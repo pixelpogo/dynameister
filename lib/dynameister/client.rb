@@ -23,8 +23,6 @@ module Dynameister
       begin
         table = client.delete_table(table_name: table_name)
       rescue Aws::DynamoDB::Errors::ResourceNotFoundException
-    private
-
         false
       else
         sleep 0.5 while table.table_description.table_status == 'DELETING'
