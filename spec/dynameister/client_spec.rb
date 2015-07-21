@@ -113,7 +113,7 @@ describe Dynameister::Client do
       it "deletes the given table" do
         subject
 
-        expect(client.client.list_tables.table_names).to_not include(table_name)
+        expect(client.aws_client.list_tables.table_names).to_not include(table_name)
       end
 
     end

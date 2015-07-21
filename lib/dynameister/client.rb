@@ -12,7 +12,7 @@ module Dynameister
       options[:write_capacity] ||= Dynameister.write_capacity
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
-      table            = resource.create_table(table_definition)
+      table            = aws_resource.create_table(table_definition)
 
       sleep 0.5 while table.table_status == 'CREATING'
 
@@ -21,7 +21,7 @@ module Dynameister
 
     def delete_table(table_name:)
       begin
-        table = client.delete_table(table_name: table_name)
+        table = aws_client.delete_table(table_name: table_name)
       rescue Aws::DynamoDB::Errors::ResourceNotFoundException
         false
       else
@@ -30,14 +30,14 @@ module Dynameister
       end
     end
 
-    def client
+    def aws_client
       options = true ? { endpoint: ENV['DYNAMEISTER_ENDPOINT'] } : {}
 
-      @@client ||= Aws::DynamoDB::Client.new(options)
+      @@aws_client ||= Aws::DynamoDB::Client.new(options)
     end
 
-    def resource
-      @@resource ||= Aws::DynamoDB::Resource.new(client: client)
+    def aws_resource
+      @@aws_resource ||= Aws::DynamoDB::Resource.new(client: aws_client)
     end
 
   end
