@@ -1,8 +1,11 @@
+require "dotenv"
+require "pry"
 require "rspec"
 require "rspec/its"
-require "pry"
 
 require "dynameister"
+
+Dotenv.load(File.join(File.dirname(__FILE__), ".env.test"))
 
 RSpec.configure do |config|
 

@@ -1,6 +1,5 @@
-require "dynameister/version"
-
 require "dynameister/client"
+require "dynameister/version"
 
 module Dynameister
 
