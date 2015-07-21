@@ -6,8 +6,8 @@
 /coverage/
 /doc/
 /pkg/
-/spec/reports/
 /spec/.env.test
+/spec/reports/
 /tmp/
 *.bundle
 *.so
