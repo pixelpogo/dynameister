@@ -1,6 +1,6 @@
 # Dynameister
 
-A ruby convenience wrapper from Amazons DynamoDB.
+A Ruby convenience wrapper from Amazons DynamoDB.
 
 ## Installation
 
