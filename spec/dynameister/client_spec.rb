@@ -42,11 +42,11 @@ describe Dynameister::Client do
 
     context "the tables attributes" do
 
-      context "the id attribute" do
+      context "the hash key attribute" do
 
         subject { table.attribute_definitions[0] }
 
-        its(:attribute_name) { is_expected.to eq("id") }
+        its(:attribute_name) { is_expected.to eq(hash_key.to_s) }
         its(:attribute_type) { is_expected.to eq("S") }
 
       end
@@ -68,7 +68,7 @@ describe Dynameister::Client do
 
         subject { table.key_schema[0] }
 
-        its(:attribute_name) { is_expected.to eq("id") }
+        its(:attribute_name) { is_expected.to eq(hash_key.to_s) }
         its(:key_type)       { is_expected.to eq("HASH") }
 
       end
