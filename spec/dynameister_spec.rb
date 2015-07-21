@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Dynameister do
 
   let(:capacity) { 99 }

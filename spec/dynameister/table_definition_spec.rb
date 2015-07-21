@@ -1,5 +1,3 @@
-require "spec_helper"
-
 require_relative "../../lib/dynameister/table_definition.rb"
 
 describe Dynameister::TableDefinition do

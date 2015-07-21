@@ -1,5 +1,3 @@
-require "spec_helper"
-
 describe Dynameister::Client do
 
   let(:client) { Dynameister::Client.new }
