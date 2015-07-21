@@ -2,6 +2,8 @@ require "spec_helper"
 
 describe Dynameister::Client do
 
+  let(:client) { Dynameister::Client.new }
+
   describe "#create_table" do
 
     let(:table_name)    { "my-table" }
@@ -14,8 +16,6 @@ describe Dynameister::Client do
         range_key: { created_at: :number }
       }
     end
-
-    let(:client) { Dynameister::Client.new }
 
     let(:table) do
       client.create_table(table_name: table_name,
@@ -86,18 +86,34 @@ describe Dynameister::Client do
 
   end
 
-  describe "#delete_table", skip: true do
+  describe "#delete_table" do
+
+    let(:table_name) { "my-table" }
+
+    subject { client.delete_table(table_name: table_name) }
 
     context "without a preexisting table" do
-      let(:table_name) { "#{Dynamoid::Config.namespace}-table" }
 
-      it "deletes the table" do
-        Dynamoid::Adapter::AwsSdk2.create_table(table_name)
-        Dynamoid::Adapter::AwsSdk2.delete_table(table_name)
+      it "returns false" do
+        expect(subject).to eq(false)
+      end
 
-        expect(
-          Dynamoid::Adapter::AwsSdk2.client.list_tables.table_names
-        ).to_not include(table_name)
+    end
+
+    context "with a preexisting table" do
+
+      before :each do
+        client.create_table(table_name: table_name)
+      end
+
+      it "returns true" do
+        expect(subject).to eq(true)
+      end
+
+      it "deletes the given table" do
+        subject
+
+        expect(client.client.list_tables.table_names).to_not include(table_name)
       end
 
     end
