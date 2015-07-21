@@ -31,13 +31,19 @@ module Dynameister
     end
 
     def aws_client
-      options = true ? { endpoint: ENV['DYNAMEISTER_ENDPOINT'] } : {}
-
-      @@aws_client ||= Aws::DynamoDB::Client.new(options)
+      @@aws_client ||= Aws::DynamoDB::Client.new(aws_client_options)
     end
 
     def aws_resource
       @@aws_resource ||= Aws::DynamoDB::Resource.new(client: aws_client)
+    end
+
+    private
+
+    def aws_client_options
+      # TODO: Decide how to handle the configuration of endpoint and region
+      #       for development and production.
+      true ? { endpoint: ENV['DYNAMEISTER_ENDPOINT'] } : {}
     end
 
   end
