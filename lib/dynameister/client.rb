@@ -16,14 +16,21 @@ module Dynameister
 
       sleep 0.5 while table.table_status == 'CREATING'
 
-      return table
+      table
     end
 
-    def delete_table
-
-    end
-
+    def delete_table(table_name:)
+      begin
+        table = client.delete_table(table_name: table_name)
+      rescue Aws::DynamoDB::Errors::ResourceNotFoundException
     private
+
+        false
+      else
+        sleep 0.5 while table.table_description.table_status == 'DELETING'
+        true
+      end
+    end
 
     def client
       options = true ? { endpoint: ENV['DYNAMEISTER_ENDPOINT'] } : {}
