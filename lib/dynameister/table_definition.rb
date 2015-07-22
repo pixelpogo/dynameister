@@ -1,6 +1,11 @@
 module Dynameister
 
   class TableDefinition
+    PROJECTION_TYPE = {
+      all: "ALL",
+      keys_only: "KEYS_ONLY",
+      include: "INCLUDE"
+    }
 
     attr_reader :table_name, :options
 
@@ -10,6 +15,12 @@ module Dynameister
     end
 
     def to_h
+      hashed.reject { |_key, value| value.empty? }
+    end
+
+    private
+
+    def hashed
       {
         table_name:            @table_name,
         attribute_definitions: attribute_definitions,
@@ -21,8 +32,6 @@ module Dynameister
         local_secondary_indexes: local_secondary_indexes
       }
     end
-
-    private
 
     def key_schema
       elements_for :key_schema
@@ -74,20 +83,21 @@ module Dynameister
     end
 
     def local_secondary_indexes
-      { local_secondary_indexes: map_local_indexes }
-    end
-
-    def map_local_indexes
-      @options[:local_indexes].each do |index|
+      @options[:local_indexes].map do |index|
         {
           index_name: index[:name],
           key_schema: key_schema,
-          projection: PROJECTION_TYPE[:projection]
+          projection: {
+            projection_type: projection_type_for(index),
+            non_key_attributes: []
+          }
         }
-
       end
     end
-    PROJECTION_TYPE = {all: "ALL", keys_only: "KEYS_ONLY", include: "INCLUDE"}
+
+    def projection_type_for(index)
+      PROJECTION_TYPE[index[:projection]]
+    end
   end
 
 end
