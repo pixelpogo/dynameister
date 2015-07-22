@@ -33,18 +33,12 @@ module Dynameister
 
     def elements_for(type)
       hash_key, range_key = @options.values_at(:hash_key, :range_key)
+      method = "#{type}_element".to_sym
 
-      schema = []
-
-      if type == :key_schema
-        schema << key_schema_element(hash_key,  :hash)
-        schema << key_schema_element(range_key, :range) if range_key
-      elsif type == :attribute_definitions
-        schema << attribute_definitions_element(hash_key,  :hash)
-        schema << attribute_definitions_element(range_key, :range) if range_key
-      end
-
-      schema
+      [
+        send(method, hash_key, :hash),
+        (send(method, range_key, :range) if range_key)
+      ].compact
     end
 
     def key_schema_element(desc, key_type)
