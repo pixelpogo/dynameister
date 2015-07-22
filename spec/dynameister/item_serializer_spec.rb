@@ -3,10 +3,10 @@ require_relative "../../lib/dynameister/attribute_value.rb"
 
 describe Dynameister::ItemSerializer do
 
-  describe "#put_item_hash" do
+  let(:values) { [123, "john doe", ["ruby", "html", "javascript"]] }
+  let(:item)   { { id: values[0], user: values[1], skills: values[2] } }
 
-    let(:values) { [123, "john doe", ["ruby", "html", "javascript"]] }
-    let(:item)   { { id: values[0], user: values[1], skills: values[2] } }
+  describe "#put_item_hash" do
 
     subject { described_class.new(item).put_item_hash }
 
