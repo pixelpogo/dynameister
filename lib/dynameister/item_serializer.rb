@@ -8,18 +8,14 @@ module Dynameister
     end
 
     def put_item_hash
-      @item.inject({}) do |hash, (key, value)|
+      @item.each_with_object({}) do |(key, value), hash|
         hash[key] = @attribute_serializer.marshal(value)
-
-        hash
       end
     end
 
     def get_item_hash
-      @item.inject({}) do |hash, (key,value)|
+      @item.each_with_object({}) do |(key, value), hash|
         hash[key] = @attribute_serializer.unmarshal(value)
-
-        hash
       end
     end
 
