@@ -1,6 +1,7 @@
 require "active_support/dependencies"
 
 require "dynameister/client"
+require "dynameister/item_serializer"
 require "dynameister/version"
 
 module Dynameister
