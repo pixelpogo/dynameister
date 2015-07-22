@@ -3,27 +3,25 @@ require_relative "../../lib/dynameister/attribute_value.rb"
 
 describe Dynameister::ItemSerializer do
 
-
   describe "#put_item_hash" do
 
+    let(:values) { [123, "john doe", ["ruby", "html", "javascript"]] }
+    let(:item)   { { id: values[0], user: values[1], skills: values[2] } }
 
-
-    let(:item) { {id: 123, user: "john doe", skills: ["ruby", "html", "javascript"]} }
     subject { described_class.new(item).put_item_hash }
 
     it "has exactly the same keys" do
       expect(subject.keys).to eq(item.keys)
     end
 
-    # @item.keys.each do |key|
-    #   it "turns #{@item[key]} into 'dynamo-style' hashes" do
-    #     expect_any_instance_of(Dynameister::AttributeValue).to receive(:marshal).with(@item[key])
-    #     subject
-    #   end
-    # end
+    it "turns into a 'dynamo-style' hash" do
+      expect_any_instance_of(Dynameister::AttributeValue).to receive(:marshal).with(values[0])
+      expect_any_instance_of(Dynameister::AttributeValue).to receive(:marshal).with(values[1])
+      expect_any_instance_of(Dynameister::AttributeValue).to receive(:marshal).with(values[2])
+
+      subject
+    end
 
   end
-
-
 
 end
