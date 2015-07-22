@@ -17,7 +17,8 @@ module Dynameister
         provisioned_throughput: {
           read_capacity_units:  read_capacity,
           write_capacity_units: write_capacity,
-        }
+        },
+        local_secondary_indexes: local_secondary_indexes
       }
     end
 
@@ -72,6 +73,21 @@ module Dynameister
       @options[:write_capacity]
     end
 
+    def local_secondary_indexes
+      { local_secondary_indexes: map_local_indexes }
+    end
+
+    def map_local_indexes
+      @options[:local_indexes].each do |index|
+        {
+          index_name: index[:name],
+          key_schema: key_schema,
+          projection: PROJECTION_TYPE[:projection]
+        }
+
+      end
+    end
+    PROJECTION_TYPE = {all: "ALL", keys_only: "KEYS_ONLY", include: "INCLUDE"}
   end
 
 end

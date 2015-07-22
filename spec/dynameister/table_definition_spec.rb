@@ -4,12 +4,18 @@ describe Dynameister::TableDefinition do
 
   let(:table_name) { "a_table_name" }
   let(:capacity)   { 99 }
+  let(:hash_key)   { { my_hash_key:  :string } }
+  let(:range_key)  { { my_range_key: :number } }
   let(:options) do
     {
-      hash_key:  { my_hash_key:  :string },
-      range_key: { my_range_key: :number },
+      hash_key: hash_key ,
+      range_key: range_key,
       read_capacity:  capacity,
-      write_capacity: capacity
+      write_capacity: capacity,
+      local_indexes: [
+        { name: 'my_index1', projection: :all },
+        { name: 'my_index2', projection: :keys_only }
+      ]
     }
   end
 
@@ -43,6 +49,28 @@ describe Dynameister::TableDefinition do
       ]
     end
 
+
+    let(:expected_local_secondary_indexes) do
+      [
+        {
+          index_name: 'my_index1',
+          key_schema: expected_key_schema,
+          projection: {
+            projection_type: "ALL",
+            non_key_attributes: [],
+          }
+        },
+        {
+          index_name: 'my_index2',
+          key_schema: expected_key_schema,
+          projection: {
+            projection_type: "KEYS_ONLY",
+            non_key_attributes: [],
+          }
+        }
+      ]
+    end
+
     subject { definition.to_h }
 
     it "includes the table name" do
@@ -65,6 +93,9 @@ describe Dynameister::TableDefinition do
       expect(subject[:key_schema]).to eq(expected_key_schema)
     end
 
+    it "includes the local secondary indexes" do
+      expect(subject[:local_secondary_indexes]).to eq(expected_local_secondary_indexes)
+    end
   end
 
 end
