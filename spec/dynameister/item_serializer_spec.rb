@@ -22,4 +22,19 @@ describe Dynameister::ItemSerializer do
 
   end
 
+  describe "#get_item_hash" do
+
+    let(:item_hash) do
+        {
+          id:     { n: "123" },
+          user:   { s: "john doe" },
+          skills: { l: [{s: "ruby"}, {s: "html"}, {s: "javascript"}] }
+        }
+    end
+
+    subject { described_class.new(item_hash).get_item_hash }
+    it { is_expected.to eq(item) }
+
+  end
+
 end
