@@ -30,6 +30,8 @@ TODO: Write usage instructions here
 
 ## Contributing
 
+Have a look at our [ToDo list](https://github.com/lessonnine/dynameister.gem/blob/master/TODO.md) first, please.
+
 1. Fork it ( https://github.com/[my-github-username]/dynameister/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
