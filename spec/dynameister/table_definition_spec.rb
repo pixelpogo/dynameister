@@ -6,16 +6,20 @@ describe Dynameister::TableDefinition do
   let(:capacity)   { 99 }
   let(:hash_key)   { { my_hash_key:  :string } }
   let(:range_key)  { { my_range_key: :number } }
+  let(:other_range_key)  { { my_other_range_key: :string } }
+  let(:local_indexes) do
+    [
+      { name: 'my_index1', range_key: range_key, projection: :all },
+      { name: 'my_index2', range_key: other_range_key, projection: :keys_only }
+    ]
+  end
   let(:options) do
     {
       hash_key: hash_key ,
       range_key: range_key,
       read_capacity:  capacity,
       write_capacity: capacity,
-      local_indexes: [
-        { name: 'my_index1', projection: :all },
-        { name: 'my_index2', projection: :keys_only }
-      ]
+      local_indexes: local_indexes
     }
   end
 
@@ -49,23 +53,40 @@ describe Dynameister::TableDefinition do
       ]
     end
 
-
     let(:expected_local_secondary_indexes) do
       [
         {
           index_name: 'my_index1',
-          key_schema: expected_key_schema,
+          key_schema: [
+            {
+              attribute_name: 'my_hash_key',
+              key_type:       'HASH'
+            },
+            {
+              attribute_name: 'my_range_key',
+              key_type:       'RANGE'
+            }
+          ],
           projection: {
             projection_type: "ALL",
-            non_key_attributes: [],
+            non_key_attributes: []
           }
         },
         {
           index_name: 'my_index2',
-          key_schema: expected_key_schema,
+          key_schema: [
+            {
+              attribute_name: 'my_hash_key',
+              key_type:       'HASH'
+            },
+            {
+              attribute_name: 'my_other_range_key',
+              key_type:       'RANGE'
+            }
+          ],
           projection: {
             projection_type: "KEYS_ONLY",
-            non_key_attributes: [],
+            non_key_attributes: []
           }
         }
       ]
@@ -95,6 +116,57 @@ describe Dynameister::TableDefinition do
 
     it "includes the local secondary indexes" do
       expect(subject[:local_secondary_indexes]).to eq(expected_local_secondary_indexes)
+    end
+
+    context "when there are more than five local secondary indexes" do
+      let(:local_indexes) do
+        [
+          { name: 'my_index1', range_key: range_key, projection: :all },
+          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
+          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
+          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
+          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
+          { name: 'my_index2', range_key: other_range_key, projection: :keys_only }          
+        ]
+      end
+
+      it "raises an ArgumentError" do
+        expect { subject }.to raise_exception(ArgumentError)
+      end
+    end
+
+    context "when projection is of type INCLUDE" do
+      let(:included_attribute_keys) { [ :attribute1, :attribute2 ] }
+      let(:local_indexes) do
+        [
+          { name: 'my_index1', range_key: range_key, projection: included_attribute_keys },
+        ]
+      end
+      let(:expected_local_secondary_indexes) do
+        [
+          {
+            index_name: 'my_index1',
+            key_schema: [
+              {
+                attribute_name: 'my_hash_key',
+                key_type:       'HASH'
+              },
+              {
+                attribute_name: 'my_range_key',
+                key_type:       'RANGE'
+              }
+            ],
+            projection: {
+              projection_type: "INCLUDE",
+              non_key_attributes: included_attribute_keys.map(&:to_s)
+            }
+          }
+        ]
+      end
+
+      it "provides additional attrbiutes for the projection" do
+        expect(subject[:local_secondary_indexes]).to eq(expected_local_secondary_indexes)
+      end
     end
   end
 

@@ -6,12 +6,15 @@ module Dynameister
       keys_only: "KEYS_ONLY",
       include: "INCLUDE"
     }
+    MAX_INDEXES = 5
 
     attr_reader :table_name, :options
 
     def initialize(table_name, options = {})
       @table_name = table_name
       @options    = options
+
+      validate_number_of_indexes!
     end
 
     def to_h
@@ -86,17 +89,41 @@ module Dynameister
       @options[:local_indexes].map do |index|
         {
           index_name: index[:name],
-          key_schema: key_schema,
+          key_schema: [
+            key_schema.first,
+            range_key_for_index(index)
+          ],
           projection: {
             projection_type: projection_type_for(index),
-            non_key_attributes: []
+            non_key_attributes: projection_non_key_attributes_for(index)
           }
         }
       end
     end
 
     def projection_type_for(index)
-      PROJECTION_TYPE[index[:projection]]
+      projection = index[:projection].is_a?(Array) ? :include : index[:projection]
+
+      PROJECTION_TYPE[projection]
+    end
+
+    def projection_non_key_attributes_for(index)
+      return [] unless projection_type_for(index) == PROJECTION_TYPE[:include]
+
+      index[:projection].map(&:to_s)
+    end
+
+    def range_key_for_index(index)
+      {
+        attribute_name: index[:range_key].keys.first.to_s,
+        key_type:       'RANGE'
+      }
+    end
+
+    def validate_number_of_indexes!
+      if @options[:local_indexes].length > MAX_INDEXES
+        raise ArgumentError, "A maximum of 5 Local Secondary Indexes are supported"
+      end
     end
   end
 
