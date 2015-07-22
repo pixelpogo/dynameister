@@ -66,7 +66,7 @@ module Dynameister
 
       {
         attribute_name: name.to_s,
-        attribute_type: type.to_s[0,1].upcase
+        attribute_type: type.to_s[0].upcase
       }
     end
 
