@@ -10,7 +10,9 @@ describe Dynameister::ItemSerializer do
 
     subject { described_class.new(item).put_item_hash }
 
-    its(:keys) { is_expected.to eq(item.keys) }
+    it "has exactly the same keys" do
+      expect(subject[:item].keys).to eq(item.keys)
+    end
 
     it "turns into a 'dynamodb-style' hash" do
       expect_any_instance_of(Dynameister::AttributeValue).to receive(:marshal).with(values[0])
