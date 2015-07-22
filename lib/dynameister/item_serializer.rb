@@ -2,8 +2,6 @@ module Dynameister
 
   class ItemSerializer
 
-    BASE_ITEM_HASH = { item: {} }
-
     def initialize(table_name: table_name, item: item)
       @table_name = table_name
       @item       = item
