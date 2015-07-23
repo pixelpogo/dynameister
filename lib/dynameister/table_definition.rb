@@ -25,14 +25,15 @@ module Dynameister
 
     def hashed
       {
-        table_name:            @table_name,
-        attribute_definitions: attribute_definitions,
-        key_schema:            key_schema,
+        table_name:               table_name,
+        attribute_definitions:    attribute_definitions,
+        key_schema:               key_schema,
         provisioned_throughput: {
-          read_capacity_units:  read_capacity,
-          write_capacity_units: write_capacity,
+          read_capacity_units:    read_capacity,
+          write_capacity_units:   write_capacity,
         },
-        local_secondary_indexes: local_secondary_indexes
+        local_secondary_indexes:  local_secondary_indexes,
+        global_secondary_indexes: global_secondary_indexes
       }
     end
 
@@ -45,7 +46,7 @@ module Dynameister
     end
 
     def elements_for(type)
-      hash_key, range_key = @options.values_at(:hash_key, :range_key)
+      hash_key, range_key = options.values_at(:hash_key, :range_key)
       method = "#{type}_element".to_sym
 
       [
@@ -78,24 +79,44 @@ module Dynameister
     end
 
     def read_capacity
-      @options[:read_capacity]
+      options[:read_capacity]
     end
 
     def write_capacity
-      @options[:write_capacity]
+      options[:write_capacity]
     end
 
     def local_secondary_indexes
-      @options[:local_indexes].map do |index|
+      options[:local_indexes].map do |index|
         {
           index_name: index[:name],
           key_schema: [
-            hash_key_schema,
+            hash_key,
             range_key_for_index(index)
           ],
           projection: {
             projection_type: projection_type_for(index),
             non_key_attributes: projection_non_key_attributes_for(index)
+          }
+        }
+      end
+    end
+
+    def global_secondary_indexes
+      options[:global_indexes].map do |index|
+        {
+          index_name: index[:name],
+          key_schema: [
+            hash_key_for_index(index),
+            range_key_for_index(index)
+          ],
+          projection: {
+            projection_type: projection_type_for(index),
+            non_key_attributes: projection_non_key_attributes_for(index)
+          },
+          provisioned_throughput: {
+            read_capacity_units: index[:throughput].first,
+            write_capacity_units: index[:throughput].last
           }
         }
       end
@@ -126,9 +147,17 @@ module Dynameister
       end
     end
 
-    def hash_key_schema
+    def hash_key
       key_schema.first
+    end
+
+    def hash_key_for_index(index)
+      {
+        attribute_name: index[:hash_key].keys.first.to_s,
+        key_type: 'HASH'
+      }
     end
   end
 
 end
+

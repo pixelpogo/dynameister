@@ -13,13 +13,19 @@ describe Dynameister::TableDefinition do
       { name: 'my_index2', range_key: other_range_key, projection: :keys_only }
     ]
   end
+  let(:global_indexes) do
+    [
+      { name: 'my_global_index1', hash_key: hash_key, range_key: range_key, projection: :all, throughput: [1,1] }
+    ]
+  end
   let(:options) do
     {
       hash_key: hash_key,
       range_key: range_key,
       read_capacity:  capacity,
       write_capacity: capacity,
-      local_indexes: local_indexes
+      local_indexes: local_indexes,
+      global_indexes: global_indexes
     }
   end
 
@@ -92,6 +98,32 @@ describe Dynameister::TableDefinition do
       ]
     end
 
+    let(:expected_global_secondary_indexes) do
+      [
+        {
+          index_name: 'my_global_index1',
+          key_schema: [
+            {
+              attribute_name: 'my_hash_key',
+              key_type:       'HASH'
+            },
+            {
+              attribute_name: 'my_range_key',
+              key_type:       'RANGE'
+            }
+          ],
+          projection: {
+            projection_type: "ALL",
+            non_key_attributes: []
+          },
+          provisioned_throughput: {
+            read_capacity_units: 1,
+            write_capacity_units: 1
+          }
+        }
+      ]
+    end
+
     subject { definition.to_h }
 
     it "includes the table name" do
@@ -116,6 +148,10 @@ describe Dynameister::TableDefinition do
 
     it "includes the local secondary indexes" do
       expect(subject[:local_secondary_indexes]).to eq(expected_local_secondary_indexes)
+    end
+
+    it 'includes the global secondary indexes' do
+      expect(subject[:global_secondary_indexes]).to eq(expected_global_secondary_indexes)
     end
 
     context "when there are more than five local secondary indexes" do
