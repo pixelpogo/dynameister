@@ -37,9 +37,11 @@ module Dynameister
     end
 
     def scan_table(options)
-      raise(ArgumentError, "table_name is required") unless options[:table_name]
-
       aws_client.scan(options)
+    end
+
+    def query_table(options)
+      aws_client.query(options)
     end
 
     def aws_client

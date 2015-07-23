@@ -141,10 +141,10 @@ describe Dynameister::Client do
 
   end
 
-  describe "#scan" do
-    subject { client.scan_table(table_options) }
+  describe "#scan_table" do
+    subject { client.scan_table(options) }
 
-    let(:table_options) do
+    let(:options) do
       {
         table_name: table_name,
         index_name: "IndexName",
@@ -159,33 +159,31 @@ describe Dynameister::Client do
 
     it "delegates to aws_client#scan" do
       subject
-      expect(client.aws_client).to have_received(:scan).with(table_options)
+      expect(client.aws_client).to have_received(:scan).with(options)
     end
-
-    context "when no table_name is given" do
-      let(:table_options) do
-        {
-          limit: 1
-        }
-      end
-
-      it "throws an ArgumentError" do
-        expect { subject }.to raise_exception(ArgumentError)
-      end
-    end
-
-      context "when table_name is nil" do
-        let(:table_options) do
-          {
-            table_name: nil,
-            limit: 1
-          }
-        end
-
-        it "throws an ArgumentError" do
-          expect { subject }.to raise_exception(ArgumentError)
-        end
-      end
   end
 
+  describe "#query_table" do
+    subject { client.query_table(options) }
+
+    let(:options) do
+      {
+        table_name: table_name,
+        index_name: "IndexName",
+        attributes_to_get: ["AttributeName"],
+        limit: 1
+      }
+    end
+
+    let(:table) { client.create_table(table_name: table_name) }
+
+    before :each do
+      allow(client.aws_client).to receive(:query)
+    end
+
+    it "delegates to aws_client#query" do
+      subject
+      expect(client.aws_client).to have_received(:query).with(options)
+    end
+  end
 end
