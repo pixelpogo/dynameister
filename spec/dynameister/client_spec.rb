@@ -121,7 +121,7 @@ describe Dynameister::Client do
 
     let(:table)          { client.create_table(table_name: table_name) }
     let(:item)           { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
-    let(:expected_item)  { { "id" => item[:id], "user" => item[:user], "skills" => item[:skills] } }
+    let(:expected_item)  { item.stringify_keys }
 
     before :each do
       table
