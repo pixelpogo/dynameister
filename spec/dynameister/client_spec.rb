@@ -143,6 +143,50 @@ describe Dynameister::Client do
 
   end
 
+  describe "#scan_table" do
+    subject { client.scan_table(options) }
+
+    let(:options) do
+      {
+        table_name: table_name,
+        index_name: "IndexName",
+        attributes_to_get: ["AttributeName"],
+        limit: 1
+      }
+    end
+
+    before :each do
+      allow(client.aws_client).to receive(:scan)
+    end
+
+    it "delegates to aws_client#scan" do
+      subject
+      expect(client.aws_client).to have_received(:scan).with(options)
+    end
+  end
+
+  describe "#query_table" do
+    subject { client.query_table(options) }
+
+    let(:options) do
+      {
+        table_name: table_name,
+        index_name: "IndexName",
+        attributes_to_get: ["AttributeName"],
+        limit: 1
+      }
+    end
+
+    before :each do
+      allow(client.aws_client).to receive(:query)
+    end
+
+    it "delegates to aws_client#query" do
+      subject
+      expect(client.aws_client).to have_received(:query).with(options)
+    end
+  end
+
   describe "#delete_item" do
 
     let(:hash_key) { { id: "123" } }

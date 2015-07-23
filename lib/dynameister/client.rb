@@ -39,6 +39,14 @@ module Dynameister
       aws_client.delete_item(serialized.to_h)
     end
 
+    def scan_table(options)
+      aws_client.scan(options)
+    end
+
+    def query_table(options)
+      aws_client.query(options)
+    end
+
     def aws_client
       @@aws_client ||= Aws::DynamoDB::Client.new(aws_client_options)
     end
