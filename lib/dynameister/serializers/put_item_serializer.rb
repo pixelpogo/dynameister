@@ -4,7 +4,7 @@ module Dynameister
 
     class PutItemSerializer
 
-      def initialize(table_name: table_name, item: item)
+      def initialize(table_name:, item:)
         @table_name = table_name
         @item       = item
       end
