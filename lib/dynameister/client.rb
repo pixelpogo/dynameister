@@ -36,6 +36,12 @@ module Dynameister
       aws_client.put_item(serialized.put_item_hash)
     end
 
+    def scan_table(table_name:)
+      aws_client.scan({
+        table_name: table_name
+      })
+    end
+
     def aws_client
       @@aws_client ||= Aws::DynamoDB::Client.new(aws_client_options)
     end

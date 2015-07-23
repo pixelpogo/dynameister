@@ -141,4 +141,27 @@ describe Dynameister::Client do
 
   end
 
+  describe "#scan" do
+    subject { client.scan_table(table_name: table_name) }
+
+    let(:table)           { client.create_table(table_name: table_name) }
+    let(:item1)           { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
+    let(:item2)           { { id: "456", user: "jane doe", skills: ["ruby", "css", "erlang"] } }
+    let(:items)           { [ item1, item2 ] }
+    let(:expected_items)  { items.reverse.map(&:stringify_keys) }
+
+    before :each do
+      table
+      items.each { |item| client.put_item(table_name: table_name, item: item) }
+    end
+
+    after :each do
+      table.delete
+    end
+
+    it "returns all items in the table" do
+      expect(subject.items).to eq(expected_items)
+    end
+  end
+
 end
