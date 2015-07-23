@@ -20,6 +20,10 @@ Or install it yourself as:
 
 ## Usage
 
+### Environment variables
+
+* `DYNAMEISTER_ENV`: defines the environment dynameister is running in, this is mainly important for testing locally and on a CI server as it defines which `/spec/.env.<environment>` file is loaded
+
 TODO: Write usage instructions here
 
 ## Testing

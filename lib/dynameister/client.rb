@@ -1,5 +1,3 @@
-require_relative "table_definition"
-
 require "aws-sdk"
 
 module Dynameister
@@ -10,6 +8,7 @@ module Dynameister
       options[:hash_key]       ||= { hash_key.to_sym => :string }
       options[:read_capacity]  ||= Dynameister.read_capacity
       options[:write_capacity] ||= Dynameister.write_capacity
+      options[:local_indexes]  ||= {}
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
       table            = aws_resource.create_table(table_definition)
@@ -31,8 +30,13 @@ module Dynameister
     end
 
     def put_item(table_name:, item:)
-      serialized = Dynameister::ItemSerializer.new(table_name: table_name, item: item)
-      aws_client.put_item(serialized.put_item_hash)
+      serialized = Dynameister::Serializers::PutItemSerializer.new(table_name: table_name, item: item)
+      aws_client.put_item(serialized.to_h)
+    end
+
+    def delete_item(table_name:, hash_key:)
+      serialized = Dynameister::Serializers::DeleteItemSerializer.new(table_name: table_name, hash_key: hash_key)
+      aws_client.delete_item(serialized.to_h)
     end
 
     def aws_client
