@@ -34,6 +34,11 @@ module Dynameister
       aws_client.put_item(serialized.to_h)
     end
 
+    def delete_item(table_name:, hash_key:)
+      serialized = Dynameister::Serializers::DeleteItemSerializer.new(table_name: table_name, hash_key: hash_key)
+      aws_client.delete_item(serialized.to_h)
+    end
+
     def aws_client
       @@aws_client ||= Aws::DynamoDB::Client.new(aws_client_options)
     end
