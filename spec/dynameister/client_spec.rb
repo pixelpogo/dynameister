@@ -122,6 +122,8 @@ describe Dynameister::Client do
     let(:item)  { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
     let(:table) { client.create_table(table_name: table_name) }
 
+    let(:get_hash) { { table_name: table_name, key: { id: "123" } } }
+
     before :each do
       table
     end
@@ -131,12 +133,40 @@ describe Dynameister::Client do
     end
 
     it "stores the item" do
-      get_hash = { table_name: table_name, key: { id: "123" } }
       client.put_item(table_name: table_name, item: item)
 
       retrieved_item = client.aws_client.get_item(get_hash).item
 
       expect(retrieved_item).to eq(item.stringify_keys)
+    end
+
+  end
+
+  describe "#delete_item" do
+
+    let(:hash_key) { { id: "123" } }
+    let(:item)     { hash_key.merge({ user: "john doe", skills: ["ruby", "html", "javascript"] }) }
+    let(:table)    { client.create_table(table_name: table_name) }
+
+    let(:put_hash) { { table_name: table_name, item: item } }
+    let(:get_hash) { { table_name: table_name, key:  hash_key } }
+
+    before :each do
+      table
+
+      client.aws_client.put_item(put_hash)
+    end
+
+    after :each do
+      table.delete
+    end
+
+    it "deletes the item" do
+      client.delete_item(table_name: table_name, hash_key: hash_key)
+
+      expect(
+        client.aws_client.get_item(get_hash).item
+      ).to be_nil
     end
 
   end
