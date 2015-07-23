@@ -9,7 +9,7 @@ module Dynameister
         @item       = item
       end
 
-      def put_item_hash
+      def to_h
         {
           table_name: @table_name,
           item:       @item

@@ -33,7 +33,7 @@ module Dynameister
 
     def put_item(table_name:, item:)
       serialized = Dynameister::Serializers::PutItemSerializer.new(table_name: table_name, item: item)
-      aws_client.put_item(serialized.put_item_hash)
+      aws_client.put_item(serialized.to_h)
     end
 
     def aws_client
