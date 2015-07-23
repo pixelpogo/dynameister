@@ -1,10 +1,10 @@
 describe Dynameister::Client do
 
-  let(:client) { Dynameister::Client.new }
+  let(:client)     { Dynameister::Client.new }
+  let(:table_name) { "my-table" }
 
   describe "#create_table" do
 
-    let(:table_name)    { "my-table" }
     let(:hash_key)      { :my_hash_key }
     let(:capacity)      { 99 }
     let(:table_options) do
@@ -86,8 +86,6 @@ describe Dynameister::Client do
 
   describe "#delete_table" do
 
-    let(:table_name) { "my-table" }
-
     subject { client.delete_table(table_name: table_name) }
 
     context "without a preexisting table" do
@@ -114,6 +112,31 @@ describe Dynameister::Client do
         expect(client.aws_client.list_tables.table_names).to_not include(table_name)
       end
 
+    end
+
+  end
+
+
+  describe "#put_item" do
+
+    let(:item)  { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
+    let(:table) { client.create_table(table_name: table_name) }
+
+    before :each do
+      table
+    end
+
+    after :each do
+      table.delete
+    end
+
+    it "stores the item" do
+      get_hash = { table_name: table_name, key: { id: "123" } }
+      client.put_item(table_name: table_name, item: item)
+
+      retrieved_item = client.aws_client.get_item(get_hash).item
+
+      expect(retrieved_item).to eq(item.stringify_keys)
     end
 
   end

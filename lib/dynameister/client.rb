@@ -30,6 +30,11 @@ module Dynameister
       end
     end
 
+    def put_item(table_name:, item:)
+      serialized = Dynameister::ItemSerializer.new(table_name: table_name, item: item)
+      aws_client.put_item(serialized.put_item_hash)
+    end
+
     def aws_client
       @@aws_client ||= Aws::DynamoDB::Client.new(aws_client_options)
     end
