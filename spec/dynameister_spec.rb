@@ -4,8 +4,8 @@ describe Dynameister do
 
   before :each do
     Dynameister.configure do |config|
-      config.read_capacity  = capacity
-      config.write_capacity = capacity
+      config.read_capacity  capacity
+      config.write_capacity capacity
     end
   end
 

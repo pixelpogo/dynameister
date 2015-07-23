@@ -119,8 +119,9 @@ describe Dynameister::Client do
 
   describe "#put_item" do
 
-    let(:item)  { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
-    let(:table) { client.create_table(table_name: table_name) }
+    let(:table)          { client.create_table(table_name: table_name) }
+    let(:item)           { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
+    let(:expected_item)  { { "id" => item[:id], "user" => item[:user], "skills" => item[:skills] } }
 
     before :each do
       table
@@ -131,12 +132,12 @@ describe Dynameister::Client do
     end
 
     it "stores the item" do
-      get_hash = { table_name: table_name, key: { id: "123" } }
+      get_hash = { table_name: table_name, key: { id: item[:id] } }
       client.put_item(table_name: table_name, item: item)
 
       retrieved_item = client.aws_client.get_item(get_hash).item
 
-      expect(retrieved_item).to eq(item.stringify_keys)
+      expect(retrieved_item).to eq(expected_item)
     end
 
   end
