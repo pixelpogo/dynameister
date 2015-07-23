@@ -176,8 +176,6 @@ describe Dynameister::Client do
       }
     end
 
-    let(:table) { client.create_table(table_name: table_name) }
-
     before :each do
       allow(client.aws_client).to receive(:query)
     end
