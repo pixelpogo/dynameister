@@ -1,5 +1,3 @@
-require_relative "table_definition"
-
 require "aws-sdk"
 
 module Dynameister
