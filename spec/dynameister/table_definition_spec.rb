@@ -156,14 +156,21 @@ describe Dynameister::TableDefinition do
 
     context "when there are more than five local secondary indexes" do
       let(:local_indexes) do
-        [
-          { name: "my_index1", range_key: range_key, projection: :all },
-          { name: "my_index2", range_key: other_range_key, projection: :keys_only },
-          { name: "my_index2", range_key: other_range_key, projection: :keys_only },
-          { name: "my_index2", range_key: other_range_key, projection: :keys_only },
-          { name: "my_index2", range_key: other_range_key, projection: :keys_only },
-          { name: "my_index2", range_key: other_range_key, projection: :keys_only }
-        ]
+        index = Proc.new {{ name: "my_index2", range_key: other_range_key, projection: :keys_only }}
+        Array.new(6, &index)
+      end
+
+      it "raises an ArgumentError" do
+        expect { subject }.to raise_exception(ArgumentError)
+      end
+    end
+
+    context "when there are more than five global secondary indexes" do
+      let(:global_indexes) do
+        index = Proc.new {
+          { name: "my_index1", hash_key: hash_key, range_key: other_range_key, projection: :keys_only, throughput: [2,3] }
+        }
+        Array.new(6, &index)
       end
 
       it "raises an ArgumentError" do
