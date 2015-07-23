@@ -1,13 +1,13 @@
-require_relative "../../lib/dynameister/item_serializer.rb"
+require_relative "../../../lib/dynameister/serializers/put_item_serializer.rb"
 
-describe Dynameister::ItemSerializer do
+describe Dynameister::Serializers::PutItemSerializer do
 
   let(:table_name) { "my-table" }
   let(:item)       { { id: 123, user: "john doe", skills: ["ruby", "html", "javascript"] } }
 
-  describe "#put_item_hash" do
+  describe "#to_h" do
 
-    subject { described_class.new(table_name: table_name, item: item).put_item_hash }
+    subject { described_class.new(table_name: table_name, item: item).to_h }
 
     it "includes table_name" do
       expect(subject).to include(table_name: table_name)

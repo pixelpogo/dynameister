@@ -7,7 +7,9 @@ require "rspec/its"
 
 require "dynameister"
 
-Dotenv.load(File.join(File.dirname(__FILE__), ".env.test"))
+ENV['DYNAMEISTER_ENV'] ||= "test"
+
+Dotenv.load(File.join(File.dirname(__FILE__), ".env.#{ENV['DYNAMEISTER_ENV']}"))
 
 RSpec.configure do |config|
 

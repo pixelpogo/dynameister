@@ -3,7 +3,7 @@
 - [ ] CRUD items
   - [ ] get
   - [x] put
-  - [ ] delete
+  - [x] delete
   - [ ] update
 - [ ] Querying
   - [ ] scan
