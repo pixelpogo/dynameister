@@ -2,7 +2,7 @@
 
 - [ ] CRUD items
   - [ ] get
-  - [ ] put
+  - [x] put
   - [ ] delete
   - [ ] update
 - [ ] Querying
