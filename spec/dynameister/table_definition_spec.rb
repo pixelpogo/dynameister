@@ -2,11 +2,11 @@ require_relative "../../lib/dynameister/table_definition.rb"
 
 describe Dynameister::TableDefinition do
 
-  let(:table_name) { "a_table_name" }
-  let(:capacity)   { 99 }
-  let(:hash_key)   { { my_hash_key:  :string } }
-  let(:range_key)  { { my_range_key: :number } }
-  let(:other_range_key)  { { my_other_range_key: :string } }
+  let(:table_name)      { "a_table_name" }
+  let(:capacity)        { 99 }
+  let(:hash_key)        { { my_hash_key:  :string } }
+  let(:range_key)       { { my_range_key: :number } }
+  let(:other_range_key) { { my_other_range_key: :string } }
   let(:local_indexes) do
     [
       { name: 'my_index1', range_key: range_key, projection: :all },
@@ -15,7 +15,7 @@ describe Dynameister::TableDefinition do
   end
   let(:options) do
     {
-      hash_key: hash_key ,
+      hash_key: hash_key,
       range_key: range_key,
       read_capacity:  capacity,
       write_capacity: capacity,
@@ -126,7 +126,7 @@ describe Dynameister::TableDefinition do
           { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
           { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
           { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-          { name: 'my_index2', range_key: other_range_key, projection: :keys_only }          
+          { name: 'my_index2', range_key: other_range_key, projection: :keys_only }
         ]
       end
 
@@ -164,7 +164,7 @@ describe Dynameister::TableDefinition do
         ]
       end
 
-      it "provides additional attrbiutes for the projection" do
+      it "provides additional attributes for the projection" do
         expect(subject[:local_secondary_indexes]).to eq(expected_local_secondary_indexes)
       end
     end
