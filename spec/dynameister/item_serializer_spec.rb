@@ -13,7 +13,7 @@ describe Dynameister::ItemSerializer do
       expect(subject).to include(table_name: table_name)
     end
 
-    it "has exactly the same keys" do
+    it "includes the item" do
       expect(subject).to include(item: item)
     end
 

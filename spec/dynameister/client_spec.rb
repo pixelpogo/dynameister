@@ -134,7 +134,9 @@ describe Dynameister::Client do
       get_hash = { table_name: table_name, key: { id: "123" } }
       client.put_item(table_name: table_name, item: item)
 
-      expect(client.aws_client.get_item(get_hash).item).to eq(item)
+      retrieved_item = client.aws_client.get_item(get_hash).item
+
+      expect(retrieved_item).to eq(item.stringify_keys)
     end
 
   end
