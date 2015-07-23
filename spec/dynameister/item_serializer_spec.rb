@@ -3,8 +3,7 @@ require_relative "../../lib/dynameister/item_serializer.rb"
 describe Dynameister::ItemSerializer do
 
   let(:table_name) { "my-table" }
-  let(:values)     { [123, "john doe", ["ruby", "html", "javascript"]] }
-  let(:item)       { { id: values[0], user: values[1], skills: values[2] } }
+  let(:item)       { { id: 123, user: "john doe", skills: ["ruby", "html", "javascript"] } }
 
   describe "#put_item_hash" do
 
