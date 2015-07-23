@@ -135,7 +135,6 @@ describe Dynameister::Client do
       client.put_item(table_name: table_name, item: item)
 
       expect(client.aws_client.get_item(get_hash).item).to eq(item)
-
     end
 
   end
