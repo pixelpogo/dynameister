@@ -1,6 +1,6 @@
-require_relative "../../lib/dynameister/item_serializer.rb"
+require_relative "../../../lib/dynameister/serializers/put_item_serializer.rb"
 
-describe Dynameister::ItemSerializer do
+describe Dynameister::Serializers::PutItemSerializer do
 
   let(:table_name) { "my-table" }
   let(:item)       { { id: 123, user: "john doe", skills: ["ruby", "html", "javascript"] } }
