@@ -90,7 +90,7 @@ module Dynameister
         {
           index_name: index[:name],
           key_schema: [
-            key_schema.first,
+            hash_key_schema,
             range_key_for_index(index)
           ],
           projection: {
@@ -124,6 +124,10 @@ module Dynameister
       if @options[:local_indexes].length > MAX_INDEXES
         raise ArgumentError, "A maximum of 5 Local Secondary Indexes are supported"
       end
+    end
+
+    def hash_key_schema
+      key_schema.first
     end
   end
 
