@@ -142,26 +142,50 @@ describe Dynameister::Client do
   end
 
   describe "#scan" do
-    subject { client.scan_table(table_name: table_name) }
+    subject { client.scan_table(table_options) }
 
-    let(:table)           { client.create_table(table_name: table_name) }
-    let(:item1)           { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
-    let(:item2)           { { id: "456", user: "jane doe", skills: ["ruby", "css", "erlang"] } }
-    let(:items)           { [ item1, item2 ] }
-    let(:expected_items)  { items.reverse.map(&:stringify_keys) }
+    let(:table_options) do
+      {
+        table_name: table_name,
+        index_name: "IndexName",
+        attributes_to_get: ["AttributeName"],
+        limit: 1
+      }
+    end
 
     before :each do
-      table
-      items.each { |item| client.put_item(table_name: table_name, item: item) }
+      allow(client.aws_client).to receive(:scan)
     end
 
-    after :each do
-      table.delete
+    it "delegates to aws_client#scan" do
+      subject
+      expect(client.aws_client).to have_received(:scan).with(table_options)
     end
 
-    it "returns all items in the table" do
-      expect(subject.items).to eq(expected_items)
+    context "when no table_name is given" do
+      let(:table_options) do
+        {
+          limit: 1
+        }
+      end
+
+      it "throws an ArgumentError" do
+        expect { subject }.to raise_exception(ArgumentError)
+      end
     end
+
+      context "when table_name is nil" do
+        let(:table_options) do
+          {
+            table_name: nil,
+            limit: 1
+          }
+        end
+
+        it "throws an ArgumentError" do
+          expect { subject }.to raise_exception(ArgumentError)
+        end
+      end
   end
 
 end

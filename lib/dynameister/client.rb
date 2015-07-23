@@ -36,10 +36,10 @@ module Dynameister
       aws_client.put_item(serialized.put_item_hash)
     end
 
-    def scan_table(table_name:)
-      aws_client.scan({
-        table_name: table_name
-      })
+    def scan_table(options)
+      raise(ArgumentError, "table_name is required") unless options[:table_name]
+
+      aws_client.scan(options)
     end
 
     def aws_client
