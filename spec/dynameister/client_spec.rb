@@ -119,7 +119,7 @@ describe Dynameister::Client do
 
   describe "#put_item" do
 
-    let(:item) { { "id" => "123", "user" => "john doe", "skills" => ["ruby", "html", "javascript"] } }
+    let(:item) { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
     let(:table) { client.create_table(table_name: table_name) }
 
     before :each do

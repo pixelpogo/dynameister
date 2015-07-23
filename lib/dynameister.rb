@@ -1,4 +1,5 @@
-require "active_support/dependencies"
+require "active_support"
+require "active_support/core_ext"
 
 require "dynameister/client"
 require "dynameister/item_serializer"
