@@ -150,31 +150,8 @@ describe Dynameister::TableDefinition do
       expect(subject[:key_schema]).to eq(expected_key_schema)
     end
 
-    context "when there are additional attributes" do
-      let(:options) do
-        {
-          hash_key: hash_key,
-          range_key: range_key,
-          read_capacity:  capacity,
-          write_capacity: capacity,
-          local_indexes: local_indexes,
-          global_indexes: global_indexes
-        }
-      end
-
-      it "includes the global secondary indexes" do
-        expect(subject[:global_secondary_indexes]).to eq(expected_global_secondary_indexes)
-      end
-    end
-
-    context "when there are more than five local secondary indexes" do
-      let(:local_indexes) do
-        Array.new(6, { name: "my_index2", range_key: other_range_key, projection: :keys_only })
-      end
-
-      it "raises an ArgumentError" do
-        expect { subject }.to raise_exception(ArgumentError)
-      end
+    it "includes the global secondary indexes" do
+      expect(subject[:global_secondary_indexes]).to eq(expected_global_secondary_indexes)
     end
 
     context "when there are more than five global secondary indexes" do
@@ -185,7 +162,6 @@ describe Dynameister::TableDefinition do
       it "raises an ArgumentError" do
         expect { subject }.to raise_exception(ArgumentError)
       end
-
     end
 
     describe "Local Secondary Indexes" do
@@ -195,14 +171,7 @@ describe Dynameister::TableDefinition do
 
       context "when there are more than five local secondary indexes" do
         let(:local_indexes) do
-          [
-            { name: 'my_index1', range_key: range_key, projection: :all },
-            { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-            { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-            { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-            { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-            { name: 'my_index2', range_key: other_range_key, projection: :keys_only }
-          ]
+          Array.new(6, { name: "my_index2", range_key: other_range_key, projection: :keys_only })
         end
 
         it "raises an ArgumentError" do
@@ -254,7 +223,8 @@ describe Dynameister::TableDefinition do
             range_key: range_key,
             read_capacity:  capacity,
             write_capacity: capacity,
-            local_indexes: local_indexes_with_other_range_key
+            local_indexes: local_indexes_with_other_range_key,
+            global_indexes: global_indexes
           }
         end
 
@@ -269,8 +239,8 @@ describe Dynameister::TableDefinition do
           expect(subject[:attribute_definitions]).to include(expected_other_range_key)
         end
       end
-
     end
   end
 
 end
+
