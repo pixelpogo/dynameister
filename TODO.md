@@ -1,7 +1,7 @@
 # Dynameister - ToDo
 
 - [ ] CRUD items
-  - [ ] get
+  - [x] get
   - [x] put
   - [x] delete
   - [ ] update
