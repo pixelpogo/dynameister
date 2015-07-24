@@ -9,8 +9,13 @@ describe Dynameister::TableDefinition do
   let(:other_range_key) { { my_other_range_key: :string } }
   let(:local_indexes) do
     [
-      { name: 'my_index1', range_key: range_key, projection: :all },
-      { name: 'my_index2', range_key: other_range_key, projection: :keys_only }
+      { name: "my_index1", range_key: range_key, projection: :all },
+      { name: "my_index2", range_key: other_range_key, projection: :keys_only }
+    ]
+  end
+  let(:global_indexes) do
+    [
+      { name: "my_global_index1", hash_key: hash_key, range_key: range_key, projection: :all, throughput: [1,1] }
     ]
   end
   let(:options) do
@@ -19,7 +24,8 @@ describe Dynameister::TableDefinition do
       range_key: range_key,
       read_capacity:  capacity,
       write_capacity: capacity,
-      local_indexes: local_indexes
+      local_indexes: local_indexes,
+      global_indexes: global_indexes
     }
   end
 
@@ -30,12 +36,12 @@ describe Dynameister::TableDefinition do
     let(:expected_attribute_definitions) do
       [
         {
-          attribute_name: 'my_hash_key',
-          attribute_type: 'S'
+          attribute_name: "my_hash_key",
+          attribute_type: "S"
         },
         {
-          attribute_name: 'my_range_key',
-          attribute_type: 'N'
+          attribute_name: "my_range_key",
+          attribute_type: "N"
         }
       ]
     end
@@ -43,12 +49,12 @@ describe Dynameister::TableDefinition do
     let(:expected_key_schema) do
       [
         {
-          attribute_name: 'my_hash_key',
-          key_type:       'HASH'
+          attribute_name: "my_hash_key",
+          key_type:       "HASH"
         },
         {
-          attribute_name: 'my_range_key',
-          key_type:       'RANGE'
+          attribute_name: "my_range_key",
+          key_type:       "RANGE"
         }
       ]
     end
@@ -56,15 +62,15 @@ describe Dynameister::TableDefinition do
     let(:expected_local_secondary_indexes) do
       [
         {
-          index_name: 'my_index1',
+          index_name: "my_index1",
           key_schema: [
             {
-              attribute_name: 'my_hash_key',
-              key_type:       'HASH'
+              attribute_name: "my_hash_key",
+              key_type:       "HASH"
             },
             {
-              attribute_name: 'my_range_key',
-              key_type:       'RANGE'
+              attribute_name: "my_range_key",
+              key_type:       "RANGE"
             }
           ],
           projection: {
@@ -73,20 +79,46 @@ describe Dynameister::TableDefinition do
           }
         },
         {
-          index_name: 'my_index2',
+          index_name: "my_index2",
           key_schema: [
             {
-              attribute_name: 'my_hash_key',
-              key_type:       'HASH'
+              attribute_name: "my_hash_key",
+              key_type:       "HASH"
             },
             {
-              attribute_name: 'my_other_range_key',
-              key_type:       'RANGE'
+              attribute_name: "my_other_range_key",
+              key_type:       "RANGE"
             }
           ],
           projection: {
             projection_type: "KEYS_ONLY",
             non_key_attributes: []
+          }
+        }
+      ]
+    end
+
+    let(:expected_global_secondary_indexes) do
+      [
+        {
+          index_name: "my_global_index1",
+          key_schema: [
+            {
+              attribute_name: "my_hash_key",
+              key_type:       "HASH"
+            },
+            {
+              attribute_name: "my_range_key",
+              key_type:       "RANGE"
+            }
+          ],
+          projection: {
+            projection_type: "ALL",
+            non_key_attributes: []
+          },
+          provisioned_throughput: {
+            read_capacity_units: 1,
+            write_capacity_units: 1
           }
         }
       ]
@@ -118,16 +150,23 @@ describe Dynameister::TableDefinition do
       expect(subject[:local_secondary_indexes]).to eq(expected_local_secondary_indexes)
     end
 
+    it "includes the global secondary indexes" do
+      expect(subject[:global_secondary_indexes]).to eq(expected_global_secondary_indexes)
+    end
+
     context "when there are more than five local secondary indexes" do
       let(:local_indexes) do
-        [
-          { name: 'my_index1', range_key: range_key, projection: :all },
-          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-          { name: 'my_index2', range_key: other_range_key, projection: :keys_only },
-          { name: 'my_index2', range_key: other_range_key, projection: :keys_only }
-        ]
+        Array.new(6, { name: "my_index2", range_key: other_range_key, projection: :keys_only })
+      end
+
+      it "raises an ArgumentError" do
+        expect { subject }.to raise_exception(ArgumentError)
+      end
+    end
+
+    context "when there are more than five global secondary indexes" do
+      let(:global_indexes) do
+        Array.new(6, { name: "my_index1", hash_key: hash_key, range_key: other_range_key, projection: :keys_only, throughput: [2,3] })
       end
 
       it "raises an ArgumentError" do
@@ -139,21 +178,21 @@ describe Dynameister::TableDefinition do
       let(:included_attribute_keys) { [ :attribute1, :attribute2 ] }
       let(:local_indexes) do
         [
-          { name: 'my_index1', range_key: range_key, projection: included_attribute_keys },
+          { name: "my_index1", range_key: range_key, projection: included_attribute_keys },
         ]
       end
       let(:expected_local_secondary_indexes) do
         [
           {
-            index_name: 'my_index1',
+            index_name: "my_index1",
             key_schema: [
               {
-                attribute_name: 'my_hash_key',
-                key_type:       'HASH'
+                attribute_name: "my_hash_key",
+                key_type:       "HASH"
               },
               {
-                attribute_name: 'my_range_key',
-                key_type:       'RANGE'
+                attribute_name: "my_range_key",
+                key_type:       "RANGE"
               }
             ],
             projection: {

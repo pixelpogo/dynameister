@@ -9,6 +9,7 @@ module Dynameister
       options[:read_capacity]  ||= Dynameister.read_capacity
       options[:write_capacity] ||= Dynameister.write_capacity
       options[:local_indexes]  ||= {}
+      options[:global_indexes] ||= {}
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
       table            = aws_resource.create_table(table_definition)
