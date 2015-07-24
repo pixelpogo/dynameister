@@ -42,17 +42,32 @@ module Dynameister
     end
 
     def attribute_definitions
-      elements_for :attribute_definitions
+      elements_for(:attribute_definitions) + other_attribute_definitions
+    end
+
+    def other_attribute_definitions
+      options.fetch(:other_attributes, []).inject([]) do |memo, element|
+        memo << attribute_definitions_element(element)
+      end
     end
 
     def elements_for(type)
       hash_key, range_key = options.values_at(:hash_key, :range_key)
-      method = "#{type}_element".to_sym
 
-      [
-        send(method, hash_key, :hash),
-        (send(method, range_key, :range) if range_key)
-      ].compact
+      case type
+      when :attribute_definitions
+        [
+          attribute_definitions_element(hash_key),
+          (attribute_definitions_element(range_key) if range_key),
+        ].compact
+      when :key_schema
+        [
+          key_schema_element(hash_key, :hash),
+          (key_schema_element(range_key, :range) if range_key),
+        ].compact
+      else
+        []
+      end
     end
 
     def key_schema_element(desc, key_type)
@@ -64,11 +79,11 @@ module Dynameister
       }
     end
 
-    def attribute_definitions_element(desc, key_type)
+    def attribute_definitions_element(desc)
       (name, type) = desc.to_a.first
 
       unless [:string, :number, :binary].include?(type)
-        msg = "Invalid #{key_type} key type, expected :string, :number or :binary."
+        msg = "Invalid #{type} key type, expected :string, :number or :binary."
         raise ArgumentError, msg
       end
 
