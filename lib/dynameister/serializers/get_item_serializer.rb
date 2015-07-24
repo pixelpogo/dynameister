@@ -4,16 +4,23 @@ module Dynameister
 
     class GetItemSerializer
 
-      def initialize(table_name:, hash_key:)
+      def initialize(table_name:, hash_key:, range_key: nil)
         @table_name = table_name
         @hash_key   = hash_key
+        @range_key  = range_key
       end
 
       def to_h
         {
           table_name: @table_name,
-          key:        @hash_key
+          key:        key
         }
+      end
+
+      private
+
+      def key
+        @hash_key.merge(@range_key || {})
       end
 
     end
