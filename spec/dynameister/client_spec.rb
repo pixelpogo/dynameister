@@ -118,7 +118,6 @@ describe Dynameister::Client do
 
   describe "#get_item" do
 
-    let(:table)          { client.create_table(table_name: table_name) }
     let(:hash_key)       { { id: "123" } }
     let(:item)           { hash_key.merge({ user: "john doe", skills: ["ruby", "html", "javascript"] }) }
     let(:expected_item)  { item.stringify_keys }
@@ -135,10 +134,16 @@ describe Dynameister::Client do
       table.delete
     end
 
-    it "retrieves the item" do
-      expect(
-        client.get_item(table_name: table_name, hash_key: hash_key).item
-      ).to eq(expected_item)
+    context "for a hash key only table" do
+
+      let(:table) { client.create_table(table_name: table_name) }
+
+      it "retrieves the item" do
+        expect(
+          client.get_item(table_name: table_name, hash_key: hash_key).item
+        ).to eq(expected_item)
+      end
+
     end
 
   end
