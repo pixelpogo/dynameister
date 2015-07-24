@@ -146,6 +146,19 @@ describe Dynameister::Client do
 
     end
 
+    context "for a hash and range key table" do
+
+      let(:table)     { client.create_table(table_name: table_name, options: { range_key: { user: :string } }) }
+      let(:range_key) { { user: "john doe" } }
+
+      it "retrieves the item" do
+        expect(
+          client.get_item(table_name: table_name, hash_key: hash_key, range_key: range_key).item
+        ).to eq(expected_item)
+      end
+
+    end
+
   end
 
   describe "#put_item" do

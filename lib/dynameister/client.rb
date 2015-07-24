@@ -29,8 +29,8 @@ module Dynameister
       end
     end
 
-    def get_item(table_name:, hash_key:)
-      serialized = Dynameister::Serializers::GetItemSerializer.new(table_name: table_name, hash_key: hash_key)
+    def get_item(table_name:, hash_key:, range_key: nil)
+      serialized = Dynameister::Serializers::GetItemSerializer.new(table_name: table_name, hash_key: hash_key, range_key: range_key)
       aws_client.get_item(serialized.to_h)
     end
 
