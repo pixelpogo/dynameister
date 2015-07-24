@@ -30,17 +30,27 @@ module Dynameister
     end
 
     def get_item(table_name:, hash_key:, range_key: nil)
-      serialized = Dynameister::Serializers::GetItemSerializer.new(table_name: table_name, hash_key: hash_key, range_key: range_key)
+      serialized = Dynameister::Serializers::GetItemSerializer.new(
+                    table_name: table_name,
+                    hash_key:   hash_key,
+                    range_key:  range_key)
+
       aws_client.get_item(serialized.to_h)
     end
 
     def put_item(table_name:, item:)
-      serialized = Dynameister::Serializers::PutItemSerializer.new(table_name: table_name, item: item)
+      serialized = Dynameister::Serializers::PutItemSerializer.new(
+                    table_name: table_name,
+                    item:       item)
+
       aws_client.put_item(serialized.to_h)
     end
 
     def delete_item(table_name:, hash_key:)
-      serialized = Dynameister::Serializers::DeleteItemSerializer.new(table_name: table_name, hash_key: hash_key)
+      serialized = Dynameister::Serializers::DeleteItemSerializer.new(
+                    table_name: table_name,
+                    hash_key:   hash_key)
+
       aws_client.delete_item(serialized.to_h)
     end
 
