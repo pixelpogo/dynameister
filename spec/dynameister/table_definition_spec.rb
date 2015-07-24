@@ -42,6 +42,10 @@ describe Dynameister::TableDefinition do
         {
           attribute_name: "my_range_key",
           attribute_type: "N"
+        },
+        {
+          attribute_name: "my_other_range_key", # added via a local index
+          attribute_type: "S"
         }
       ]
     end
@@ -239,6 +243,33 @@ describe Dynameister::TableDefinition do
           expect(subject[:local_secondary_indexes]).to eq(expected_local_secondary_indexes)
         end
       end
+
+      context "when local secondary indexes use a different range key" do
+        let(:local_indexes_with_other_range_key) do
+          [ { name: 'index3',  range_key: { my_attribute: :string }, projection: :all } ]
+        end
+        let(:options) do
+          {
+            hash_key: hash_key,
+            range_key: range_key,
+            read_capacity:  capacity,
+            write_capacity: capacity,
+            local_indexes: local_indexes_with_other_range_key
+          }
+        end
+
+        let(:expected_other_range_key) do
+          {
+            attribute_name: "my_attribute",
+            attribute_type: "S"
+          }
+        end
+
+        it "includes them in the attributes definitions" do
+          expect(subject[:attribute_definitions]).to include(expected_other_range_key)
+        end
+      end
+
     end
   end
 

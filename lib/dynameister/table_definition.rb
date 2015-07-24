@@ -46,7 +46,7 @@ module Dynameister
     end
 
     def other_attribute_definitions
-      options.fetch(:other_attributes, []).inject([]) do |memo, element|
+      range_keys_for_local_indexes.inject([]) do |memo, element|
         memo << attribute_definitions_element(element)
       end
     end
@@ -171,6 +171,12 @@ module Dynameister
         attribute_name: index[:hash_key].keys.first.to_s,
         key_type: 'HASH'
       }
+    end
+
+    def range_keys_for_local_indexes
+      options[:local_indexes].map { |index| index[:range_key] }.reject do |range_key|
+        range_key == options[:range_key]
+      end
     end
   end
 
