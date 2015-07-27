@@ -9,7 +9,7 @@
   - [x] scan
   - [x] query
 - [ ] Support for new pagination that is built in to the AWS SDK
-- [ ] Support for local/global secondary indexes
+- [x] Support for local/global secondary indexes
 - [ ] Support for streams
 - [ ] Create model layer
   - [ ] Break down this huge topic into subtasks
