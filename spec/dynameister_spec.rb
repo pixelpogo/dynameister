@@ -14,4 +14,35 @@ describe Dynameister do
   its(:read_capacity)  { is_expected.to eq(capacity) }
   its(:write_capacity) { is_expected.to eq(capacity) }
 
+  context "when configuration is set on different threads" do
+
+    let(:thread_1_capacity) { 2 }
+    let(:thread_2_capacity) { 9 }
+
+    let(:thread_1) do
+      Thread.new(thread_1_capacity) do |capacity|
+        Dynameister.configure { |config| config.read_capacity capacity }
+
+        Dynameister.read_capacity
+      end
+    end
+
+    let(:thread_2) do
+      Thread.new(thread_2_capacity) do |capacity|
+        Dynameister.configure { |config| config.read_capacity capacity }
+
+        Dynameister.read_capacity
+      end
+    end
+
+    it "sets the proper configuration on thread 1" do
+      expect(thread_1.value).to eq(thread_1_capacity)
+    end
+
+    it "sets the proper configuration on thread 2" do
+      expect(thread_2.value).to eq(thread_2_capacity)
+    end
+
+  end
+
 end
