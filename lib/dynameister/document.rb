@@ -17,6 +17,7 @@ module Dynameister
     end
 
     def initialize(attributes={})
+      @attributes = {}
       load attributes
     end
 

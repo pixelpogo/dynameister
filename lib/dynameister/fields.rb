@@ -3,7 +3,8 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :attributes
+#      class_attribute :attributes, instance_accessor: false
+      class_attribute :attributes, instance_accessor: false
       self.attributes = {}
     end
 
@@ -18,6 +19,7 @@ module Dynameister
         define_method(method_name) { read_attribute(method_name) }
         define_method("#{method_name}=") { |value| write_attribute(method_name, value) }
       end
+
     end
 
     attr_accessor :attributes
@@ -25,11 +27,11 @@ module Dynameister
     private
 
     def write_attribute(name, value)
-      attributes[name] = value
+      attributes[name.to_sym] = value
     end
 
     def read_attribute(name)
-      attributes[name]
+      attributes[name.to_sym]
     end
   end
 end
