@@ -12,6 +12,9 @@ module Dynameister
       def field(name, type = :string, options = {})
         method_name = name.to_s
 
+        field_attributes = { name => { type: type }.merge(options) }
+        self.attributes  = attributes.merge(field_attributes)
+
         define_method(method_name) { }
       end
 
