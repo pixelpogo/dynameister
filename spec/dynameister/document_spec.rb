@@ -2,12 +2,13 @@ require_relative "../app/models/language"
 
 describe Dynameister::Document do
 
-  let(:language) { Language.new  }
+  context "fields" do
 
-  it "has an attribute named locale" do
-    expect(language).to respond_to(:locale)
+    subject { Language.new }
+
+    it { is_expected.to respond_to(:locale) }
+    it { is_expected.to respond_to(:displayable) }
+
   end
-
-  # its { is_expected.to respond_to(:displayable) }
 
 end
