@@ -2,19 +2,32 @@ require_relative "../app/models/language"
 
 describe Dynameister::Document do
 
-  context "fields" do
+  let(:table_name) { "languages"}
 
-    subject { Language.new }
+  after { Dynameister::Client.new.delete_table table_name: table_name }
 
-    it { is_expected.to respond_to(:locale) }
-    it { is_expected.to respond_to(:displayable) }
+  subject { Language.new(locale: "GER") }
 
-    context "attributes" do
+  its(:locale) { is_expected.to eq("GER") }
 
-      subject { Language.new.attributes }
+  context "defaults for model" do
 
-      its(:keys)   { is_expected.to include(:locale, :displayable) }
-      its(:values) { is_expected.to eq([{ type: :string }, { type: :boolean }]) }
+    subject { Language }
+
+    its(:table_name) { is_expected.to eq(table_name) }
+
+  end
+
+  context "object initialization" do
+
+    before { subject.save }
+
+    it "creates the table for the object" do
+      expect(Dynameister::Client.new.table_names).to include(table_name)
+    end
+
+    it "does not create an additional table if it already exists" do
+      expect{ subject.save }.not_to raise_exception
 
     end
 

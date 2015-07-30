@@ -15,9 +15,21 @@ module Dynameister
         field_attributes = { name => { type: type }.merge(options) }
         self.attributes  = attributes.merge(field_attributes)
 
-        define_method(method_name) { }
+        define_method(method_name) { read_attribute(method_name) }
+        define_method("#{method_name}=") { |value| write_attribute(method_name, value) }
       end
+    end
 
+    attr_accessor :attributes
+
+    private
+
+    def write_attribute(name, value)
+      attributes[name] = value
+    end
+
+    def read_attribute(name)
+      attributes[name]
     end
   end
 end
