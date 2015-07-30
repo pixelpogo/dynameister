@@ -2,6 +2,8 @@ require "dynameister/client"
 require "dynameister/serializers"
 require "dynameister/table_definition"
 require "dynameister/version"
+require "dynameister/document"
+require "dynameister/fields"
 
 module Dynameister
 
