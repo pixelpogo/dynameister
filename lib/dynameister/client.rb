@@ -75,9 +75,11 @@ module Dynameister
     private
 
     def aws_client_options
-      # TODO: Decide how to handle the configuration of endpoint and region
-      #       for development and production.
-      true ? { endpoint: ENV['DYNAMEISTER_ENDPOINT'] } : {}
+      if %w(ci test).include?(ENV['DYNAMEISTER_ENV'])
+        { endpoint: ENV['DYNAMEISTER_ENDPOINT'] }
+      else
+        {}
+      end
     end
 
   end
