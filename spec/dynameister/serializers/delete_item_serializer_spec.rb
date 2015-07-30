@@ -1,4 +1,5 @@
 require_relative "../../../lib/dynameister/serializers/delete_item_serializer.rb"
+require_relative "shared_examples_for_serializers.rb"
 
 describe Dynameister::Serializers::DeleteItemSerializer do
 
@@ -7,14 +8,23 @@ describe Dynameister::Serializers::DeleteItemSerializer do
 
   describe "#to_h" do
 
-    subject { described_class.new(table_name: table_name, hash_key: hash_key).to_h }
+    let(:options) { { table_name: table_name, hash_key: hash_key } }
 
-    it "includes table_name" do
-      expect(subject).to include(table_name: table_name)
-    end
+    subject { described_class.new(options).to_h }
 
-    it "includes the hash_key" do
-      expect(subject).to include(key: hash_key)
+    it_behaves_like "a serializer that includes table name and hash key"
+
+    context "with an additional range key given" do
+
+      let(:range_key) { { user: "john doe" } }
+      let(:options)   { { table_name: table_name, hash_key: hash_key, range_key: range_key } }
+
+      it_behaves_like "a serializer that includes table name and hash key"
+
+      it "includes the range_key" do
+        expect(subject[:key]).to include(range_key)
+      end
+
     end
 
   end

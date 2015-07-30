@@ -235,10 +235,8 @@ describe Dynameister::Client do
 
     let(:hash_key) { { id: "123" } }
     let(:item)     { hash_key.merge({ user: "john doe", skills: ["ruby", "html", "javascript"] }) }
-    let(:table)    { client.create_table(table_name: table_name) }
 
     let(:put_hash) { { table_name: table_name, item: item } }
-    let(:get_hash) { { table_name: table_name, key:  hash_key } }
 
     before :each do
       table
@@ -250,12 +248,36 @@ describe Dynameister::Client do
       table.delete
     end
 
-    it "deletes the item" do
-      client.delete_item(table_name: table_name, hash_key: hash_key)
+    context "for a hash key only table" do
 
-      expect(
-        client.aws_client.get_item(get_hash).item
-      ).to be_nil
+      let(:table)    { client.create_table(table_name: table_name) }
+      let(:get_hash) { { table_name: table_name, key: hash_key } }
+
+      it "deletes the item" do
+        client.delete_item(table_name: table_name, hash_key: hash_key)
+
+        expect(
+          client.aws_client.get_item(get_hash).item
+        ).to be_nil
+      end
+
+    end
+
+    context "for a hash and range key table" do
+
+      let(:table)     { client.create_table(table_name: table_name, options: { range_key: { user: :string } }) }
+      let(:range_key) { { user: "john doe" } }
+
+      let(:get_hash)  { { table_name: table_name, key: hash_key.merge(range_key) } }
+
+      it "deletes the item" do
+        client.delete_item(table_name: table_name, hash_key: hash_key, range_key: range_key)
+
+        expect(
+          client.aws_client.get_item(get_hash).item
+        ).to be_nil
+      end
+
     end
 
   end
