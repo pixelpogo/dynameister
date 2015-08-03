@@ -3,8 +3,7 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
-#      class_attribute :attributes, instance_accessor: false
-      class_attribute :attributes, instance_accessor: false
+      class_attribute :attributes
       self.attributes = {}
     end
 

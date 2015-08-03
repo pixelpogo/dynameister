@@ -14,11 +14,35 @@ module Dynameister
         @client ||= Dynameister::Client.new
       end
 
+      def undump( attrs = nil)
+        attrs = (attrs || {}).symbolize_keys
+        Hash.new.tap do |hash|
+          self.attributes.each do |attribute, options|
+            hash[attribute] = undump_field(attrs[attribute], options)
+          end
+          attrs.each {|attribute, value| hash[attribute] = value unless hash.has_key? attribute }
+        end
+      end
+
+      def undump_field(value, options)
+
+        return if value.nil?
+
+        case options[:type]
+        when :string
+          value.to_s
+        when :integer
+          value.to_i
+        when :boolean
+          value
+        end
+      end
+
     end
 
-    def initialize(attributes={})
-      @attributes = {}
-      load attributes
+    def initialize(attrs = {})
+      @attributes ||= {}
+      load attrs
     end
 
     def save
@@ -28,7 +52,7 @@ module Dynameister
     private
 
     def load(attributes)
-      attributes.each do |key, value|
+      self.class.undump(attributes).each do |key, value|
         send "#{key}=", value
       end
     end
@@ -42,4 +66,5 @@ module Dynameister
     end
 
   end
+
 end

@@ -10,10 +10,9 @@ describe Dynameister::Fields do
 
   context "attributes" do
 
-    subject { Language.new.attributes }
+    subject { Language }
 
-    its(:keys)   { is_expected.to include(:locale, :displayable) }
-    its(:values) { is_expected.to eq([{ type: :string }, { type: :boolean }]) }
+    its(:attributes) { is_expected.to eq( { locale: { type: :string }, displayable: { type: :boolean } } ) }
 
   end
 
