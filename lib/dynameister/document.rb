@@ -16,13 +16,12 @@ module Dynameister
         @client ||= Dynameister::Client.new
       end
 
-      def undump(attrs = nil)
-        attrs = (attrs || {}).symbolize_keys
-        Hash.new.tap do |hash|
-          self.attributes.each do |attribute, options|
-            hash[attribute] = undump_field(attrs[attribute], options)
+      def expanded(assigned = nil)
+        assigned = (assigned || {}).symbolize_keys
+        {}.tap do |hash|
+          self.attributes.each do |attribute, _|
+            hash[attribute] = assigned[attribute]
           end
-          attrs.each { |attribute, value| hash[attribute] = value unless hash.has_key? attribute }
         end
       end
 
@@ -32,20 +31,6 @@ module Dynameister
 
       def table_exists?
         client.table_names.include? table_name
-      end
-
-      def undump_field(value, options)
-
-        return if value.nil?
-
-        case options[:type]
-        when :string
-          value.to_s
-        when :integer
-          value.to_i
-        when :boolean
-          value
-        end
       end
 
       def create(attrs = {})
@@ -73,6 +58,7 @@ module Dynameister
       persist
     end
 
+    #TODO: Add support for non-default hash key
     def delete
       client.delete_item(table_name: table_name, hash_key: { id: self.id })
     end
@@ -80,7 +66,7 @@ module Dynameister
     private
 
     def load(attributes)
-      self.class.undump(attributes).each do |key, value|
+      self.class.expanded(attributes).each do |key, value|
         send "#{key}=", value
       end
     end

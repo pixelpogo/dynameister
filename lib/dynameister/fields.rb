@@ -6,6 +6,7 @@ module Dynameister
       class_attribute :attributes
       self.attributes = {}
 
+      #TODO: default for hash key, add option to override
       field :id
     end
 
@@ -30,7 +31,7 @@ module Dynameister
         attributes.each do |attribute, value|
           self.write_attribute(attribute, value)
         end
-      save
+        save
       end
     end
 
@@ -43,5 +44,7 @@ module Dynameister
     def read_attribute(name)
       attributes[name.to_sym]
     end
+
   end
 end
+
