@@ -3,8 +3,9 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :attributes
+      class_attribute :attributes, :options
       self.attributes = {}
+      self.options = {}
 
       #TODO: default for hash key, add option to override
       field :id
@@ -29,17 +30,18 @@ module Dynameister
     def update_attributes(attributes)
       unless attributes.nil? || attributes.empty?
         attributes.each do |attribute, value|
-          self.write_attribute(attribute, value)
+          write_attribute(attribute, value)
         end
         save
       end
     end
 
+
+    private
+
     def write_attribute(name, value)
       attributes[name.to_sym] = value
     end
-
-    private
 
     def read_attribute(name)
       attributes[name.to_sym]
