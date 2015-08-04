@@ -3,4 +3,6 @@ class Language
 
   field :locale
   field :displayable, :boolean
+  field :rank, :integer
 end
+

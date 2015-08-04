@@ -5,6 +5,8 @@ module Dynameister
     included do
       class_attribute :attributes
       self.attributes = {}
+
+      field :id
     end
 
     module ClassMethods
@@ -23,11 +25,20 @@ module Dynameister
 
     attr_accessor :attributes
 
-    private
+    def update_attributes(attributes)
+      unless attributes.nil? || attributes.empty?
+        attributes.each do |attribute, value|
+          self.write_attribute(attribute, value)
+        end
+      save
+      end
+    end
 
     def write_attribute(name, value)
       attributes[name.to_sym] = value
     end
+
+    private
 
     def read_attribute(name)
       attributes[name.to_sym]
