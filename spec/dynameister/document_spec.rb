@@ -61,7 +61,6 @@ describe Dynameister::Document do
 
     context "updating a language" do
 
-      #TODO: fix id and hash_key stuff
       subject { language.update_attributes(locale: "my_locale", rank: 99) }
 
       its(:locale) { is_expected.to eq("my_locale") }
@@ -82,9 +81,9 @@ describe Dynameister::Document do
         language.delete
         expect(subject).to be_nil
       end
+
     end
 
   end
-
 
 end

@@ -93,8 +93,9 @@ module Dynameister
       self.class.table_name
     end
 
+    #TODO: fix id and hash_key stuff
     def persist
-      self.id = SecureRandom.uuid
+      self.id = SecureRandom.uuid unless self.id
       client.put_item(table_name: table_name, item: self.attributes)
       self
     end
