@@ -1,3 +1,5 @@
+require 'securerandom'
+
 module Dynameister
   module Persistence
     extend ActiveSupport::Concern
