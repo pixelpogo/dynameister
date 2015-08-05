@@ -10,7 +10,7 @@ describe Dynameister::Finders do
     Dynameister::Client.new.delete_table table_name: table_name
   end
 
-  context "fetching a document" do
+  describe "fetching a document" do
 
     subject { Language.find_by(hash_key: { id: language.id }) }
 

@@ -8,7 +8,7 @@ describe Dynameister::Fields do
   it { is_expected.to respond_to(:rank) }
   it { is_expected.to respond_to(:displayable) }
 
-  context "class level attributes with type definition" do
+  describe "class level attributes with type definition" do
 
     subject { Language }
 
@@ -24,7 +24,7 @@ describe Dynameister::Fields do
 
   end
 
-  context "updating a document" do
+  describe "updating a document" do
 
     let!(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
 
@@ -40,7 +40,7 @@ describe Dynameister::Fields do
 
   end
 
-  context "hash key" do
+  describe "hash key" do
 
     subject { Language.new(id: "my_hash_key") }
 

@@ -8,7 +8,7 @@ describe Dynameister::Persistence do
     Dynameister::Client.new.delete_table table_name: table_name
   end
 
-  context "defaults for model" do
+  describe "defaults for model" do
 
     subject { Language }
 
@@ -16,7 +16,7 @@ describe Dynameister::Persistence do
 
   end
 
-  context "creating a document" do
+  describe "creating a document" do
 
     subject! { Language.create(locale: "JPN") }
 
@@ -35,7 +35,7 @@ describe Dynameister::Persistence do
   end
 
 
-  context "deleting a document" do
+  describe "deleting a document" do
 
     let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
 
