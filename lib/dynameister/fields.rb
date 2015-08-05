@@ -19,8 +19,12 @@ module Dynameister
         field_attributes = { name => { type: type }.merge(options) }
         self.attributes  = attributes.merge(field_attributes)
 
-        define_method(method_name) { read_attribute(method_name) }
+        define_method(method_name)       { read_attribute(method_name) }
         define_method("#{method_name}=") { |value| write_attribute(method_name, value) }
+      end
+
+      def hash_key
+        options[:key] || :id
       end
 
     end
@@ -36,6 +40,13 @@ module Dynameister
       end
     end
 
+    def hash_key
+      send(self.class.hash_key)
+    end
+
+    def hash_key=(value)
+      self.send("#{self.class.hash_key}=", value)
+    end
 
     private
 

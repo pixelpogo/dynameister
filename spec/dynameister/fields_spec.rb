@@ -25,5 +25,17 @@ describe Dynameister::Fields do
 
   end
 
+  context "hash key" do
+
+    subject { Language.new(id: "my_hash_key") }
+
+    it "has a default hash key" do
+      expect(subject.hash_key).to eq "my_hash_key"
+    end
+
+    xit "can be overriden" do
+    end
+  end
+
 end
 

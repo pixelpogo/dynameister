@@ -4,6 +4,7 @@ module Dynameister
   module Document
     extend ActiveSupport::Concern
 
+    include Dynameister::Finders
     include Dynameister::Fields
 
     module ClassMethods
@@ -18,10 +19,9 @@ module Dynameister
 
       def expanded(assigned = nil)
         assigned = (assigned || {}).symbolize_keys
-        {}.tap do |hash|
-          self.attributes.each do |attribute, _|
-            hash[attribute] = assigned[attribute]
-          end
+        self.attributes.inject({}) do |hash, (attribute, _)|
+          hash[attribute] = assigned[attribute]
+          hash
         end
       end
 
@@ -34,33 +34,25 @@ module Dynameister
       end
 
       def create(attrs = {})
-        new(attrs).tap(&:save)
-      end
-
-      def find_by(hash_key:)
-        retrieved = client.get_item(table_name: table_name, hash_key: hash_key)
-        if retrieved.empty?
-          nil
-        else
-          new(retrieved.item)
-        end
+        new(attrs).save
       end
 
     end
 
     def initialize(attrs = {})
-      @attributes ||= {}
+      @attributes = {}
       load attrs
     end
 
     def save
       self.class.create_table
       persist
+      self
     end
 
-    #TODO: Add support for non-default hash key
     def delete
-      client.delete_item(table_name: table_name, hash_key: { id: self.id })
+      params = { self.class.hash_key => hash_key }
+      client.delete_item(table_name: table_name, hash_key: params )
     end
 
     private
@@ -79,11 +71,9 @@ module Dynameister
       self.class.table_name
     end
 
-    #TODO: fix id and hash_key stuff
     def persist
-      self.id = SecureRandom.uuid unless self.id
+      self.hash_key ||= SecureRandom.uuid unless self.hash_key
       client.put_item(table_name: table_name, item: self.attributes)
-      self
     end
 
   end

@@ -4,7 +4,9 @@ describe Dynameister::Document do
 
   let(:table_name) { "languages"}
 
-  after { Dynameister::Client.new.delete_table table_name: table_name }
+  after do
+    Dynameister::Client.new.delete_table table_name: table_name
+  end
 
   subject { Language.new(locale: "GER", displayable: true, rank: 42) }
 
@@ -46,11 +48,11 @@ describe Dynameister::Document do
 
     end
 
-    context "fetching a language document" do
+    context "fetching a document" do
 
       subject { Language.find_by(hash_key: { id: language.id }) }
 
-      it "returns an instance of language" do
+      it "returns an instance of document" do
         expect(subject).to be_an_instance_of(Language)
       end
 
@@ -59,12 +61,12 @@ describe Dynameister::Document do
       end
     end
 
-    context "updating a language" do
+    context "updating a document" do
 
       subject { language.update_attributes(locale: "my_locale", rank: 99) }
 
       its(:locale) { is_expected.to eq("my_locale") }
-      its(:rank) { is_expected.to eq(99) }
+      its(:rank)   { is_expected.to eq(99) }
 
       it "persists the modified data" do
         item = Language.find_by(hash_key: { id: subject.id })
@@ -73,13 +75,12 @@ describe Dynameister::Document do
 
     end
 
-    context "deleting a language" do
+    context "deleting a document" do
 
-      subject { Language.find_by(hash_key: { id: language.id }) }
+      subject! { language.delete }
 
       it "deletes the record of the language object" do
-        language.delete
-        expect(subject).to be_nil
+        expect(Language.find_by(hash_key: { id: language.id })).to be_nil
       end
 
     end
