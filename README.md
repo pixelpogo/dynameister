@@ -26,6 +26,20 @@ Or install it yourself as:
 
 TODO: Write usage instructions here
 
+### Turn your Model into a Document
+
+Dynameister currently only supports defaults for table name, and hash_key. The default for hash_key is the :id columen, which does not have to be declared seperately. Include the module in your model definition. On first time model creation, it will also create the table for the model for you. Add fields to the model, for easy convenience methods on the attributes.
+
+```ruby
+class Cat
+  include Dynameister::Document
+
+  field :name
+  field :age, :integer
+  field :likes_mice, :boolean
+end
+```
+
 ## Testing
 
 1. Copy `spec/.env.test.template` to `spec/.env.test`,
