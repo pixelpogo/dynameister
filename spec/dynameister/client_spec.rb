@@ -21,7 +21,7 @@ describe Dynameister::Client do
                           options:    table_options)
     end
 
-    after :each do
+    after do
       table.delete
     end
 
@@ -98,7 +98,7 @@ describe Dynameister::Client do
 
     context "with a preexisting table" do
 
-      before :each do
+      before do
         client.create_table(table_name: table_name)
       end
 
@@ -124,13 +124,13 @@ describe Dynameister::Client do
 
     let(:put_hash) { { table_name: table_name, item: item } }
 
-    before :each do
+    before do
       table
 
       client.aws_client.put_item(put_hash)
     end
 
-    after :each do
+    after do
       table.delete
     end
 
@@ -169,11 +169,11 @@ describe Dynameister::Client do
 
     let(:get_hash) { { table_name: table_name, key: { id: "123" } } }
 
-    before :each do
+    before do
       table
     end
 
-    after :each do
+    after do
       table.delete
     end
 

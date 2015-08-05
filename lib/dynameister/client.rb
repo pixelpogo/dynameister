@@ -72,6 +72,10 @@ module Dynameister
       @@aws_resource ||= Aws::DynamoDB::Resource.new(client: aws_client)
     end
 
+    def table_names
+      aws_client.list_tables.table_names
+    end
+
     private
 
     def aws_client_options
