@@ -5,8 +5,9 @@ require "dynameister/serializers"
 require "dynameister/table_definition"
 require "dynameister/version"
 
-require "dynameister/finders"
 require "dynameister/fields"
+require "dynameister/finders"
+require "dynameister/persistence"
 require "dynameister/document"
 
 
