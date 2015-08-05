@@ -5,7 +5,7 @@ module Dynameister
     included do
       class_attribute :attributes, :options
       self.attributes = {}
-      self.options = {}
+      self.options    = {}
 
       #TODO: default for hash key, add option to override
       field :id
