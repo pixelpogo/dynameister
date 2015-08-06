@@ -2,13 +2,16 @@ require_relative "../app/models/language"
 
 describe Dynameister::Finders do
 
-  let(:table_name) { "languages"}
-
-  let!(:language) { Language.create(locale: "grumpy_cat") }
+  before { Language.create_table }
 
   after do
     Dynameister::Client.new.delete_table table_name: table_name
   end
+
+  let(:table_name) { "languages"}
+
+  let!(:language) { Language.create(locale: "grumpy_cat") }
+
 
   describe "fetching a document" do
 

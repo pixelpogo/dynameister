@@ -16,17 +16,25 @@ describe Dynameister::Persistence do
 
   end
 
-  describe "creating a document" do
+  describe "creating a table" do
 
-    subject! { Language.create(locale: "JPN") }
+    subject! { Language.create_table }
 
     it "creates the table for the object" do
       expect(Dynameister::Client.new.table_names).to include(table_name)
     end
 
     it "does not create an additional table if it already exists" do
-      expect{ subject.save }.not_to raise_exception
+      expect{ Language.create_table }.not_to raise_exception
     end
+
+  end
+
+  describe "creating a document" do
+
+    before { Language.create_table }
+
+    subject! { Language.create(locale: "JPN") }
 
     it "generates an uuid for the hash_key of the document" do
       expect(subject.id).not_to be_nil
@@ -36,6 +44,8 @@ describe Dynameister::Persistence do
 
 
   describe "deleting a document" do
+
+    before { Language.create_table }
 
     let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
 
