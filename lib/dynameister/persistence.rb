@@ -14,8 +14,11 @@ module Dynameister
         @client ||= Dynameister::Client.new
       end
 
-      def create_table
-        client.create_table(table_name: table_name) unless table_exists?
+      def create_table(hash_key: :id, options: {})
+        options[:hash_key] ||= { hash_key.to_sym => :string }
+        unless table_exists?
+          client.create_table(table_name: table_name, hash_key: hash_key, options: options)
+        end
       end
 
       def table_exists?

@@ -1,4 +1,5 @@
 require_relative "../app/models/language"
+require_relative "../app/models/cat"
 
 describe Dynameister::Fields do
 
@@ -50,13 +51,24 @@ describe Dynameister::Fields do
 
   describe "hash key" do
 
-    subject { Language.new(id: "my_hash_key") }
+    context "defaults" do
 
-    it "has a default hash key" do
-      expect(subject.hash_key).to eq "my_hash_key"
+      subject { Language.new(id: "my_hash_key") }
+
+      it "has id as the default hash key" do
+        expect(subject.hash_key).to eq "my_hash_key"
+      end
+
     end
 
-    xit "can be overriden" do
+    context "can be overriden" do
+
+      subject { Cat.new(name: "neko atsume") }
+
+      it "supports a custom hash key" do
+        expect(subject.hash_key).to eq "neko atsume"
+      end
+
     end
   end
 

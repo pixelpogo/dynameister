@@ -7,7 +7,6 @@ module Dynameister
       self.attributes = {}
       self.options    = {}
 
-      #TODO: default for hash key, add option to override
       field :id
     end
 
@@ -24,7 +23,22 @@ module Dynameister
       end
 
       def hash_key
-        options[:key] || :id
+        options[:hash_key] || :id
+      end
+
+      def table(options = {})
+        self.options = options
+        unless(attributes.has_key? hash_key)
+          remove_field :id
+          field(hash_key)
+        end
+      end
+
+      def remove_field(field)
+        field = field.to_sym
+        attributes.delete(field) or raise "No such field"
+        remove_method field
+        remove_method :"#{field}="
       end
 
     end
@@ -47,6 +61,16 @@ module Dynameister
     def hash_key=(value)
       self.send("#{self.class.hash_key}=", value)
     end
+
+    # def range_value
+    #   if range_key = self.class.range_key
+    #     self.send(range_key)
+    #   end
+    # end
+
+    # def range_value=(value)
+    #   self.send("#{self.class.range_key}=", value)
+    # end
 
     private
 
