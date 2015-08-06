@@ -28,7 +28,6 @@ module Dynameister
     end
 
     def save
-      self.class.create_table
       persist
       self
     end

@@ -2,6 +2,14 @@ require_relative "../app/models/language"
 
 describe Dynameister::Fields do
 
+  let(:table_name) { "languages" }
+
+  before { Language.create_table }
+
+  after do
+    Dynameister::Client.new.delete_table table_name: table_name
+  end
+
   subject { Language.new }
 
   it { is_expected.to respond_to(:locale) }
