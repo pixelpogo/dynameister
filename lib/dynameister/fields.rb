@@ -35,7 +35,6 @@ module Dynameister
       end
 
       def remove_field(field)
-        field = field.to_sym
         attributes.delete(field) or raise "No such field"
         remove_method field
         remove_method :"#{field}="
