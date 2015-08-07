@@ -62,16 +62,6 @@ module Dynameister
       self.send("#{self.class.hash_key}=", value)
     end
 
-    # def range_value
-    #   if range_key = self.class.range_key
-    #     self.send(range_key)
-    #   end
-    # end
-
-    # def range_value=(value)
-    #   self.send("#{self.class.range_key}=", value)
-    # end
-
     private
 
     def write_attribute(name, value)
