@@ -3,12 +3,11 @@ require_relative "../app/models/cat"
 
 describe Dynameister::Fields do
 
-  let(:table_name) { "languages" }
-
   before { Language.create_table }
 
   after do
-    Dynameister::Client.new.delete_table table_name: table_name
+    delete_table("languages")
+    delete_table("cats")
   end
 
   subject { Language.new }
@@ -63,6 +62,7 @@ describe Dynameister::Fields do
 
     context "can be overriden" do
 
+      before  { Cat.create_table }
       subject { Cat.new(name: "neko atsume") }
 
       it "supports a custom hash key" do
