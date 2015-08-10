@@ -69,6 +69,13 @@ class Cat
 end
 ```
 
+### Indexes
+
+TODO: write some documentation
+
+You can also define indexes on a field.
+
+
 ## Testing
 
 1. Copy `spec/.env.test.template` to `spec/.env.test`,

@@ -8,8 +8,9 @@ require "dynameister/version"
 require "dynameister/fields"
 require "dynameister/finders"
 require "dynameister/persistence"
-require "dynameister/document"
+require "dynameister/indexes"
 
+require "dynameister/document"
 
 module Dynameister
 
