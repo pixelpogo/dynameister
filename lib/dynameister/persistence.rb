@@ -7,7 +7,7 @@ module Dynameister
     module ClassMethods
 
       def table_name
-        name.demodulize.tableize
+        options.fetch(:table_name, name.demodulize.tableize)
       end
 
       def client
@@ -15,8 +15,15 @@ module Dynameister
       end
 
       def create_table(options: {})
+        options =
+        {
+          range_key:      self.range_key,
+          local_indexes:  self.local_indexes,
+          global_indexes: self.global_indexes,
+        }.merge(options)
+
         unless table_exists?
-          client.create_table(table_name: table_name, hash_key: self.hash_key, options: options)
+          client.create_table(table_name: self.table_name, hash_key: self.hash_key, options: options)
         end
       end
 

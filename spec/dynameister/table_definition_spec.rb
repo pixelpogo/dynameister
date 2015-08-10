@@ -79,7 +79,7 @@ describe Dynameister::TableDefinition do
           ],
           projection: {
             projection_type: "ALL",
-            non_key_attributes: []
+            non_key_attributes: nil
           }
         },
         {
@@ -96,7 +96,7 @@ describe Dynameister::TableDefinition do
           ],
           projection: {
             projection_type: "KEYS_ONLY",
-            non_key_attributes: []
+            non_key_attributes: nil
           }
         }
       ]
@@ -118,7 +118,7 @@ describe Dynameister::TableDefinition do
           ],
           projection: {
             projection_type: "ALL",
-            non_key_attributes: []
+            non_key_attributes: nil
           },
           provisioned_throughput: {
             read_capacity_units: 1,

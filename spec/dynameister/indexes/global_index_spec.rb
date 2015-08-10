@@ -1,6 +1,6 @@
 require_relative "../../app/models/cat.rb"
 
-describe Dynameister::Indexes::Index do
+describe Dynameister::Indexes::GlobalIndex do
 
   subject { described_class.new(Cat, [:name, :pet_food]) }
 
@@ -12,9 +12,7 @@ describe Dynameister::Indexes::Index do
     expect(subject.hash_keys).to eq([:name, :pet_food])
   end
 
- it "saves a model to its index" do
-   binding.pry
-   true
+ xit "saves a model to its index" do
  end
 
  xit "deletes a model from its index" do

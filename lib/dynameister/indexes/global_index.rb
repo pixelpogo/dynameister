@@ -1,6 +1,6 @@
 module Dynameister
   module Indexes
-    class Index
+    class GlobalIndex
 
       attr_accessor :model, :name, :hash_keys, :range_keys
 

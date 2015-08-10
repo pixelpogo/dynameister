@@ -144,7 +144,7 @@ module Dynameister
     end
 
     def projection_non_key_attributes_for(index)
-      return [] unless projection_type_for(index) == PROJECTION_TYPE[:include]
+      return nil unless projection_type_for(index) == PROJECTION_TYPE[:include]
 
       index[:projection].map(&:to_s)
     end

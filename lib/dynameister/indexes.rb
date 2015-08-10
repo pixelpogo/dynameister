@@ -1,4 +1,5 @@
-require 'dynameister/indexes/index'
+require "dynameister/indexes/global_index"
+require "dynameister/indexes/local_index"
 
 module Dynameister
 
@@ -6,23 +7,22 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :indexes
+      class_attribute :local_indexes, :global_indexes
 
-      self.indexes = {}
+      self.local_indexes  = []
+      self.global_indexes = []
     end
 
     module ClassMethods
 
-      def index(name, options = {})
-        index = Index.new(self, name, options)
-        self.indexes[index.name] = index
-        create_indexes
+      def local_index(range_key, options = {})
+        local_index = LocalIndex.new(self.range_key, options)
+        self.local_indexes << local_index.to_hash
       end
 
-      def create_indexes
-        self.indexes.each do |name, index|
-          self.create_table(opts)
-        end
+      def global_index(keys, options = {})
+        global_index = GlobalIndex.new(keys, options)
+        self.global_indexes[global_index.name] = global_index
       end
 
     end
