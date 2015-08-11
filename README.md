@@ -58,7 +58,7 @@ cat.id #=> "C43b9fe9-e264-4544-8e48-fa64c5eb5ddc"
 
 ### Custom Hash Key
 
-If you want to override the default hash_key, you can declare the hash_key on the model. This key also has to be part of the fields' declaration.
+If you want to override the default hash_key, you can declare the hash_key on the model. This key does not have to be part of the fields definiton, it is implicitly defined, when added as a hash_key. 
 
 ```ruby
 class Cat
@@ -66,7 +66,6 @@ class Cat
 
   table hash_key: :name
 
-  field :name
 end
 ```
 
