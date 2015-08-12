@@ -2,27 +2,45 @@ module Dynameister
   module Indexes
     class GlobalIndex
 
-      attr_accessor :model, :name, :hash_keys, :range_keys
+      GLOBAL_INDEX_PREFIX = "by_"
 
-      def initialize(model, name, options = {})
-        @model = model
-        @hash_keys = name
-        @range_keys = options[:range_key]
-        @name = combined_keys
+      attr_accessor :keys, :projection, :throughput
+
+      def initialize(keys, options = {})
+        @keys       = keys
+        @projection = options[:projection] || :all
+        @throughput = options[:throughput] || [1,1]
       end
 
-      def table_name
-        "index_#{model.table_name.singularize}_#{formatted_name}"
+      def to_hash
+        {
+          name:       name,
+          hash_key:   hash_key,
+          projection: projection,
+          throughput: throughput
+        }.merge(range_key)
       end
 
       private
 
-      def combined_keys
-        [hash_keys, range_keys].compact.flatten
+      def hash_key
+        { keys.first => :string }
       end
 
-      def formatted_name
-        name.map(&:to_s).map(&:pluralize).join('_and_')
+      def range_key
+        if keys.length > 1
+          { range_key: { keys.last => :number } }
+        else
+          {}
+        end
+      end
+
+      def name
+        GLOBAL_INDEX_PREFIX + combined_keys
+      end
+
+      def combined_keys
+        keys.map(&:to_s).map(&:pluralize).join('_and_')
       end
 
     end

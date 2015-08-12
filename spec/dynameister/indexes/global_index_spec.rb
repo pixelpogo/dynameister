@@ -1,25 +1,76 @@
-require_relative "../../app/models/cat.rb"
-
 describe Dynameister::Indexes::GlobalIndex do
 
-  subject { described_class.new(Cat, [:name, :pet_food]) }
+  let(:keys) { [:uuid, :created_at] }
 
-  it "forms a table name from the provided keys" do
-    expect(subject.table_name).to eq "index_cat_names_and_pet_foods"
+  context "default projection type" do
+
+    subject { described_class.new(keys) }
+
+    it "has a hash representation" do
+      expect(subject.to_hash).to eq(
+        {
+          name:       "by_uuids_and_created_ats",
+          hash_key:   { uuid: :string },
+          range_key:  { created_at: :number },
+          projection: :all,
+          throughput: [1,1]
+        }
+      )
+    end
+
   end
 
-  it "assigns itself hash keys" do
-    expect(subject.hash_keys).to eq([:name, :pet_food])
+  context "non-default projection type" do
+
+    subject { described_class.new(keys, { projection: :keys_only }) }
+
+    it "has a hash representation" do
+      expect(subject.to_hash).to eq(
+        {
+          name:       "by_uuids_and_created_ats",
+          hash_key:   { uuid: :string },
+          range_key:  { created_at: :number },
+          projection: :keys_only,
+          throughput: [1,1]
+        }
+      )
+    end
+
   end
 
- xit "saves a model to its index" do
- end
+  context "only providing a hash key" do
 
- xit "deletes a model from its index" do
- end
+    subject { described_class.new([:uuid]) }
 
- xit 'updates a model by removing it from its previous index and adding it to its new one' do
- end
+    it "has a hash representation" do
+      expect(subject.to_hash).to eq(
+        {
+          name:       "by_uuids",
+          hash_key:   { uuid: :string },
+          projection: :all,
+          throughput: [1,1]
+        }
+      )
+    end
+
+  end
+
+  context "non-default throughput" do
+
+    subject { described_class.new([:uuid], throughput: [2,3]) }
+
+    it "has a hash representation" do
+      expect(subject.to_hash).to eq(
+        {
+          name:       "by_uuids",
+          hash_key:   { uuid: :string },
+          projection: :all,
+          throughput: [2,3]
+        }
+      )
+    end
+
+  end
 
 end
 

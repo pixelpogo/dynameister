@@ -1,7 +1,6 @@
 describe Dynameister::Indexes::LocalIndex do
 
-  let(:range_key) {  :adopted_at }
-
+  let(:range_key) { :adopted_at }
 
   context "default projection type" do
 
@@ -34,8 +33,6 @@ describe Dynameister::Indexes::LocalIndex do
     end
 
   end
-
-
 
 end
 

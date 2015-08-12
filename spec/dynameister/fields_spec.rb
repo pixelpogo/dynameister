@@ -93,7 +93,7 @@ describe Dynameister::Fields do
     end
 
     it "adds the attribute name to the table key schema" do
-      expect(subject.attribute_name).to eq "adopted_at"
+      expect(subject.attribute_name).to eq "created_at"
     end
 
     it "adds the range key type to the table key schema" do

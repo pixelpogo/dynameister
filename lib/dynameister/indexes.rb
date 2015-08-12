@@ -22,7 +22,7 @@ module Dynameister
 
       def global_index(keys, options = {})
         global_index = GlobalIndex.new(keys, options)
-        self.global_indexes[global_index.name] = global_index
+        self.global_indexes << global_index.to_hash
       end
 
     end
