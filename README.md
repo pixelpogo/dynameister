@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ### Turn your Model into a Document
 
-Dynameister currently only supports defaults for table name, and hash_key. The default for hash_key is the :id column, which does not have to be declared separately. Include the module in your model definition. Add fields to the model, for easy convenience methods on the attributes.
+Dynameister currently only supports a default for the table name. The default for hash_key is the :id column, which does not have to be declared separately. Include the module in your model definition. Add fields to the model, for easy convenience methods on the attributes.
 
 ```ruby
 class Cat
@@ -54,6 +54,19 @@ Save saves the object in the previously created "cats" table. Also a unique iden
 
 ```ruby
 cat.id #=> "C43b9fe9-e264-4544-8e48-fa64c5eb5ddc"
+```
+
+### Custom Hash Key
+
+If you want to override the default hash_key, you can declare the hash_key on the model. This key does not have to be part of the fields definiton, it is implicitly defined, when added as a hash_key. 
+
+```ruby
+class Cat
+  include Dynameister::Document
+
+  table hash_key: :name
+
+end
 ```
 
 ## Testing

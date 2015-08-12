@@ -7,7 +7,6 @@ module Dynameister
       self.attributes = {}
       self.options    = {}
 
-      #TODO: default for hash key, add option to override
       field :id
     end
 
@@ -24,7 +23,21 @@ module Dynameister
       end
 
       def hash_key
-        options[:key] || :id
+        options[:hash_key] || :id
+      end
+
+      def table(options = {})
+        self.options = options
+        unless(attributes.has_key? hash_key)
+          remove_field :id
+          field(hash_key)
+        end
+      end
+
+      def remove_field(field)
+        attributes.delete(field) or raise "No such field"
+        remove_method field
+        remove_method :"#{field}="
       end
 
     end
