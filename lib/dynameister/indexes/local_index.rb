@@ -2,6 +2,8 @@ module Dynameister
   module Indexes
     class LocalIndex
 
+      LOCAL_INDEX_PREFIX = "by_"
+
       attr_accessor :range_key, :projection
 
       def initialize(range_key, options = {})
@@ -10,13 +12,13 @@ module Dynameister
       end
 
       def to_hash
-        { name: name, range_key: range_key, projection: projection }
+        { name: name, range_key: { range_key => :number }, projection: projection }
       end
 
       private
 
       def name
-        "by_#{range_key.keys.first.to_s}"
+        LOCAL_INDEX_PREFIX + range_key.to_s
       end
 
     end

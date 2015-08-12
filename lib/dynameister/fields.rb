@@ -3,7 +3,7 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
-      class_attribute :attributes, :options, :range_key
+      class_attribute :attributes, :options
       self.attributes = {}
       self.options    = {}
 
@@ -26,9 +26,8 @@ module Dynameister
         options[:hash_key] || :id
       end
 
-      def range(name, type = :number)
-        field(name, type)
-        self.range_key = { name => type }
+      def range_key
+        { options[:range_key] => :number } if options[:range_key]
       end
 
       def table(options = {})
@@ -64,6 +63,16 @@ module Dynameister
 
     def hash_key=(value)
       self.send("#{self.class.hash_key}=", value)
+    end
+
+    def range_key
+      if range_key = self.class.range_key
+        send(range_key)
+      end
+    end
+
+    def range_key=(value)
+      self.send("#{self.class.range_key}=", value)
     end
 
     private

@@ -1,17 +1,17 @@
 describe Dynameister::Indexes::LocalIndex do
 
-  let(:range_key) { { attack_strength: :number } }
+  let(:range_key) {  :adopted_at }
 
 
-  context " default projection type" do
+  context "default projection type" do
 
     subject { described_class.new(range_key) }
 
     it "has a hash representation" do
       expect(subject.to_hash).to eq(
         {
-          name: "by_attack_strength",
-          range_key: range_key,
+          name: "by_adopted_at",
+          range_key: { range_key => :number },
           projection: :all
         }
       )
@@ -26,8 +26,8 @@ describe Dynameister::Indexes::LocalIndex do
     it "has a hash representation" do
       expect(subject.to_hash).to eq(
         {
-          name: "by_attack_strength",
-          range_key: range_key,
+          name: "by_adopted_at",
+          range_key: { range_key => :number },
           projection: :keys_only
         }
       )

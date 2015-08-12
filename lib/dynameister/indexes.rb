@@ -16,7 +16,7 @@ module Dynameister
     module ClassMethods
 
       def local_index(range_key, options = {})
-        local_index = LocalIndex.new(self.range_key, options)
+        local_index = LocalIndex.new(range_key, options)
         self.local_indexes << local_index.to_hash
       end
 

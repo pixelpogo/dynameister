@@ -62,15 +62,44 @@ describe Dynameister::Fields do
 
     context "can be overriden" do
 
-      before  { Cat.create_table }
       subject { Cat.new(name: "neko atsume") }
+
+      let(:cats_table)  { Cat.create_table }
+
+      let(:hash_key_schema) do
+        cats_table.key_schema.first
+      end
 
       it "supports a custom hash key" do
         expect(subject.hash_key).to eq "neko atsume"
       end
 
+      it "adds the attribute name to the table key schema" do
+        expect(hash_key_schema.attribute_name).to eq "name"
+      end
+
+      it "adds the hash key type to the table key schema" do
+        expect(hash_key_schema.key_type).to eq "HASH"
+      end
+
     end
   end
 
+  describe "range key" do
+
+    subject! do
+      cats = Cat.create_table
+      cats.key_schema.last
+    end
+
+    it "adds the attribute name to the table key schema" do
+      expect(subject.attribute_name).to eq "adopted_at"
+    end
+
+    it "adds the range key type to the table key schema" do
+      expect(subject.key_type).to eq "RANGE"
+    end
+
+  end
 end
 
