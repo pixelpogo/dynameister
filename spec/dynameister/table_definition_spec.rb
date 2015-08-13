@@ -28,6 +28,9 @@ describe Dynameister::TableDefinition do
       global_indexes: global_indexes
     }
   end
+  let(:local_indexes_with_other_range_key) do
+    [ { name: 'index3',  range_key: { my_attribute: :string }, projection: :all } ]
+  end
 
   let(:definition) { described_class.new(table_name, options) }
 
@@ -214,9 +217,6 @@ describe Dynameister::TableDefinition do
       end
 
       context "when local secondary indexes use a different range key" do
-        let(:local_indexes_with_other_range_key) do
-          [ { name: 'index3',  range_key: { my_attribute: :string }, projection: :all } ]
-        end
         let(:options) do
           {
             hash_key: hash_key,
@@ -238,6 +238,56 @@ describe Dynameister::TableDefinition do
         it "includes them in the attributes definitions" do
           expect(subject[:attribute_definitions]).to include(expected_other_range_key)
         end
+      end
+
+      context "hash key and range keys not used in table definitions but for indexes" do
+
+        let(:global_indexes_with_other_hash_and_range_keys) do
+          [
+            {
+              name:       'global_index',
+              hash_key:   { hash_key_for_global_index:  :string },
+              range_key:  { range_key_for_global_index: :number },
+              projection: :all,
+              throughput: [1,1]
+            }
+          ]
+        end
+
+        let(:options) do
+          {
+            hash_key:       hash_key,
+            range_key:      range_key,
+            read_capacity:  capacity,
+            write_capacity: capacity,
+            local_indexes:  local_indexes_with_other_range_key,
+            global_indexes: global_indexes_with_other_hash_and_range_keys
+          }
+        end
+
+        let(:expected_other_hash_key) do
+          {
+            attribute_name: "hash_key_for_global_index",
+            attribute_type: "S"
+          }
+        end
+
+        let(:expected_other_range_key) do
+          {
+            attribute_name: "range_key_for_global_index",
+            attribute_type: "N"
+          }
+        end
+
+
+        it "adds the hash_key to the attribute definitions" do
+          expect(subject[:attribute_definitions]).to include(expected_other_hash_key)
+        end
+
+        it "adds the range_key to the attribute definitions" do
+          expect(subject[:attribute_definitions]).to include(expected_other_range_key)
+        end
+
       end
     end
   end
