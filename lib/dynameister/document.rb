@@ -4,6 +4,7 @@ module Dynameister
 
     include Dynameister::Fields
     include Dynameister::Finders
+    include Dynameister::Indexes
     include Dynameister::Persistence
 
     module ClassMethods

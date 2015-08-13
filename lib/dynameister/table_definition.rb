@@ -46,7 +46,17 @@ module Dynameister
     end
 
     def other_attribute_definitions
-      range_keys_for_local_indexes.inject([]) do |memo, element|
+      other_range_key_attribute_definitons + other_hash_key_attribute_definitions
+    end
+
+    def other_range_key_attribute_definitons
+      range_keys_for_indexes.inject([]) do |memo, element|
+        memo << attribute_definitions_element(element)
+      end
+    end
+
+    def other_hash_key_attribute_definitions
+      hash_keys_for_global_indexes.inject([]) do |memo, element|
         memo << attribute_definitions_element(element)
       end
     end
@@ -144,7 +154,7 @@ module Dynameister
     end
 
     def projection_non_key_attributes_for(index)
-      return [] unless projection_type_for(index) == PROJECTION_TYPE[:include]
+      return nil unless projection_type_for(index) == PROJECTION_TYPE[:include]
 
       index[:projection].map(&:to_s)
     end
@@ -173,11 +183,18 @@ module Dynameister
       }
     end
 
-    def range_keys_for_local_indexes
-      options[:local_indexes].map { |index| index[:range_key] }.reject do |range_key|
+    def range_keys_for_indexes
+      (options[:local_indexes] + options[:global_indexes]).map { |index| index[:range_key] }.reject do |range_key|
         range_key == options[:range_key]
       end
     end
+
+    def hash_keys_for_global_indexes
+      options[:global_indexes].map { |index| index[:hash_key] }.reject do |hash_key|
+        hash_key == options[:hash_key]
+      end
+    end
+
   end
 
 end

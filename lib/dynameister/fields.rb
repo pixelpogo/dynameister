@@ -26,6 +26,10 @@ module Dynameister
         options[:hash_key] || :id
       end
 
+      def range_key
+        { options[:range_key] => :number } if options[:range_key]
+      end
+
       def table(options = {})
         self.options = options
         unless(attributes.has_key? hash_key)
@@ -59,6 +63,16 @@ module Dynameister
 
     def hash_key=(value)
       self.send("#{self.class.hash_key}=", value)
+    end
+
+    def range_key
+      if range_key = self.class.range_key
+        send(range_key)
+      end
+    end
+
+    def range_key=(value)
+      self.send("#{self.class.range_key}=", value)
     end
 
     private

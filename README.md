@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ### Turn your Model into a Document
 
-Dynameister currently only supports a default for the table name. The default for hash_key is the :id column, which does not have to be declared separately. Include the module in your model definition. Add fields to the model, for easy convenience methods on the attributes.
+Dynameister supports sensible defaults for creating a table. The default for hash_key (which is the primary key) is the :id column, which does not have to be declared separately. Include the module in your model definition. Add fields to the model, for easy convenience methods on the attributes.
 
 ```ruby
 class Cat
@@ -38,9 +38,19 @@ class Cat
 end
 ```
 
+Defaults for table name and hash_key can be overridden on table creation. The custom hash_key does not have to be part of the fields definiton, it is implicitly defined, when added as a hash_key. 
+
+```ruby
+class Cat
+  include Dynameister::Document
+
+  table name: "kittens", hash_key: :nickname
+end
+```
+
 ### Document Creation
 
-First create the table for the model. It will create a table with the name "cats".
+First create the table for the model.
 
 ```ruby
 Cat.create_table
@@ -56,18 +66,34 @@ Save saves the object in the previously created "cats" table. Also a unique iden
 cat.id #=> "C43b9fe9-e264-4544-8e48-fa64c5eb5ddc"
 ```
 
-### Custom Hash Key
+## Secondary Indexes
 
-If you want to override the default hash_key, you can declare the hash_key on the model. This key does not have to be part of the fields definiton, it is implicitly defined, when added as a hash_key. 
+To improve access to data and faster queries, you can define indexes on fields. These indexes are only supported when the table is created using a hash-and-range key.
+
+There are two different kinds of indexes supported by DynamoDB:
+
+### Local Secondary Indexes
+
+Only a different range key than in the table definition needs to be supplied here. The hash_key remains the same.
+
+### Global Secondary Indexes
+
+Different hash and range keys than defined on the table.
 
 ```ruby
 class Cat
-  include Dynameister::Document
 
-  table hash_key: :name
+  field :pet_food
+  field :feed_at, :datetime
 
+  table hash_key: :name, range_key: :created_at
+
+  local_index :feed_at 
+
+  global_index [:pet_food, :feed_at]
 end
 ```
+The maximum number for both local and global indexes is five.
 
 ## Testing
 
