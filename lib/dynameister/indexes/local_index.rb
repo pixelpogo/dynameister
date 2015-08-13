@@ -18,7 +18,7 @@ module Dynameister
       private
 
       def name
-        LOCAL_INDEX_PREFIX + range_key.to_s
+        "#{LOCAL_INDEX_PREFIX}#{range_key}"
       end
 
     end

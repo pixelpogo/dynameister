@@ -2,7 +2,8 @@ module Dynameister
   module Indexes
     class GlobalIndex
 
-      GLOBAL_INDEX_PREFIX = "by_"
+      GLOBAL_INDEX_PREFIX      = "by_"
+      GLOBAL_INDEX_CONJUGATION = "_and_"
 
       attr_accessor :keys, :projection, :throughput
 
@@ -40,7 +41,7 @@ module Dynameister
       end
 
       def combined_keys
-        keys.map(&:to_s).map(&:pluralize).join('_and_')
+        keys.map(&:to_s).map(&:pluralize).join(GLOBAL_INDEX_CONJUGATION)
       end
 
     end
