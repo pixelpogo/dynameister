@@ -93,9 +93,7 @@ class Cat
   global_index [:pet_food, :feed_at]
 end
 ```
-
-There is a limit on how many indexes are allowed to be defined. The maximum number of local and global indexes is five, respectively.
-
+The maximum number for both local and global indexes is five.
 
 ## Testing
 
