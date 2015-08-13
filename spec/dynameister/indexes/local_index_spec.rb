@@ -9,8 +9,8 @@ describe Dynameister::Indexes::LocalIndex do
     it "has a hash representation" do
       expect(subject.to_hash).to eq(
         {
-          name: "by_adopted_at",
-          range_key: { range_key => :number },
+          name:       "by_adopted_at",
+          range_key:  { range_key => :number },
           projection: :all
         }
       )
@@ -25,8 +25,8 @@ describe Dynameister::Indexes::LocalIndex do
     it "has a hash representation" do
       expect(subject.to_hash).to eq(
         {
-          name: "by_adopted_at",
-          range_key: { range_key => :number },
+          name:       "by_adopted_at",
+          range_key:  { range_key => :number },
           projection: :keys_only
         }
       )

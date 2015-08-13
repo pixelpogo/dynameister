@@ -7,7 +7,7 @@ module Dynameister
     module ClassMethods
 
       def table_name
-        options.fetch(:table_name, name.demodulize.tableize)
+        options.fetch(:name, name.demodulize.tableize)
       end
 
       def client

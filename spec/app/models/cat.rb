@@ -5,7 +5,7 @@ class Cat
   field :adopted_at, :datetime
 
   # local indexes can only be defined on tables with hash and range key
-  table hash_key: :name, range_key: :created_at
+  table name: "kittens", hash_key: :name, range_key: :created_at
 
   local_index :adopted_at # projection: :all, :keys_only, [:attr1, :attr2]
 

@@ -7,7 +7,7 @@ describe Dynameister::Fields do
 
   after do
     delete_table("languages")
-    delete_table("cats")
+    delete_table("kittens")
   end
 
   subject { Language.new }
@@ -64,7 +64,7 @@ describe Dynameister::Fields do
 
       subject { Cat.new(name: "neko atsume") }
 
-      let(:cats_table)  { Cat.create_table }
+      let(:cats_table) { Cat.create_table }
 
       let(:hash_key_schema) do
         cats_table.key_schema.first

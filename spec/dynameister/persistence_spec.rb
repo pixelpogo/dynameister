@@ -1,11 +1,13 @@
 require_relative "../app/models/language"
+require_relative "../app/models/cat"
 
 describe Dynameister::Persistence do
 
   let(:table_name) { "languages"}
 
   after do
-    Dynameister::Client.new.delete_table table_name: table_name
+    delete_table table_name
+    delete_table "kittens"
   end
 
   describe "defaults for model" do
@@ -28,6 +30,15 @@ describe Dynameister::Persistence do
       expect{ Language.create_table }.not_to raise_exception
     end
 
+    context "custom table name" do
+
+      subject! { Cat.create_table }
+
+      it "creates a table" do
+        expect(Dynameister::Client.new.table_names).to include("kittens")
+      end
+
+    end
   end
 
   describe "creating a document" do
