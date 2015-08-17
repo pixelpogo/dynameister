@@ -19,7 +19,7 @@ module Dynameister
         {
           range_key:      self.range_key,
           local_indexes:  self.local_indexes,
-          global_indexes: self.global_indexes,
+          global_indexes: self.global_indexes
         }.merge(options)
 
         unless table_exists?

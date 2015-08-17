@@ -95,6 +95,10 @@ end
 ```
 The maximum number for both local and global indexes is five.
 
+## Querying
+
+
+
 ## Testing
 
 1. Copy `spec/.env.test.template` to `spec/.env.test`,

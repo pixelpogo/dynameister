@@ -7,7 +7,7 @@ module Dynameister
 
     module ClassMethods
 
-      def where(opts={})
+      def query(opts={})
         params = query_parameters(opts)
         response = self.client.query_table(params)
         Collection.new(response, self)
@@ -22,7 +22,7 @@ module Dynameister
           key_conditions[key] =
             {
               attribute_value_list: [value],
-              comparison_operator: 'EQ'
+              comparison_operator:  "EQ"
             }
         end
 

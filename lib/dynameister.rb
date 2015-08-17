@@ -10,6 +10,7 @@ require "dynameister/finders"
 require "dynameister/indexes"
 require "dynameister/persistence"
 require "dynameister/query"
+require "dynameister/scan"
 
 require "dynameister/document"
 
