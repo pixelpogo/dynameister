@@ -9,34 +9,6 @@ describe Dynameister::Query do
 
   after { delete_table "books" }
 
-  describe "#all" do
-
-    subject { Book.all }
-
-    it "finds all records" do
-      expect(subject.count).to eq(3)
-    end
-
-    it "returns an array with all the records' data" do
-      expect(subject.map(&:name)).to match_array %w(Book0 Book1 Book2)
-    end
-
-    context "limit" do
-
-      subject { Book.all(limit: 1) }
-
-      it 'find all records with limit' do
-        expect(subject.count).to eq(1)
-      end
-
-      it "returns an array with limited data" do
-        expect(subject.first).to be_a Book
-      end
-
-    end
-
-  end
-
   describe 'querying' do
 
     describe '#where' do
