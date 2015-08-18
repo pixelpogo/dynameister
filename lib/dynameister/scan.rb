@@ -19,6 +19,8 @@ module Dynameister
         params.merge!(scan_filter: scan_filter(opts))
       end
 
+      private
+
       def find_local_index_for_attributes(opts)
         local_indexes = []
         opts.each do |attribute, _|
@@ -39,7 +41,7 @@ module Dynameister
         end
       end
 
-
     end
   end
+
 end
