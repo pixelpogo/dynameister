@@ -30,14 +30,12 @@ module Dynameister
       end
 
       def scan_filter(opts)
-        {}.tap do |hash|
-          opts.each do |key, value|
-            hash[key] =
-              {
-                attribute_value_list: [value],
-                comparison_operator:  "EQ"
-              }
-          end
+        opts.each_with_object({}) do |(key, value), hash|
+          hash[key] =
+            {
+              attribute_value_list: [value],
+              comparison_operator:  "EQ"
+            }
         end
       end
 
