@@ -101,6 +101,8 @@ Supported methods for querying:
 
 * by hash_key  (uses DynamoDB query)
 * filter on matching values for attributes (uses DynamoDB scan)
+* return a whole collection of documents  (uses DynamoDB scan without a filter)
+* return a limited number of documents
 
 ```ruby
 Book.query(uuid: "72c62052", author_id: 42) # Perform a query using the hash_key
