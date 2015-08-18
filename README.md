@@ -97,7 +97,19 @@ The maximum number for both local and global indexes is five.
 
 ## Querying
 
+Supported methods for querying:
 
+* by hash_key  (uses DynamoDB query)
+* filter on matching values for attributes (uses DynamoDB scan)
+* return a whole collection of documents  (uses DynamoDB scan without a filter)
+* return a limited number of documents
+
+```ruby
+Book.query(uuid: "72c62052", author_id: 42) # Perform a query using the hash_key
+Book.find_by(hash_key: "a17871e56c14") # Same as above but uses get_item underneath
+Book.scan(author_id: 42) # Filter on other attributes other than the hash_key
+```
+When using scan with an attribute that corresponds to a local secondary index, internally it will use this index to optimise the query.
 
 ## Testing
 
