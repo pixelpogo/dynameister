@@ -9,26 +9,32 @@ describe Dynameister::Query do
 
   after { delete_table "books" }
 
-  describe 'querying' do
 
-    describe 'query with a given hash_key' do
+  describe "query with a given hash_key" do
 
-      let(:book) { Book.all[0] }
+    let(:book) { Book.all[0] }
 
-      subject do
-        Book.query(uuid: book.uuid, rank: book.rank)
-      end
+    subject { Book.query(uuid: book.uuid).all }
 
-      it "returns a record by hash key and range key" do
-        expect(subject.count).to eq(1)
-      end
+    it "returns a record by hash key" do
+      expect(subject.count).to eq(1)
+    end
 
-      it "returns the book with the corresponding attritbutes" do
-        expect(subject.first.rank).to eq book.rank
-      end
-
+    it "returns the book with the corresponding attritbutes" do
+      expect(subject.first.uuid).to eq book.uuid
     end
 
   end
+
+  describe "combining queries" do
+
+    subject { Book.query(uuid: book.uuid).and(name: book.name).all }
+
+    it "returns a book for a given hash_key and name" do
+      expect(subject.name).to eq book.name
+    end
+
+  end
+
 
 end

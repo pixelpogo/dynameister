@@ -1,36 +1,47 @@
 module Dynameister
 
-  class Collection < Array
+  class Collection
 
-    attr_reader :pager, :model
+    class Response
+      attr_accessor :count, :entities, :last_evaluated_key
 
-    def initialize(pager, model)
-      @pager = pager
-      @model = model
-      replace pager.items.map { |item| model.new(item) }
-    end
-
-    def next_page?
-      pager ? pager.next_page? : false
-    end
-
-    def last_page?
-      pager ? pager.last_page? : true
-    end
-
-    def next_page
-      return self.class.new(pager.next_page, model) if pager.next_page?
-      self.class.new
-    end
-
-    def each_page(&_block)
-      pager.each do |page|
-        yield self.class.new(page, model)
+      def initialize
+        @count    = 0
+        @entities = []
       end
+
     end
 
-    def last_evaluated_key
-      pager.last_evaluated_key
+    attr_accessor :client, :table_name
+
+    def initialize(client, table_name)
+      @client     = client
+      @table_name = table_name.to_s
+    end
+
+    def query(options = {}, previous_response = nil)
+      response = client.query_table(options.merge(table_name: table_name))
+      deserialize_response(response, previous_response)
+    end
+
+    def scan(options = {}, previous_response = nil)
+      response = client.scan_table(options.merge(table_name: table_name))
+      deserialize_response(response, previous_response)
+    end
+
+    private
+
+    def deserialize_response(response, previous_response = nil)
+      Response.new.tap do |current_response|
+        if previous_response
+          current_response = previous_response
+        end
+
+        current_response.count += response.count
+        current_response.entities += response.items.map do |item|
+          item.symbolize_keys
+        end if response.items
+      end
     end
 
   end
