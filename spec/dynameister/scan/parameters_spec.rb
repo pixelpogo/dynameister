@@ -58,7 +58,7 @@ describe Dynameister::Scan::Parameters do
 
   describe "parameters for a model with local indexes" do
 
-    let(:local_index) { Dynameister::Indexes::LocalIndex.new(:age).to_hash }
+    let(:local_index) { Dynameister::Indexes::LocalIndex.new(:age).to_h }
     let(:model)   { double('model', table_name: 'models', local_indexes: [local_index]) }
     let(:options) { { age: 42 } }
 
