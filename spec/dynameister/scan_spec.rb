@@ -11,16 +11,6 @@ describe Dynameister::Scan do
 
   after { delete_table "books" }
 
-  describe "scan, using a local index" do
-
-    subject { Book.scan_parameters(author_id: 42) }
-
-    it "derives the index from its local secondary index" do
-      expect(subject[:index_name]).to eq "by_author_id"
-    end
-
-  end
-
   describe "scan returns a collection" do
 
     context "scanning with one attribute" do
