@@ -7,12 +7,13 @@ describe Dynameister::Query do
     3.times { |n| Book.create(name: "Book#{n}", rank: n, author_id: 42) }
   end
 
+  let!(:book) { Book.create(name: "my book", rank: 42, author_id: 2) }
+
   after { delete_table "books" }
 
 
   describe "query with a given hash_key" do
 
-    let(:book) { Book.all[0] }
 
     subject { Book.query(uuid: book.uuid).all }
 
@@ -28,10 +29,12 @@ describe Dynameister::Query do
 
   describe "combining queries" do
 
-    subject { Book.query(uuid: book.uuid).and(name: book.name).all }
+    subject do
+      Book.query(uuid: book.uuid).and(rank: book.rank).and(name: book.name).all
+    end
 
     it "returns a book for a given hash_key and name" do
-      expect(subject.name).to eq book.name
+      expect(subject.first.rank).to eq book.rank
     end
 
   end

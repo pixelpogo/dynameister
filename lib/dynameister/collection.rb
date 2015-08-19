@@ -9,7 +9,6 @@ module Dynameister
         @count    = 0
         @entities = []
       end
-
     end
 
     attr_accessor :client, :table_name

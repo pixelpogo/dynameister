@@ -8,7 +8,7 @@ module Dynameister
     include Dynameister::Finders
     include Dynameister::Indexes
     include Dynameister::Persistence
-    include Dynameister::Query
+    include Dynameister::Queries
     include Dynameister::Scan
 
     module ClassMethods

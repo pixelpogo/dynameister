@@ -1,4 +1,5 @@
 require "dynameister/query"
+require "dynameister/collection"
 
 module Dynameister
 
@@ -8,7 +9,8 @@ module Dynameister
     module ClassMethods
 
       def query(opts={})
-        Query.new()
+        collection = Collection.new(client, table_name, self.hash_key)
+        Query.new(collection, self).query(opts)
       end
 
     end
