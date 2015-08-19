@@ -23,14 +23,32 @@ describe Dynameister::Scan do
 
   describe "scan returns a collection" do
 
-    subject { Book.scan(author_id: 42) }
+    context "scanning with one attribute" do
 
-    it "returns one book matching the filter" do
-      expect(subject.count).to eq 1
+      subject { Book.scan(author_id: 42) }
+
+      it "returns one book matching the filter" do
+        expect(subject.count).to eq 1
+      end
+
+      it "returns the book matching the filter for author_id" do
+        expect(subject.first.uuid).to eq book.uuid
+      end
+
     end
 
-    it "returns the book matching the filter for author_id" do
-      expect(subject.first.uuid).to eq book.uuid
+    context "scanning with multiple attributes" do
+
+      subject { Book.scan(author_id: 42, rank: 2) }
+
+      it "returns one book matching the filter" do
+        expect(subject.count).to eq 1
+      end
+
+      it "returns the book matching the filter for author_id" do
+        expect(subject.first.uuid).to eq book.uuid
+      end
+
     end
 
   end

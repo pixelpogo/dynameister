@@ -16,7 +16,7 @@ module Dynameister
           hash[:table_name] = self.table_name
           hash[:index_name] = find_local_index_for_attributes(opts)
         end
-        params.merge!(scan_filter: scan_filter(opts))
+        params.merge!(filter_expression(opts))
       end
 
       private
@@ -31,14 +31,28 @@ module Dynameister
         local_indexes.first[:name] if local_indexes.any?
       end
 
-      def scan_filter(opts)
-        opts.each_with_object({}) do |(key, value), hash|
-          hash[key] =
-            {
-              attribute_value_list: [value],
-              comparison_operator:  "EQ"
-            }
+      def filter_expression(opts)
+        expression_attribute_names  = {}
+        expression_attribute_values = {}
+
+        opts.each do |key, value|
+          expression_attribute_names["##{key}"]  = key.to_s
+          expression_attribute_values[":#{key}"] = value
         end
+
+        expression_attributes = Hash[expression_attribute_names.keys.zip(expression_attribute_values.keys)]
+
+        {
+          filter_expression:           build_filter_expression(expression_attributes),
+          expression_attribute_names:  expression_attribute_names,
+          expression_attribute_values: expression_attribute_values
+        }
+      end
+
+      def build_filter_expression(expression_attributes)
+        expression_attributes.each_with_object([]) do |(name, value), filter|
+          filter << "#{name} = #{value}"
+        end.join(" AND ")
       end
 
     end
