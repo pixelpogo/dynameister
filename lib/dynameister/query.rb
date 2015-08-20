@@ -17,13 +17,14 @@ module Dynameister
         limit = opts.delete(:limit)
         exclusive_start_key = opts.delete(:exclusive_start_key)
 
-        key_conditions = {}
-        opts.each do |key, value|
-          key_conditions[key] =
+        key_conditions = opts.inject({}) do |memo, (key, value)|
+          memo[key] =
             {
               attribute_value_list: [value],
               comparison_operator:  "EQ"
             }
+
+          memo
         end
 
         params = { table_name: self.table_name }
