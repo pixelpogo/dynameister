@@ -3,7 +3,7 @@ module Dynameister
 
     attr_reader :pager, :model
 
-    def initialize(pager = nil, model = nil)
+    def initialize(pager, model)
       @pager = pager
       @model = model
       replace pager.items.map { |item| model.send(:new, item) }
