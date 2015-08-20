@@ -4,16 +4,13 @@ describe Dynameister::Query do
 
   before do
     Book.create_table
-    3.times { |n| Book.create(name: "Book#{n}", rank: n, author_id: 42) }
   end
 
   let!(:book) { Book.create(name: "my book", rank: 42, author_id: 2) }
 
   after { delete_table "books" }
 
-
   describe "query with a given hash_key" do
-
 
     subject { Book.query(uuid: book.uuid).all }
 
@@ -39,5 +36,25 @@ describe Dynameister::Query do
 
   end
 
+  describe "#limit" do
 
+    subject { Book.query(uuid: book.uuid).limit(1).all }
+
+    it "limits the nummber of results" do
+      expect(subject.count).to eq 1
+    end
+
+  end
+
+  describe "#or" do
+
+    before { Book.create(uuid: "my id", rank: 99, author_id: 1, name: "my book") }
+
+    subject { Book.query(uuid: book.uuid).or.query(name: "my book", author_id: 1) }
+
+    xit "returns " do
+    end
+
+
+  end
 end
