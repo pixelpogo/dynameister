@@ -13,14 +13,16 @@ describe Dynameister::Collection do
     ]
   }
 
-  subject { described_class.new(pager, Language) }
+  let(:model_class) { Language }
+
+  subject { described_class.new(pager, model_class) }
 
   it "returns a collection of 2 elements" do
     expect(subject.count).to eq(2)
   end
 
   it "returns a collection of model instances" do
-    expect(subject.map(&:locale)).to eq %w(Language1 Language2)
+    expect(subject.all? { |model| model.instance_of? model_class }).to be_truthy
   end
 
   it "returns a paginated collection" do
