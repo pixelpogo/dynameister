@@ -53,16 +53,19 @@ module Dynameister
         end
       end
 
-      def build_filter_expression(raw_expression_attributes)
-        expression_attributes = Hash[
-          raw_expression_attributes[:names]
-            .keys
-            .zip(raw_expression_attributes[:values].keys)
-        ]
+      def build_filter_expression(expression_attributes)
+        key_mapping = expression_attribute_key_mapping(expression_attributes)
 
-        expression_attributes.each_with_object([]) do |(name, value), filter|
+        key_mapping.each_with_object([]) do |(name, value), filter|
           filter << "#{name} = #{value}"
         end.join(" AND ")
+      end
+
+      def expression_attribute_key_mapping(expression_attributes)
+        attribute_names_keys   = expression_attributes[:names].keys
+        attrribute_values_keys = expression_attributes[:values].keys
+
+        Hash[attribute_names_keys.zip(attrribute_values_keys)]
       end
 
     end
