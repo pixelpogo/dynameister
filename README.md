@@ -81,7 +81,6 @@ Different hash and range keys than defined on the table.
 
 ```ruby
 class Cat
-
   field :pet_food
   field :feed_at, :datetime
 
@@ -104,9 +103,17 @@ Supported methods for querying:
 * return a limited number of documents
 
 ```ruby
-Book.query(uuid: "72c62052", author_id: 42) # Perform a query using the hash_key
-Book.find_by(hash_key: "a17871e56c14") # Same as above but uses get_item underneath
-Book.scan(author_id: 42) # Filter on other attributes other than the hash_key
+# Perform a query using hash and range key.
+# It is also possible for query to only receive the hash key.
+# In this case all books with that hash key and - if present -
+# different range keys would be returned.
+Book.query(hash_key: "72c62052", range_key: 42)
+
+# Same as above but uses get_item underneath
+Book.find_by(hash_key: "a17871e56c14")
+
+# Filter on other attributes other than the hash_key
+Book.scan(author_id: 42)
 ```
 When using scan with an attribute that corresponds to a local secondary index, internally it will use this index to optimise the query.
 
