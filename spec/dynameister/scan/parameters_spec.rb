@@ -60,7 +60,8 @@ describe Dynameister::Scan::Parameters do
     let(:options) { { age: 42 } }
 
     its([:table_name]) { is_expected.to eq "models" }
-    its([:index_name]) { is_expected.to be_nil }
+
+    it { is_expected.to_not have_key(:index_name) }
 
     it_behaves_like "a single-attribute filter"
     it_behaves_like "a multi-attribute filter"
