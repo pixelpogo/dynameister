@@ -23,12 +23,12 @@ module Dynameister
       private
 
       def find_local_index_for_attributes
-        local_indexes = []
-        @options.each do |attribute, _|
-          local_indexes << @model.local_indexes.detect do |index|
+        local_indexes = @options.map do |attribute, _|
+          @model.local_indexes.detect do |index|
             index[:range_key].keys.first == attribute
           end
         end
+
         local_indexes.first[:name] if local_indexes.any?
       end
 
