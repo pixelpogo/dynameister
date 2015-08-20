@@ -6,7 +6,7 @@ module Dynameister
     def initialize(pager, model)
       @pager = pager
       @model = model
-      replace pager.items.map { |item| model.send(:new, item) }
+      replace pager.items.map { |item| model.new(item) }
     end
 
     def next_page?
