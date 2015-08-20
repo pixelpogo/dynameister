@@ -35,8 +35,13 @@ describe Dynameister::Scan do
         expect(subject.count).to eq 1
       end
 
-      it "returns the book matching the filter for author_id" do
-        expect(subject.first.uuid).to eq book.uuid
+      context "the retrieved model's attributes include" do
+
+        subject { Book.scan(author_id: 42, rank: 2).first }
+
+        its(:uuid) { is_expected.to eq book.uuid }
+        its(:rank) { is_expected.to eq book.rank }
+
       end
 
     end
