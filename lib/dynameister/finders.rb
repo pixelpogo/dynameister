@@ -1,9 +1,7 @@
 require "dynameister/collection"
 
 module Dynameister
-
   module Finders
-
     extend ActiveSupport::Concern
 
     module ClassMethods
@@ -17,20 +15,12 @@ module Dynameister
         end
       end
 
-      def all(opts = {})
-        options =
-          {
-            table_name: table_name,
-            attributes_to_get: attributes.keys
-          }
-        options.merge!(opts.slice(:limit))
-
-        response = client.scan_table(options)
-        Collection.new(response, self)
+      def all(options = {})
+        response = Collection.new(client, table_name).scan(options)
+        response.entities.map { |entity| new(entity) }
       end
 
     end
 
   end
-
 end

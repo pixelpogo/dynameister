@@ -8,13 +8,17 @@ module Dynameister
 
     module ClassMethods
 
-      def query(opts={})
+      def query(options={})
         collection = Collection.new(client, table_name, self.hash_key)
-        Query.new(collection, self).query(opts)
+        Query.new(collection, self, :query).query(options)
+      end
+
+      def scan(options = {})
+        collection = Collection.new(client, table_name, self.hash_key)
+        Query.new(collection, self).query(options)
       end
 
     end
-
 
   end
 

@@ -50,7 +50,7 @@ describe Dynameister::Finders do
       end
 
       it "returns an array with limited data" do
-        expect(subject.first).to be_a Language
+        expect(subject.first).to be_an_instance_of Language
       end
 
     end

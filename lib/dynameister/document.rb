@@ -9,7 +9,6 @@ module Dynameister
     include Dynameister::Indexes
     include Dynameister::Persistence
     include Dynameister::Queries
-    include Dynameister::Scan
 
     module ClassMethods
 
