@@ -58,8 +58,8 @@ module Dynameister
       def build_filter_expression(expression_attributes)
         key_mapping = expression_attribute_key_mapping(expression_attributes)
 
-        key_mapping.each_with_object([]) do |(name, value), filter|
-          filter << "#{name} = #{value}"
+        key_mapping.map do |name, value|
+          "#{name} = #{value}"
         end.join(" AND ")
       end
 
