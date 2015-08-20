@@ -45,7 +45,7 @@ describe Dynameister::Finders do
 
       subject { Language.all(limit: 1) }
 
-      it 'find all records with limit' do
+      it 'finds all records with limit' do
         expect(subject.count).to eq(1)
       end
 
