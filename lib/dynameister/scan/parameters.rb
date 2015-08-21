@@ -35,7 +35,7 @@ module Dynameister
         filter_expression     = build_filter_expression(expression_attributes)
 
         {
-          key_condition_expression:    filter_expression,
+          @expression_key =>    filter_expression,
           expression_attribute_names:  expression_attributes[:names],
           expression_attribute_values: expression_attributes[:values]
         }

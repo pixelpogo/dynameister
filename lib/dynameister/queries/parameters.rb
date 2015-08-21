@@ -4,15 +4,15 @@ module Dynameister
 
     class Parameters
 
-      def initialize(model, expression, options = {})
-        @model      = model
-        @expression = expression
-        @options    = options
+      def initialize(model, expression_key, options = {}, comparator = "=")
+        @model          = model
+        @expression_key = expression_key
+        @options        = options
+        @comparator     = comparator
       end
 
       def to_h
         params = {}.tap do |hash|
-          hash[:table_name] = @model.table_name
 
           index = find_local_index_for_attributes
           hash[:index_name] = index if index
@@ -35,10 +35,9 @@ module Dynameister
 
       def filter_expression
         expression_attributes = build_expression_attributes
-        filter_expression     = build_filter_expression(expression_attributes)
 
         {
-          @expression =>   filter_expression,
+          @expression_key =>           build_filter_expression(expression_attributes),
           expression_attribute_names:  expression_attributes[:names],
           expression_attribute_values: expression_attributes[:values]
         }
@@ -52,23 +51,37 @@ module Dynameister
 
         @options.each_with_object(initial) do |(key, value), attributes|
           attributes[:names]["##{key}"]  = key.to_s
-          attributes[:values][":#{key}"] = value
+          attributes[:values]            = expression_attribute_values(key,value)
         end
+      end
+
+      def expression_attribute_values(key, value)
+        expression_values ||= case
+                              when value.is_a?(Array)
+                                value.each_with_object({}).with_index do |(val, hash), index|
+                                  hash[":#{key}#{index}"] = val
+                                end
+                              else
+                                {":#{key}" => value }
+                              end
       end
 
       def build_filter_expression(expression_attributes)
         key_mapping = expression_attribute_key_mapping(expression_attributes)
+        name, values = key_mapping.keys.first, key_mapping.values.first
+        filter ||= case
+                   when @options.values.first.is_a?(Array)
+                     "#{name} in (#{values})"
+                   else
+                     "#{name} #{@comparator} #{values}"
+                   end
 
-        key_mapping.each_with_object([]) do |(name, value), filter|
-          filter << "#{name} = #{value}"
-        end.join(" AND ")
       end
 
       def expression_attribute_key_mapping(expression_attributes)
-        attribute_names_keys  = expression_attributes[:names].keys
-        attribute_values_keys = expression_attributes[:values].keys
-
-        Hash[attribute_names_keys.zip(attribute_values_keys)]
+        names = expression_attributes[:names].keys.first
+        values = expression_attributes[:values].keys.join(", ")
+        { names => values }
       end
 
     end
