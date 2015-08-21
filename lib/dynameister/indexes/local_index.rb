@@ -11,7 +11,7 @@ module Dynameister
         @projection = options[:projection] || :all
       end
 
-      def to_hash
+      def to_h
         { name: name, range_key: { range_key => :number }, projection: projection }
       end
 

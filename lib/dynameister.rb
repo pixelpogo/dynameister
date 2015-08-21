@@ -7,8 +7,11 @@ require "dynameister/version"
 
 require "dynameister/fields"
 require "dynameister/finders"
-require "dynameister/persistence"
 require "dynameister/indexes"
+require "dynameister/persistence"
+require "dynameister/query"
+require "dynameister/scan/parameters"
+require "dynameister/scan"
 
 require "dynameister/document"
 

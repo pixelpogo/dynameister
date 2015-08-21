@@ -13,7 +13,7 @@ module Dynameister
         @throughput = options[:throughput] || [1,1]
       end
 
-      def to_hash
+      def to_h
         {
           name:       name,
           hash_key:   hash_key,

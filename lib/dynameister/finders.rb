@@ -1,3 +1,5 @@
+require "dynameister/collection"
+
 module Dynameister
   module Finders
     extend ActiveSupport::Concern
@@ -11,6 +13,18 @@ module Dynameister
         else
           new(retrieved.item)
         end
+      end
+
+      def all(opts = {})
+        options =
+          {
+            table_name: self.table_name,
+            attributes_to_get: self.attributes.keys
+          }
+        options.merge!(opts.slice(:limit))
+
+        response = self.client.scan_table(options)
+        Collection.new(response, self)
       end
 
     end

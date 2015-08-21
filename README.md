@@ -26,7 +26,7 @@ Or install it yourself as:
 
 ### Turn your Model into a Document
 
-Dynameister supports sensible defaults for creating a table. The default for hash_key (which is the primary key) is the :id column, which does not have to be declared separately. Include the module in your model definition. Add fields to the model, for easy convenience methods on the attributes.
+Dynameister supports sensible defaults for creating a table. The default for `hash_key` (which is the primary key) is the `id` column, which does not have to be declared separately. Include the `Dynameister::Document` module in your model definition. Add fields to the model, for easy convenience methods on the attributes.
 
 ```ruby
 class Cat
@@ -38,7 +38,7 @@ class Cat
 end
 ```
 
-Defaults for table name and hash_key can be overridden on table creation. The custom hash_key does not have to be part of the fields definiton, it is implicitly defined, when added as a hash_key. 
+Defaults for table name and `hash_key` can be overridden on table creation. The custom `hash_key` does not have to be part of the fields definiton. It is implicitly defined, when added as a `hash_key`.
 
 ```ruby
 class Cat
@@ -57,10 +57,9 @@ Cat.create_table
 cat = Cat.new(name: "Neko Atsume", lives: 9)
 cat.likes_mice = true
 cat.save
-
 ```
 
-Save saves the object in the previously created "cats" table. Also a unique identifier string is created for the hash_key which is the :id column.
+`save` saves the object in the previously created "cats" table. Also a unique identifier string is created for the `hash_key` which is the `id` column.
 
 ```ruby
 cat.id #=> "C43b9fe9-e264-4544-8e48-fa64c5eb5ddc"
@@ -74,7 +73,7 @@ There are two different kinds of indexes supported by DynamoDB:
 
 ### Local Secondary Indexes
 
-Only a different range key than in the table definition needs to be supplied here. The hash_key remains the same.
+Only a different range key than in the table definition needs to be supplied here. The `hash_key` remains the same.
 
 ### Global Secondary Indexes
 
@@ -82,18 +81,41 @@ Different hash and range keys than defined on the table.
 
 ```ruby
 class Cat
-
   field :pet_food
   field :feed_at, :datetime
 
   table hash_key: :name, range_key: :created_at
 
-  local_index :feed_at 
+  local_index :feed_at # Uses feed_at as range key
 
-  global_index [:pet_food, :feed_at]
+  global_index [:pet_food, :feed_at] # Uses pet_food as hash key and feed_at as range key
 end
 ```
 The maximum number for both local and global indexes is five.
+
+## Querying
+
+Supported methods for querying:
+
+* by hash_key (uses DynamoDB query)
+* filter on matching values for attributes (uses DynamoDB scan)
+* return a whole collection of documents (uses DynamoDB scan without a filter)
+* return a limited number of documents
+
+```ruby
+# Perform a query using hash and range key.
+# It is also possible for query to only receive the hash key.
+# In this case all books with that hash key and - if present -
+# different range keys would be returned.
+Book.query(hash_key: "72c62052", range_key: 42)
+
+# Same as above but uses get_item underneath
+Book.find_by(hash_key: "a17871e56c14")
+
+# Filter on other attributes other than the hash_key
+Book.scan(author_id: 42)
+```
+When using scan with an attribute that corresponds to a local secondary index, internally it will use this index to optimise the query.
 
 ## Testing
 

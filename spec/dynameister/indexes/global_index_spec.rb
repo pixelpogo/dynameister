@@ -7,7 +7,7 @@ describe Dynameister::Indexes::GlobalIndex do
     subject { described_class.new(keys) }
 
     it "has a hash representation" do
-      expect(subject.to_hash).to eq(
+      expect(subject.to_h).to eq(
         {
           name:       "by_uuids_and_created_ats",
           hash_key:   { uuid: :string },
@@ -25,7 +25,7 @@ describe Dynameister::Indexes::GlobalIndex do
     subject { described_class.new(keys, { projection: :keys_only }) }
 
     it "has a hash representation" do
-      expect(subject.to_hash).to eq(
+      expect(subject.to_h).to eq(
         {
           name:       "by_uuids_and_created_ats",
           hash_key:   { uuid: :string },
@@ -43,7 +43,7 @@ describe Dynameister::Indexes::GlobalIndex do
     subject { described_class.new([:uuid]) }
 
     it "has a hash representation" do
-      expect(subject.to_hash).to eq(
+      expect(subject.to_h).to eq(
         {
           name:       "by_uuids",
           hash_key:   { uuid: :string },
@@ -60,7 +60,7 @@ describe Dynameister::Indexes::GlobalIndex do
     subject { described_class.new([:uuid], throughput: [2,3]) }
 
     it "has a hash representation" do
-      expect(subject.to_hash).to eq(
+      expect(subject.to_h).to eq(
         {
           name:       "by_uuids",
           hash_key:   { uuid: :string },

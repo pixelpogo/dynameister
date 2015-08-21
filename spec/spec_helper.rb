@@ -11,6 +11,8 @@ ENV['DYNAMEISTER_ENV'] ||= "test"
 
 Dotenv.load(File.join(File.dirname(__FILE__), ".env.#{ENV['DYNAMEISTER_ENV']}"))
 
+Dir[File.join(File.dirname(__FILE__), "/support/**/*.rb")].each { |f| require f }
+
 RSpec.configure do |config|
 
   config.expect_with :rspec do |expectations|
@@ -21,8 +23,4 @@ RSpec.configure do |config|
     mocks.verify_partial_doubles = true
   end
 
-end
-
-def delete_table(name)
-  Dynameister::Client.new.delete_table table_name: name
 end
