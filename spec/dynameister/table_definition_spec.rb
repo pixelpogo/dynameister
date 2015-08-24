@@ -247,11 +247,15 @@ describe Dynameister::TableDefinition do
             {
               name:       'global_index',
               hash_key:   { hash_key_for_global_index:  :string },
-              range_key:  { range_key_for_global_index: :number },
+              range_key:  { range_key_for_index: :number },
               projection: :all,
               throughput: [1,1]
             }
           ]
+        end
+
+        let(:local_indexes_with_duplicate_range_key) do
+          [ { name: 'index3',  range_key: { range_key_for_index: :number }, projection: :all } ]
         end
 
         let(:options) do
@@ -260,7 +264,7 @@ describe Dynameister::TableDefinition do
             range_key:      range_key,
             read_capacity:  capacity,
             write_capacity: capacity,
-            local_indexes:  local_indexes_with_other_range_key,
+            local_indexes:  local_indexes_with_duplicate_range_key,
             global_indexes: global_indexes_with_other_hash_and_range_keys
           }
         end
@@ -274,7 +278,7 @@ describe Dynameister::TableDefinition do
 
         let(:expected_other_range_key) do
           {
-            attribute_name: "range_key_for_global_index",
+            attribute_name: "range_key_for_index",
             attribute_type: "N"
           }
         end
@@ -286,6 +290,24 @@ describe Dynameister::TableDefinition do
 
         it "adds the range_key to the attribute definitions" do
           expect(subject[:attribute_definitions]).to include(expected_other_range_key)
+        end
+
+        it "does not add duplicate entries to the attribute definitions" do
+          expect(
+            subject[:attribute_definitions]
+          ).to contain_exactly(
+            {
+              attribute_name: "my_hash_key",
+              attribute_type: "S"
+            },
+            {
+              attribute_name: "my_range_key",
+              attribute_type: "N"
+            },
+            expected_other_hash_key,
+            expected_other_range_key
+          )
+
         end
 
       end
