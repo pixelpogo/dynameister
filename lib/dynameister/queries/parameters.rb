@@ -12,12 +12,9 @@ module Dynameister
       end
 
       def to_h
-        params = {}.tap do |hash|
-
-          index = find_local_index_for_attributes
-          hash[:index_name] = index if index
-        end
-
+        index = find_local_index_for_attributes
+        params = {}
+        params.merge!(index_name: index) if index
         params.merge!(filter_expression)
       end
 
