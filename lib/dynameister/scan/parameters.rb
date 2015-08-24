@@ -29,7 +29,7 @@ module Dynameister
           end
         end
 
-        local_indexes.first[:name] if local_indexes.any?
+        local_indexes.compact.first[:name] if local_indexes.any?
       end
 
       def filter_expression
