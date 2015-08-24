@@ -100,21 +100,58 @@ Supported methods for querying:
 * by hash_key (uses DynamoDB query)
 * filter on matching values for attributes (uses DynamoDB scan)
 * return a whole collection of documents (uses DynamoDB scan without a filter)
-* return a limited number of documents
+
+The Queries are built lazily, via the DSL for adding attributes to the query and comparison or logical operators.
+Calling `.all` on the query, will execute the query and return the result. 
+
+### Queries
+
+DynamoDB query should be used whenever the `hash_key` or additionally the `range_key` is available.
 
 ```ruby
 # Perform a query using hash and range key.
 # It is also possible for query to only receive the hash key.
 # In this case all books with that hash key and - if present -
 # different range keys would be returned.
-Book.query(hash_key: "72c62052", range_key: 42)
+Book.query(hash_key: "72c62052").all # or
+Book.query(hash_key: "72c62052").and(range_key: 42).all
+Book.query(hash_key: "72c62052").and(range_key: 42).limit(1)
+
+# You can also do comparisons on the range_key,
+# e.g. returning objects with ranges less than or equal to 42
+Book.query(hash_key: "72c62052").le(range_key: 42).all 
+
 
 # Same as above but uses get_item underneath
-Book.find_by(hash_key: "a17871e56c14")
+Book.find_by(hash_key: { uuid: "a17871e56c14" })
+```
+
+### Scans
+
+DynamoDB scan can be used when filtering on other attributes other than `hash_key` and `range_key`.
+
+Using 
+```ruby
 
 # Filter on other attributes other than the hash_key
 Book.scan(author_id: 42)
+
+# Combining attributes for filtering
+Book.scan(author_id: 42).and(locale: "DE").all # finds all books with author_id 42 and locale DE
+Book.scan(author_id: 42).or.where(region: "germany").all # finds all books with author_id 42 or locale DE
+Book.scan(author_id: 42).lt(rank: 42).all # finds all the books with author_id # 42 and a rank less than 42
+# Contains in
+Book.scan(author_id: [40, 41, 42]).all # providing an array with values will return all books with author_ids in 40, 41, 42
 ```
+
+#### Comparison operators
+
+The default is equals `=`. Aliases are `and`, `eq` and `in`. Other supported operators are:
+* Less than or equal to `<=`, as `le` 
+* Greater than `>`, as `gt`
+* Less than`<`, as `lt`
+* Greater than or equal to `>=`, as `ge`
+ 
 When using scan with an attribute that corresponds to a local secondary index, internally it will use this index to optimise the query.
 
 ## Development
