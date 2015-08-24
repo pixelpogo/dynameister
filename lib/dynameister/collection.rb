@@ -30,6 +30,8 @@ module Dynameister
 
     private
 
+    private
+
     def deserialize_response(response, previous_response = nil)
       Response.new.tap do |current_response|
         if previous_response
