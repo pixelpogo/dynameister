@@ -9,13 +9,16 @@ module Dynameister
     module ClassMethods
 
       def query(options={})
-        collection = Collection.new(client, table_name)
-        Query.new(collection, self, :query).where(options)
+        perform_operation(:query, options)
       end
 
-      def scan(options = {})
+      def scan(options={})
+        perform_operation(:scan, options)
+      end
+
+      def perform_operation(operation, options)
         collection = Collection.new(client, table_name)
-        Query.new(collection, self).where(options)
+        Query.new(collection, self, operation).where(options)
       end
 
     end
@@ -23,3 +26,4 @@ module Dynameister
   end
 
 end
+

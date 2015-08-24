@@ -30,18 +30,16 @@ module Dynameister
 
     private
 
-    private
-
     def deserialize_response(response, previous_response = nil)
       Response.new.tap do |current_response|
-        if previous_response
-          current_response = previous_response
-        end
-
+        current_response = previous_response if previous_response
         current_response.count += response.count
-        current_response.entities += response.items.map do |item|
-          item.symbolize_keys
-        end if response.items
+
+        if response.items
+          current_response.entities += response.items.map do |item|
+            item.symbolize_keys
+          end
+        end
       end
     end
 

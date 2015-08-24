@@ -128,7 +128,7 @@ Book.find_by(hash_key: { uuid: "a17871e56c14" })
 
 ### Scans
 
-DynamoDB scan can be used when filtering on other attributes other than `hash_key` and `range_key`.
+DynamoDB scan can be used when filtering on attributes other than `hash_key` and `range_key`.
 
 Using 
 ```ruby
