@@ -1,69 +1,141 @@
-require_relative '../app/models/book'
+require_relative "../app/models/book"
 
 describe Dynameister::Query do
 
-  before do
-    Book.create_table
+  let(:collection) { Dynameister::Collection.new(Book.client, "books" ) }
+
+  before  { Book.create_table }
+
+  after   { delete_table "books"}
+
+  let(:query) { described_class.new(collection, Book) }
+
+  describe "operation" do
+
+    describe "scan" do
+
+      subject { query }
+
+      its(:operation) { is_expected.to eq :scan }
+
+      it "equals after query call" do
+        expect(subject.where(something: "anything").operation).to eq :scan
+      end
+
+      it "equals after or call" do
+        expect(subject.or.operation).to eq :scan
+      end
+
+      it "equals after limit call" do
+        expect(subject.limit(1).operation).to eq :scan
+      end
+
+      it "equals after count call" do
+        subject.count
+        expect(subject.operation).to eq :scan
+      end
+
+    end
+
+    describe "query" do
+
+      subject { described_class.new(collection, Book, :query) }
+
+      describe "after query call" do
+
+        its(:operation) { is_expected.to eq :query }
+
+        it "equals after or call" do
+          expect(subject.or.operation).to eq :query
+        end
+
+        it "equals after limit call" do
+          expect(subject.limit(1).operation).to eq :query
+        end
+
+        describe "key condition expression" do
+
+          let(:options) { { uuid: "some uuid" } }
+
+          subject { described_class.new(collection, Book, :query).where(options).options }
+
+          it "builds the query hash with a filter expression" do
+            expect(subject[:key_condition_expression]).to eq "#uuid = :uuid"
+          end
+
+        end
+
+      end
+
+    end
+
+    describe "options" do
+
+      subject { query.where(options).options }
+
+      let(:options) { { something: "anything" } }
+
+      it "builds the query hash with a filter expression" do
+        expect(subject[:filter_expression]).to eq "#something = :something"
+      end
+
+      it "builds the query hash with expression attribute names" do
+        expect(subject[:expression_attribute_names]).to eq({ "#something" => "something" })
+      end
+
+      it "builds the query hash with expression attribute names" do
+        expect(subject[:expression_attribute_values]).to eq({ ":something" => "anything" })
+      end
+
+      context "combining queries" do
+
+        subject { query.where(options).and(more: "of something").options }
+
+        it "builds the query hash with a filter expression" do
+          expect(
+            subject[:filter_expression]
+          ).to eq "#something = :something and #more = :more"
+        end
+
+        it "builds the query hash with expression attribute names" do
+          expect(
+            subject[:expression_attribute_names]
+          ).to eq({ "#something" => "something", "#more" => "more" })
+        end
+
+        it "builds the query hash with expression attribute names" do
+          expect(
+            subject[:expression_attribute_values]
+          ).to eq({ ":something" => "anything", ":more" => "of something" })
+        end
+      end
+
+      context "combining or queries" do
+
+        subject { query.where(options).or.where(more: "of something").options }
+
+        it "builds the query hash with a filter expression" do
+          expect(
+            subject[:filter_expression]
+          ).to eq "#something = :something or #more = :more"
+        end
+
+      end
+
+      context "comparison" do
+
+        subject { query.where(options).le(age: 42).options }
+
+        it "builds the query hash with a filter expression" do
+          expect(
+            subject[:filter_expression]
+          ).to eq "#something = :something and #age <= :age"
+        end
+
+      end
+
+    end
+
   end
 
-  let!(:book) { Book.create(name: "bog", rank: 42, author_id: 2) }
-
-  after { delete_table "books" }
-
-  describe "query with a given hash_key" do
-
-    subject { Book.query(uuid: book.uuid).all }
-
-    it "returns a record by hash key" do
-      expect(subject.count).to eq(1)
-    end
-
-    it "returns the book with the corresponding attritbutes" do
-      expect(subject.first.uuid).to eq book.uuid
-    end
-
-  end
-
-describe "query with a hash and range key" do
-
-    subject { Book.query(uuid: book.uuid).and(rank: 42).all }
-
-    it "returns the book with the given hash and range keys" do
-      expect(subject.first.rank).to eq(42)
-    end
-  end
-
-  describe "combining queries" do
-
-    subject do
-      Book.query(uuid: book.uuid).and(rank: book.rank).and(name: book.name).all
-    end
-
-    it "returns a book for a given hash_key and name" do
-      expect(subject.first.rank).to eq book.rank
-    end
-
-  end
-
-  describe "#limit" do
-
-    subject { Book.query(uuid: book.uuid).limit(1).all }
-
-    it "limits the nummber of results" do
-      expect(subject.count).to eq 1
-    end
-
-  end
-
-  describe "#or" do
-
-    let!(:other_book)  { Book.create(rank: 99, author_id: 1, name: "my book") }
-
-    subject { Book.scan(name: book.name).or.query(rank: 99) }
-
-    it "returns the 2 books matching the filter" do
-      expect(subject.count).to eq 2
-    end
-
-  end
 end

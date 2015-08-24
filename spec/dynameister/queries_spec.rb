@@ -2,7 +2,7 @@ require_relative "../app/models/book"
 
 describe Dynameister::Queries do
 
-  let(:book) { Book.create(author_id: 42, rank: 2, name: "bog") }
+  let(:book) { Book.create(author_id: 42, rank: 42, name: "bog") }
 
   before do
     Book.create_table
@@ -10,6 +10,63 @@ describe Dynameister::Queries do
   end
 
   after { delete_table "books" }
+
+  describe "query with a given hash_key" do
+
+    subject { Book.query(uuid: book.uuid).all }
+
+    it "returns a record by hash key" do
+      expect(subject.count).to eq(1)
+    end
+
+    it "returns the book with the corresponding attritbutes" do
+      expect(subject.first.uuid).to eq book.uuid
+    end
+
+  end
+
+  describe "query with a hash and range key" do
+
+    subject { Book.query(uuid: book.uuid).and(rank: 42).all }
+
+    it "returns the book with the given hash and range keys" do
+      expect(subject.first.rank).to eq(42)
+    end
+  end
+
+  describe "combining queries" do
+
+    subject do
+      Book.query(uuid: book.uuid).and(rank: book.rank).and(name: book.name).all
+    end
+
+    it "returns a book for a given hash_key and name" do
+      expect(subject.first.rank).to eq book.rank
+    end
+
+  end
+
+  describe "#limit" do
+
+    subject { Book.query(uuid: book.uuid).limit(1).all }
+
+    it "limits the nummber of results" do
+      expect(subject.count).to eq 1
+    end
+
+  end
+
+  describe "#or" do
+
+    let!(:other_book)  { Book.create(rank: 99, author_id: 1, name: "my book") }
+
+    subject { Book.scan(name: book.name).or.where(rank: 99) }
+
+    it "returns the 2 books matching the filter" do
+      expect(subject.count).to eq 2
+    end
+
+  end
 
   describe "scan returns a collection" do
 
@@ -29,7 +86,7 @@ describe Dynameister::Queries do
 
     context "scanning with multiple attributes" do
 
-      subject { Book.scan(name: "bog").and(rank: 2).all }
+      subject { Book.scan(name: "bog").and(rank: 42).all }
 
       it "returns one book matching the filter" do
         expect(subject.count).to eq 1
@@ -104,7 +161,7 @@ describe Dynameister::Queries do
         subject { Book.scan(name: "bog1").or.le(rank: 2) }
 
         it "returns the " do
-          expect(subject.count).to eq 4
+          expect(subject.count).to eq 3
         end
 
       end

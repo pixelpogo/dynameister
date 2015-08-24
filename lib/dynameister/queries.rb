@@ -10,12 +10,12 @@ module Dynameister
 
       def query(options={})
         collection = Collection.new(client, table_name)
-        Query.new(collection, self, :query).query(options)
+        Query.new(collection, self, :query).where(options)
       end
 
       def scan(options = {})
         collection = Collection.new(client, table_name)
-        Query.new(collection, self).query(options)
+        Query.new(collection, self).where(options)
       end
 
     end
