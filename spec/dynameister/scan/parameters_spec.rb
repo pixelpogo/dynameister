@@ -80,6 +80,17 @@ describe Dynameister::Scan::Parameters do
     it_behaves_like "a single-attribute filter"
     it_behaves_like "a multi-attribute filter"
 
+    context "if not the first queried attribute has an index" do
+
+      let(:local_index) { Dynameister::Indexes::LocalIndex.new(:name).to_h }
+      let(:options)     { { age: 42, name: "bob" } }
+
+      its([:index_name]) { is_expected.to eq "by_name" }
+
+      it_behaves_like "a multi-attribute filter"
+
+    end
+
   end
 
 end
