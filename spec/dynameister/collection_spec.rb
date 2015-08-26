@@ -6,7 +6,7 @@ describe Dynameister::Collection do
 
   let(:table_name) { "languages" }
 
-  subject { described_class.new(client, table_name ) }
+  subject { described_class.new(client, table_name) }
 
   let(:response) { double("response", items: []) }
 

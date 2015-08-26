@@ -19,7 +19,7 @@ describe Dynameister::Queries do
       expect(subject.count).to eq(1)
     end
 
-    it "returns the book with the corresponding attritbutes" do
+    it "returns the book with the uuid" do
       expect(subject.first.uuid).to eq book.uuid
     end
 
@@ -27,10 +27,10 @@ describe Dynameister::Queries do
 
   describe "query with a hash and range key" do
 
-    subject { Book.query(uuid: book.uuid).and(rank: 42).all }
+    subject { Book.query(uuid: book.uuid).and(rank: book.rank).all }
 
     it "returns the book with the given hash and range keys" do
-      expect(subject.first.rank).to eq(42)
+      expect(subject.first.rank).to eq book.rank
     end
   end
 
@@ -42,16 +42,6 @@ describe Dynameister::Queries do
 
     it "returns a book for a given hash_key and name" do
       expect(subject.first.rank).to eq book.rank
-    end
-
-  end
-
-  describe "#limit" do
-
-    subject { Book.query(uuid: book.uuid).limit(1).all }
-
-    it "limits the nummber of results" do
-      expect(subject.count).to eq 1
     end
 
   end
@@ -86,7 +76,7 @@ describe Dynameister::Queries do
 
     context "scanning with multiple attributes" do
 
-      subject { Book.scan(name: "bog").and(rank: 42).all }
+      subject { Book.scan(name: "bog").and(rank: book.rank).all }
 
       it "returns one book matching the filter" do
         expect(subject.count).to eq 1
@@ -140,6 +130,16 @@ describe Dynameister::Queries do
 
       it "counts the collection" do
         expect(subject).to eq 2
+      end
+
+    end
+
+    context "limit" do
+
+      subject { Book.scan(author_id: [0,1,2]).limit(1).all }
+
+      it "limits the nummber of results" do
+        expect(subject.count).to eq 1
       end
 
     end
