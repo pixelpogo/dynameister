@@ -10,16 +10,30 @@ describe Dynameister::Finders do
 
   describe "fetching a document" do
 
-    let!(:language) { Language.create(locale: "grumpy_cat") }
+    context "there is a language" do
 
-    subject { Language.find_by(hash_key: { id: language.id }) }
+      let!(:language) { Language.create(locale: "grumpy_cat") }
 
-    it "returns an instance of document" do
-      expect(subject).to be_an_instance_of(Language)
+      subject { Language.find_by(hash_key: { id: language.id }) }
+
+      it "returns an instance of document" do
+        expect(subject).to be_an_instance_of(Language)
+      end
+
+      it "finds a document for a given hash key and returns the data" do
+        expect(subject.attributes).to eq(language.attributes)
+      end
+
     end
 
-    it "finds a document for a given hash key and returns the data" do
-      expect(subject.attributes).to eq(language.attributes)
+    context "no language found for the given hash key" do
+
+      subject { Language.find_by(hash_key: {id: "nothing here"}) }
+
+      it "finds a document for a given hash key and returns the data" do
+        expect(subject).to be_nil
+      end
+
     end
 
   end
