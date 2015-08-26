@@ -19,7 +19,7 @@ describe Dynameister::Query do
       its(:operation) { is_expected.to eq :scan }
 
       it "equals after query call" do
-        expect(subject.where(something: "anything").operation).to eq :scan
+        expect(subject.having(something: "anything").operation).to eq :scan
       end
 
       it "equals after or call" do
@@ -57,7 +57,7 @@ describe Dynameister::Query do
 
           let(:options) { { uuid: "some uuid" } }
 
-          subject { described_class.new(collection, Book, :query).where(options).options }
+          subject { described_class.new(collection, Book, :query).having(options).options }
 
           it "builds the query hash with a filter expression" do
             expect(subject[:key_condition_expression]).to eq "#uuid = :uuid"
@@ -71,7 +71,7 @@ describe Dynameister::Query do
 
     describe "options" do
 
-      subject { query.where(options).options }
+      subject { query.having(options).options }
 
       let(:options) { { something: "anything" } }
 
@@ -89,7 +89,7 @@ describe Dynameister::Query do
 
       context "combining queries" do
 
-        subject { query.where(options).and(more: "of something").options }
+        subject { query.having(options).and(more: "of something").options }
 
         it "builds the query hash with a filter expression" do
           expect(
@@ -112,7 +112,7 @@ describe Dynameister::Query do
 
       context "combining or queries" do
 
-        subject { query.where(options).or.where(more: "of something").options }
+        subject { query.having(options).or.having(more: "of something").options }
 
         it "builds the query hash with a filter expression" do
           expect(
@@ -124,7 +124,7 @@ describe Dynameister::Query do
 
       context "comparison" do
 
-        subject { query.where(options).le(age: 42).options }
+        subject { query.having(options).le(age: 42).options }
 
         it "builds the query hash with a filter expression" do
           expect(

@@ -18,7 +18,7 @@ module Dynameister
 
       def perform_operation(operation, options)
         collection = Collection.new(client, table_name)
-        Query.new(collection, self, operation).where(options)
+        Query.new(collection, self, operation).having(options)
       end
 
     end
