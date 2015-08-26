@@ -2,11 +2,15 @@ require_relative "../app/models/book"
 
 describe Dynameister::Query do
 
-  let(:collection) { Dynameister::Collection.new(Book.client, "books" ) }
+  let(:table_name) { "books" }
+
+  let(:collection) do
+    Dynameister::Collection.new(Book.client, table_name)
+  end
 
   before  { Book.create_table }
 
-  after   { delete_table "books"}
+  after   { delete_table table_name }
 
   let(:query) { described_class.new(collection, Book) }
 
@@ -59,7 +63,7 @@ describe Dynameister::Query do
 
           subject { described_class.new(collection, Book, :query).having(options).options }
 
-          it "builds the query hash with a filter expression" do
+          it "builds the query hash with the correct key" do
             expect(subject[:key_condition_expression]).to eq "#uuid = :uuid"
           end
 
@@ -83,7 +87,7 @@ describe Dynameister::Query do
         expect(subject[:expression_attribute_names]).to eq({ "#something" => "something" })
       end
 
-      it "builds the query hash with expression attribute names" do
+      it "builds the query hash with expression attribute values" do
         expect(subject[:expression_attribute_values]).to eq({ ":something" => "anything" })
       end
 

@@ -57,9 +57,10 @@ describe Dynameister::Queries::Parameters do
     let(:comparator) { "=" }
     let(:options)    { { age: 42 } }
 
-    it { is_expected.to_not have_key(:index_name) }
+    it               { is_expected.to_not have_key(:index_name) }
 
     it_behaves_like "a single-attribute filter"
+
   end
 
   describe "parameters for a model with local indexes" do
@@ -75,7 +76,7 @@ describe Dynameister::Queries::Parameters do
 
   end
 
-  describe "comparion operators" do
+  describe "comparison operators" do
 
     let(:model)   { double('model', local_indexes: []) }
     let(:options) { { age: 42 } }
@@ -123,3 +124,4 @@ describe Dynameister::Queries::Parameters do
   end
 
 end
+

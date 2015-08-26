@@ -50,7 +50,7 @@ describe Dynameister::Queries do
 
     let!(:other_book) { Book.create(rank: 99, author_id: 1, name: "my book") }
 
-    subject { Book.scan(name: book.name).or.having(rank: 99) }
+    subject { Book.scan(name: book.name).or.having(rank: other_book.rank) }
 
     it "returns the 2 books matching the filter" do
       expect(subject.count).to eq 2
@@ -68,8 +68,8 @@ describe Dynameister::Queries do
         expect(subject.count).to eq 1
       end
 
-      it "returns the book matching the filter for author_id" do
-        expect(subject.first.uuid).to eq book.uuid
+      it "returns the book matching the filter for name" do
+        expect(subject.first.name).to eq "bog"
       end
 
     end
@@ -82,8 +82,8 @@ describe Dynameister::Queries do
         expect(subject.count).to eq 1
       end
 
-      it "returns the book matching the filter for author_id" do
-        expect(subject.first.uuid).to eq book.uuid
+      it "returns the book matching the filter for name and rank" do
+        expect(subject.first.name).to eq "bog"
       end
 
     end
@@ -98,7 +98,7 @@ describe Dynameister::Queries do
 
     context "array with integers" do
 
-      subject { Book.scan(author_id: [0,2] ).all }
+      subject { Book.scan(author_id: [0,2]).all }
 
       it "returns the books matching the filter" do
         expect(subject.count).to eq 2
@@ -136,7 +136,7 @@ describe Dynameister::Queries do
 
     context "limit" do
 
-      subject { Book.scan(author_id: [0,1,2]).limit(1).all }
+      subject { Book.scan(rank: [0,1,2]).limit(1).all }
 
       it "limits the nummber of results" do
         expect(subject.count).to eq 1
@@ -158,9 +158,9 @@ describe Dynameister::Queries do
 
       context "combining queries" do
 
-        subject { Book.scan(name: "bog1").or.le(rank: 2) }
+        subject { Book.scan(name: "bog1").or.le(rank: 2).all }
 
-        it "returns the " do
+        it "returns the matching book" do
           expect(subject.count).to eq 3
         end
 

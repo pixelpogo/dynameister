@@ -48,7 +48,7 @@ module Dynameister
 
         @options.each_with_object(initial) do |(key, value), attributes|
           attributes[:names]["##{key}"]  = key.to_s
-          attributes[:values]            = expression_attribute_values(key,value)
+          attributes[:values]            = expression_attribute_values(key, value)
         end
       end
 
@@ -72,7 +72,6 @@ module Dynameister
                    else
                      "#{name} #{@comparator} #{values}"
                    end
-
       end
 
       def expression_attribute_key_mapping(expression_attributes)
