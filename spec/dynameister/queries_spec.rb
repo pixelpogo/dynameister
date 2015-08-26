@@ -48,7 +48,7 @@ describe Dynameister::Queries do
 
   describe "#or" do
 
-    let!(:other_book)  { Book.create(rank: 99, author_id: 1, name: "my book") }
+    let!(:other_book) { Book.create(rank: 99, author_id: 1, name: "my book") }
 
     subject { Book.scan(name: book.name).or.having(rank: 99) }
 
