@@ -282,4 +282,20 @@ describe Dynameister::Client do
 
   end
 
+  describe "#describe_table" do
+
+    let(:table_name) { "my table" }
+
+    subject { client.describe_table(table_name: table_name) }
+
+    before do
+      allow(client.aws_client).to receive(:describe_table).with(table_name: table_name)
+    end
+
+    it "delegates to aws_client#describe_table" do
+      subject
+      expect(client.aws_client).to have_received(:describe_table).with(table_name: table_name)
+    end
+  end
+
 end

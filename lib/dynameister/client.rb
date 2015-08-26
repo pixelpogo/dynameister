@@ -62,6 +62,10 @@ module Dynameister
       aws_client.query(options)
     end
 
+    def describe_table(table_name:)
+      aws_client.describe_table(table_name: table_name)
+    end
+
     def aws_client
       @@aws_client ||= Aws::DynamoDB::Client.new(aws_client_options)
     end

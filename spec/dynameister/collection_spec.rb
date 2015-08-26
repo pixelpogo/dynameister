@@ -11,13 +11,13 @@ describe Dynameister::Collection do
   let(:response) { double("response", items: []) }
 
   before do
-    allow(subject).to receive(:key_schema).and_return [:id]
+    allow(subject).to receive(:key_schema_keys).and_return [:id]
     allow(client).to receive(:query_table).with({table_name: table_name}).and_return response
     allow(client).to receive(:scan_table).with({table_name: table_name}).and_return response
   end
 
   it "has a key schema" do
-    expect(subject.key_schema).to eq [:id]
+    expect(subject.key_schema_keys).to eq [:id]
   end
 
   describe "#scan" do
