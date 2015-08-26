@@ -183,10 +183,12 @@ module Dynameister
       }
     end
 
+    # We have to make sure to only return unique range keys here,
+    # so that they are not added multiple times to the attribute definitions
     def range_keys_for_indexes
       (options[:local_indexes] + options[:global_indexes]).map { |index| index[:range_key] }.reject do |range_key|
         range_key == options[:range_key]
-      end.uniq # make sure no duplicate keys are added here
+      end.uniq
     end
 
     def hash_keys_for_global_indexes
