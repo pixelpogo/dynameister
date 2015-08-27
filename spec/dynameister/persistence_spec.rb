@@ -3,7 +3,7 @@ require_relative "../app/models/cat"
 
 describe Dynameister::Persistence do
 
-  let(:table_name) { "languages"}
+  let(:table_name) { "languages" }
 
   after do
     delete_table table_name
@@ -27,7 +27,7 @@ describe Dynameister::Persistence do
     end
 
     it "does not create an additional table if it already exists" do
-      expect{ Language.create_table }.not_to raise_exception
+      expect { Language.create_table }.not_to raise_exception
     end
 
     context "custom table name" do
@@ -52,7 +52,6 @@ describe Dynameister::Persistence do
     end
 
   end
-
 
   describe "deleting a document" do
 

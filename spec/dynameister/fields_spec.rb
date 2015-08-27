@@ -20,15 +20,14 @@ describe Dynameister::Fields do
 
     subject { Language }
 
-    its(:attributes) do is_expected.to eq(
-       {
-         id:          { type: :string },
-         locale:      { type: :string },
-         displayable: { type: :boolean },
-         rank:        { type: :integer }
-       }
-     )
-     end
+    its(:attributes) do
+      is_expected.to eq(
+        id:          { type: :string },
+        locale:      { type: :string },
+        displayable: { type: :boolean },
+        rank:        { type: :integer }
+      )
+    end
 
   end
 
@@ -102,4 +101,3 @@ describe Dynameister::Fields do
 
   end
 end
-

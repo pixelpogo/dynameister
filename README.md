@@ -117,6 +117,12 @@ Book.scan(author_id: 42)
 ```
 When using scan with an attribute that corresponds to a local secondary index, internally it will use this index to optimise the query.
 
+## Development
+
+We use [rubocop](https://github.com/bbatsov/rubocop) to ensure our code style guide in combination with [HoundCI](https://houndci.com). This means that when you create a pull request on Github HoundCI will analyse your changes and automatically comment on statements that do not comply with our style guide.
+
+To avoid too many complaints of HoundCI in your pull request use a [plugin for your code editor](https://github.com/bbatsov/rubocop#editor-integration). This allows you to get notified about not complying statements before your pull request is created.
+
 ## Testing
 
 1. Copy `spec/.env.test.template` to `spec/.env.test`,

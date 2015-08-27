@@ -39,13 +39,13 @@ describe Dynameister::Scan::Parameters do
       it "includes proper expression attribute names" do
         expect(
           subject[:expression_attribute_names]
-        ).to eq({ "#age" => "age", "#name" => "name" })
+        ).to eq("#age" => "age", "#name" => "name")
       end
 
       it "includes proper expression attribute values" do
         expect(
           subject[:expression_attribute_values]
-        ).to eq({ ":age" => 42, ":name" => "bob" })
+        ).to eq(":age" => 42, ":name" => "bob")
       end
 
     end

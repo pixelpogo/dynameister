@@ -1,5 +1,7 @@
 module Dynameister
+
   module Fields
+
     extend ActiveSupport::Concern
 
     included do
@@ -32,14 +34,14 @@ module Dynameister
 
       def table(options = {})
         self.options = options
-        unless(attributes.has_key? hash_key)
+        unless attributes.has_key? hash_key
           remove_field :id
           field(hash_key)
         end
       end
 
       def remove_field(field)
-        attributes.delete(field) or raise "No such field"
+        attributes.delete(field) || raise("No such field")
         remove_method field
         remove_method :"#{field}="
       end
@@ -62,7 +64,7 @@ module Dynameister
     end
 
     def hash_key=(value)
-      self.send("#{self.class.hash_key}=", value)
+      send("#{self.class.hash_key}=", value)
     end
 
     def range_key
@@ -72,7 +74,7 @@ module Dynameister
     end
 
     def range_key=(value)
-      self.send("#{self.class.range_key}=", value)
+      send("#{self.class.range_key}=", value)
     end
 
     private
@@ -86,5 +88,5 @@ module Dynameister
     end
 
   end
-end
 
+end

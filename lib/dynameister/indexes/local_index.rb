@@ -1,5 +1,7 @@
 module Dynameister
+
   module Indexes
+
     class LocalIndex
 
       LOCAL_INDEX_PREFIX = "by_"
@@ -22,5 +24,7 @@ module Dynameister
       end
 
     end
+
   end
+
 end

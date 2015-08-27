@@ -1,4 +1,5 @@
 class Book
+
   include Dynameister::Document
 
   field :name
@@ -8,4 +9,5 @@ class Book
   table hash_key: :uuid, range_key: :rank
 
   local_index :author_id
+
 end

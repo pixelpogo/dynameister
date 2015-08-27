@@ -1,7 +1,9 @@
 require 'securerandom'
 
 module Dynameister
+
   module Persistence
+
     extend ActiveSupport::Concern
 
     module ClassMethods
@@ -17,13 +19,13 @@ module Dynameister
       def create_table(options: {})
         options =
         {
-          range_key:      self.range_key,
-          local_indexes:  self.local_indexes,
-          global_indexes: self.global_indexes
+          range_key:      range_key,
+          local_indexes:  local_indexes,
+          global_indexes: global_indexes
         }.merge(options)
 
         unless table_exists?
-          client.create_table(table_name: self.table_name, hash_key: self.hash_key, options: options)
+          client.create_table(table_name: table_name, hash_key: hash_key, options: options)
         end
       end
 
@@ -34,6 +36,7 @@ module Dynameister
       def create(attrs = {})
         new(attrs).save
       end
+
     end
 
     def save
@@ -43,7 +46,7 @@ module Dynameister
 
     def delete
       params = { self.class.hash_key => hash_key }
-      client.delete_item(table_name: table_name, hash_key: params )
+      client.delete_item(table_name: table_name, hash_key: params)
     end
 
     private
@@ -57,9 +60,10 @@ module Dynameister
     end
 
     def persist
-      self.hash_key ||= SecureRandom.uuid unless self.hash_key
-      client.put_item(table_name: table_name, item: self.attributes)
+      self.hash_key ||= SecureRandom.uuid unless hash_key
+      client.put_item(table_name: table_name, item: attributes)
     end
 
   end
+
 end
