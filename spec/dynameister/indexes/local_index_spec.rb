@@ -8,11 +8,9 @@ describe Dynameister::Indexes::LocalIndex do
 
     it "has a hash representation" do
       expect(subject.to_h).to eq(
-        {
-          name:       "by_adopted_at",
-          range_key:  { range_key => :number },
-          projection: :all
-        }
+        name:       "by_adopted_at",
+        range_key:  { range_key => :number },
+        projection: :all
       )
     end
 
@@ -20,19 +18,16 @@ describe Dynameister::Indexes::LocalIndex do
 
   context "overriding the projection type" do
 
-    subject { described_class.new(range_key, { projection: :keys_only }) }
+    subject { described_class.new(range_key, projection: :keys_only) }
 
     it "has a hash representation" do
       expect(subject.to_h).to eq(
-        {
-          name:       "by_adopted_at",
-          range_key:  { range_key => :number },
-          projection: :keys_only
-        }
+        name:       "by_adopted_at",
+        range_key:  { range_key => :number },
+        projection: :keys_only
       )
     end
 
   end
 
 end
-

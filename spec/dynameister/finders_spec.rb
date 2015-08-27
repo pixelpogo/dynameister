@@ -2,7 +2,7 @@ require_relative "../app/models/language"
 
 describe Dynameister::Finders do
 
-  let(:table_name) { "languages"}
+  let(:table_name) { "languages" }
 
   before { Language.create_table }
 
@@ -58,4 +58,3 @@ describe Dynameister::Finders do
   end
 
 end
-

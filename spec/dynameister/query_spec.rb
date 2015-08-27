@@ -32,4 +32,3 @@ describe Dynameister::Query do
   end
 
 end
-
