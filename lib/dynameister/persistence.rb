@@ -37,6 +37,16 @@ module Dynameister
         new(attrs).save
       end
 
+      def schema
+        @schema ||= client.describe_table(table_name: table_name).table
+      end
+
+      def key_schema_keys
+        schema[:key_schema].map do |key|
+          key[:attribute_name].to_sym
+        end
+      end
+
     end
 
     def save
