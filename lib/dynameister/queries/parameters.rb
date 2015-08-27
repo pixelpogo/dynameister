@@ -58,25 +58,32 @@ module Dynameister
                                 value.each_with_object({}).with_index do |(val, hash), index|
                                   hash[":#{key}#{index}"] = val
                                 end
+                              when value.is_a?(Range)
+                                [value.first, value.last].each_with_object({}).with_index do |(val, hash), index|
+                                  hash[":#{key}#{index}"] = val
+                                end
                               else
                                 {":#{key}" => value }
                               end
       end
 
+
       def build_filter_expression(expression_attributes)
         key_mapping = expression_attribute_key_mapping(expression_attributes)
-        name, values = key_mapping.keys.first, key_mapping.values.first
+        name, values = key_mapping.keys.first, key_mapping.values.flatten
         filter ||= case
                    when @options.values.first.is_a?(Array)
-                     "#{name} in (#{values})"
+                     "#{name} in (#{values.join(', ')})"
+                   when @options.values.first.is_a?(Range)
+                     "#{name} between #{values.first} and #{values.last}"
                    else
-                     "#{name} #{@comparator} #{values}"
+                     "#{name} #{@comparator} #{values.first}"
                    end
       end
 
       def expression_attribute_key_mapping(expression_attributes)
         names = expression_attributes[:names].keys.first
-        values = expression_attributes[:values].keys.join(", ")
+        values = expression_attributes[:values].keys
         { names => values }
       end
 

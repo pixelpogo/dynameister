@@ -47,6 +47,28 @@ describe Dynameister::Queries::Parameters do
 
     end
 
+    describe "filter expression with ranges" do
+
+      let(:options) { { age: 40..42 } }
+
+      it "includes a proper filter expression" do
+        expect(subject[:filter_expression]).to eq "#age between :age0 and :age1"
+      end
+
+      it "includes proper expression attribute names" do
+        expect(
+          subject[:expression_attribute_names]
+        ).to eq ( {"#age" => "age"})
+      end
+
+      it "includes proper expression attribute values" do
+        expect(
+          subject[:expression_attribute_values]
+        ).to eq(":age0" => 40, ":age1" => 42)
+
+      end
+
+    end
   end
 
   subject { described_class.new(model, :filter_expression, options, comparator).to_h }

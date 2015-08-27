@@ -134,16 +134,6 @@ describe Dynameister::Queries do
 
     end
 
-    context "limit" do
-
-      subject { Book.scan(rank: [0,1,2]).limit(1).all }
-
-      it "limits the nummber of results" do
-        expect(subject.count).to eq 1
-      end
-
-    end
-
     describe "comparison" do
 
       context "there is a book matching the criteria" do
@@ -176,6 +166,33 @@ describe Dynameister::Queries do
 
       end
 
+    end
+
+    describe "between two values" do
+
+      before do
+        3.times { |n| Book.create(author_id: n, rank: n, name: "bog#{n}") }
+      end
+
+      subject { Book.scan(author_id: 40..42).all }
+
+      it "returns the books with rank greater than or equal to 1, and less than or equal to 3" do
+        expect(subject.count).to eq 1
+      end
+
+    end
+
+    describe "limit" do
+
+      before do
+        3.times { |n| Book.create(author_id: n, rank: n, name: "bog#{n}") }
+      end
+
+      subject { Book.scan(rank: [0,1,2]).limit(1).all }
+
+      it "limits the number of results" do
+        expect(subject.count).to eq 1
+      end
     end
 
   end

@@ -138,10 +138,14 @@ Book.scan(author_id: 42)
 
 # Combining attributes for filtering
 Book.scan(author_id: 42).and(locale: "DE").all # finds all books with author_id 42 and locale DE
-Book.scan(author_id: 42).or.having(region: "germany").all # finds all books with author_id 42 or locale DE
+Book.scan(author_id: 42).or.having(locale: "DE").all # finds all books with author_id 42 or locale DE
 Book.scan(author_id: 42).lt(rank: 42).all # finds all the books with author_id # 42 and a rank less than 42
 # Contains in
 Book.scan(author_id: [40, 41, 42]).all # providing an array with values will return all books with author_ids in 40, 41, 42
+# Between values
+Book.scan(author_id: 1..3).all # providing a range will return all books with author_ids
+                               # greater than or equal to 1, and less than or equal to 3.
+
 ```
 
 #### Comparison operators
