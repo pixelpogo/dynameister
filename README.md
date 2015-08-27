@@ -131,7 +131,7 @@ To avoid too many complaints of HoundCI in your pull request use a [plugin for y
 
 ## Contributing
 
-Have a look at our [ToDo list](https://github.com/lessonnine/dynameister.gem/blob/master/TODO.md) first, please.
+Have a look at [existing issues](https://github.com/lessonnine/dynameister.gem/issues) first, please. Most of the time this is a good way to start getting used to the code base.
 
 1. Fork it ( https://github.com/[my-github-username]/dynameister/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
