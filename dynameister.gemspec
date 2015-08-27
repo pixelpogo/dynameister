@@ -6,10 +6,13 @@ require 'dynameister/version'
 Gem::Specification.new do |spec|
   spec.name          = "dynameister"
   spec.version       = Dynameister::VERSION
-  spec.authors       = ["Oliver Grimm", "Sebastian Oelke"]
-  spec.email         = ["soelke@babbel.com"]
-  spec.summary       = "A Ruby convenience wrapper from Amazons DynamoDB."
-  spec.description   = %q{TODO: Write a longer description. Optional.}
+  spec.authors       = ["Oliver Grimm", "Sebastian Oelke", "Nicola Sheldrick"]
+  spec.email         = ["ogrimm@babbel.com", "soelke@babbel.com", "nsheldrick@babbel.com"]
+  spec.summary       = "A Ruby convenience wrapper for Amazon's DynamoDB."
+  spec.description   = "Dynameister is an Object Document Mapper (ODM) for Amazon's
+                        DynamoDB. It provides a convenient interface for CRUD operations
+                        of your models. Besides that, global and local secondary
+                        indexes are supported."
   spec.homepage      = "https://github.com/lessonnine/dynameister.gem"
 
   spec.files         = `git ls-files -z`.split("\x0")
