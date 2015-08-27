@@ -1,12 +1,13 @@
 module Dynameister
 
   module Scan
+
     extend ActiveSupport::Concern
 
     module ClassMethods
 
       def scan(options = {})
-        response = self.client.scan_table(parameters(options))
+        response = client.scan_table(parameters(options))
         Collection.new(response, self)
       end
 
@@ -17,6 +18,7 @@ module Dynameister
       end
 
     end
+
   end
 
 end

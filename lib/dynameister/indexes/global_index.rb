@@ -1,5 +1,7 @@
 module Dynameister
+
   module Indexes
+
     class GlobalIndex
 
       GLOBAL_INDEX_PREFIX      = "by_"
@@ -10,7 +12,7 @@ module Dynameister
       def initialize(keys, options = {})
         @keys       = keys
         @projection = options[:projection] || :all
-        @throughput = options[:throughput] || [1,1]
+        @throughput = options[:throughput] || [1, 1]
       end
 
       def to_h
@@ -45,5 +47,7 @@ module Dynameister
       end
 
     end
+
   end
+
 end

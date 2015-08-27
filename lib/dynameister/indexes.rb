@@ -4,6 +4,7 @@ require "dynameister/indexes/local_index"
 module Dynameister
 
   module Indexes
+
     extend ActiveSupport::Concern
 
     included do
@@ -17,12 +18,12 @@ module Dynameister
 
       def local_index(range_key, options = {})
         local_index = LocalIndex.new(range_key, options)
-        self.local_indexes << local_index.to_h
+        local_indexes << local_index.to_h
       end
 
       def global_index(keys, options = {})
         global_index = GlobalIndex.new(keys, options)
-        self.global_indexes << global_index.to_h
+        global_indexes << global_index.to_h
       end
 
     end

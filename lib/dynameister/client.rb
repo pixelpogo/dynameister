@@ -20,38 +20,36 @@ module Dynameister
     end
 
     def delete_table(table_name:)
-      begin
-        table = aws_client.delete_table(table_name: table_name)
-      rescue Aws::DynamoDB::Errors::ResourceNotFoundException
-        false
-      else
-        sleep 0.5 while table.table_description.table_status == 'DELETING'
-        true
-      end
+      table = aws_client.delete_table(table_name: table_name)
+    rescue Aws::DynamoDB::Errors::ResourceNotFoundException
+      false
+    else
+      sleep 0.5 while table.table_description.table_status == 'DELETING'
+      true
     end
 
     def get_item(table_name:, hash_key:, range_key: nil)
       serialized = Dynameister::Serializers::GetItemSerializer.new(
-                    table_name: table_name,
-                    hash_key:   hash_key,
-                    range_key:  range_key)
+        table_name: table_name,
+        hash_key:   hash_key,
+        range_key:  range_key)
 
       aws_client.get_item(serialized.to_h)
     end
 
     def put_item(table_name:, item:)
       serialized = Dynameister::Serializers::PutItemSerializer.new(
-                    table_name: table_name,
-                    item:       item)
+        table_name: table_name,
+        item:       item)
 
       aws_client.put_item(serialized.to_h)
     end
 
     def delete_item(table_name:, hash_key:, range_key: nil)
       serialized = Dynameister::Serializers::DeleteItemSerializer.new(
-                    table_name: table_name,
-                    hash_key:   hash_key,
-                    range_key:  range_key)
+        table_name: table_name,
+        hash_key:   hash_key,
+        range_key:  range_key)
 
       aws_client.delete_item(serialized.to_h)
     end
