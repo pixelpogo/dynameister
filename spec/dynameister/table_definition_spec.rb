@@ -159,7 +159,11 @@ describe Dynameister::TableDefinition do
 
     context "when there are more than five global secondary indexes" do
       let(:global_indexes) do
-        Array.new(6, { name: "my_index1", hash_key: hash_key, range_key: other_range_key, projection: :keys_only, throughput: [2, 3] })
+        Array.new(6, name: "my_index1",
+                     hash_key: hash_key,
+                     range_key: other_range_key,
+                     projection: :keys_only,
+                     throughput: [2, 3])
       end
 
       it "raises an ArgumentError" do
