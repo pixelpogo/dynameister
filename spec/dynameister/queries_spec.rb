@@ -172,7 +172,7 @@ describe Dynameister::Queries do
 
       subject { Book.scan(author_id: 40..42).all }
 
-      it "returns the books with rank greater than or equal to 1, and less than or equal to 3" do
+      it "returns the books with author_id greater than or equal to 40, and less than or equal to 42" do
         expect(subject.count).to eq 1
       end
 
