@@ -35,7 +35,7 @@ describe Dynameister::Queries::Parameters do
       it "includes proper expression attribute names" do
         expect(
           subject[:expression_attribute_names]
-        ).to eq ( {"#age" => "age"})
+        ).to eq("#age" => "age")
       end
 
       it "includes proper expression attribute values" do
@@ -58,7 +58,7 @@ describe Dynameister::Queries::Parameters do
       it "includes proper expression attribute names" do
         expect(
           subject[:expression_attribute_names]
-        ).to eq ( {"#age" => "age"})
+        ).to eq("#age" => "age")
       end
 
       it "includes proper expression attribute values" do
@@ -89,7 +89,7 @@ describe Dynameister::Queries::Parameters do
 
     let(:local_index) { Dynameister::Indexes::LocalIndex.new(:age).to_h }
     let(:model)   { double('model', local_indexes: [local_index]) }
-    let(:comparator) { "="}
+    let(:comparator) { "=" }
     let(:options) { { age: 42 } }
 
     its([:index_name]) { is_expected.to eq "by_age" }
@@ -146,4 +146,3 @@ describe Dynameister::Queries::Parameters do
   end
 
 end
-

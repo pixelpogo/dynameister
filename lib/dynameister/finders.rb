@@ -1,7 +1,9 @@
 require "dynameister/collection"
 
 module Dynameister
+
   module Finders
+
     extend ActiveSupport::Concern
 
     module ClassMethods
@@ -23,4 +25,5 @@ module Dynameister
     end
 
   end
+
 end

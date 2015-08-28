@@ -28,7 +28,7 @@ describe Dynameister::Finders do
 
     context "no language found for the given hash key" do
 
-      subject { Language.find_by(hash_key: {id: "nothing here"}) }
+      subject { Language.find_by(hash_key: { id: "nothing here" }) }
 
       it "finds a document for a given hash key and returns the data" do
         expect(subject).to be_nil

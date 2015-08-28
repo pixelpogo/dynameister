@@ -8,9 +8,8 @@ describe Dynameister::Query do
     Dynameister::Collection.new(Book.client, table_name)
   end
 
-  before  { Book.create_table }
-
-  after   { delete_table table_name }
+  before { Book.create_table }
+  after { delete_table table_name }
 
   let(:query) { described_class.new(collection, Book) }
 
@@ -84,11 +83,11 @@ describe Dynameister::Query do
       end
 
       it "builds the query hash with expression attribute names" do
-        expect(subject[:expression_attribute_names]).to eq({ "#something" => "something" })
+        expect(subject[:expression_attribute_names]).to eq("#something" => "something")
       end
 
       it "builds the query hash with expression attribute values" do
-        expect(subject[:expression_attribute_values]).to eq({ ":something" => "anything" })
+        expect(subject[:expression_attribute_values]).to eq(":something" => "anything")
       end
 
       context "combining queries" do
@@ -104,13 +103,13 @@ describe Dynameister::Query do
         it "builds the query hash with expression attribute names" do
           expect(
             subject[:expression_attribute_names]
-          ).to eq({ "#something" => "something", "#more" => "more" })
+          ).to eq("#something" => "something", "#more" => "more")
         end
 
         it "builds the query hash with expression attribute names" do
           expect(
             subject[:expression_attribute_values]
-          ).to eq({ ":something" => "anything", ":more" => "of something" })
+          ).to eq(":something" => "anything", ":more" => "of something")
         end
       end
 

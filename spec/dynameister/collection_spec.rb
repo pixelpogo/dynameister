@@ -11,8 +11,8 @@ describe Dynameister::Collection do
   let(:response) { double("response", items: []) }
 
   before do
-    allow(client).to receive(:query_table).with({table_name: table_name}).and_return response
-    allow(client).to receive(:scan_table).with({table_name: table_name}).and_return response
+    allow(client).to receive(:query_table).with(table_name: table_name).and_return response
+    allow(client).to receive(:scan_table).with(table_name: table_name).and_return response
   end
 
   describe "#scan" do

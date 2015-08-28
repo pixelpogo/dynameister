@@ -3,12 +3,14 @@ module Dynameister
   class Collection
 
     class Response
+
       attr_accessor :count, :entities, :last_evaluated_key
 
       def initialize
         @count    = 0
         @entities = []
       end
+
     end
 
     attr_accessor :client, :table_name
@@ -36,9 +38,7 @@ module Dynameister
         current_response.count += response.count
 
         if response.items
-          current_response.entities += response.items.map do |item|
-            item.symbolize_keys
-          end
+          current_response.entities += response.items.map(&:symbolize_keys)
         end
       end
     end

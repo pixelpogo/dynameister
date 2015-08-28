@@ -4,15 +4,16 @@ require "dynameister/collection"
 module Dynameister
 
   module Queries
+
     extend ActiveSupport::Concern
 
     module ClassMethods
 
-      def query(options={})
+      def query(options = {})
         perform_operation(:query, options)
       end
 
-      def scan(options={})
+      def scan(options = {})
         perform_operation(:scan, options)
       end
 
@@ -26,4 +27,3 @@ module Dynameister
   end
 
 end
-

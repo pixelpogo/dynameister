@@ -98,21 +98,21 @@ describe Dynameister::Queries do
 
     context "array with integers" do
 
-      subject { Book.scan(author_id: [0,2]).all }
+      subject { Book.scan(author_id: [0, 2]).all }
 
       it "returns the books matching the filter" do
         expect(subject.count).to eq 2
       end
 
       it "returns the books matching the filter for author_id" do
-        expect(subject.map(&:author_id)).to match_array [0,2]
+        expect(subject.map(&:author_id)).to match_array [0, 2]
       end
 
     end
 
     context "selecting from names" do
 
-      subject { Book.scan(name: %w(bog1 bog2) ).all }
+      subject { Book.scan(name: %w(bog1 bog2)).all }
 
       it "returns the books matching the filter" do
         expect(subject.count).to eq 2
@@ -126,7 +126,7 @@ describe Dynameister::Queries do
 
     context "count" do
 
-      subject { Book.scan(name: %w(bog1 bog2) ).count }
+      subject { Book.scan(name: %w(bog1 bog2)).count }
 
       it "counts the collection" do
         expect(subject).to eq 2
@@ -170,10 +170,6 @@ describe Dynameister::Queries do
 
     describe "between two values" do
 
-      before do
-        3.times { |n| Book.create(author_id: n, rank: n, name: "bog#{n}") }
-      end
-
       subject { Book.scan(author_id: 40..42).all }
 
       it "returns the books with rank greater than or equal to 1, and less than or equal to 3" do
@@ -188,7 +184,7 @@ describe Dynameister::Queries do
         3.times { |n| Book.create(author_id: n, rank: n, name: "bog#{n}") }
       end
 
-      subject { Book.scan(rank: [0,1,2]).limit(1).all }
+      subject { Book.scan(rank: [0, 1, 2]).limit(1).all }
 
       it "limits the number of results" do
         expect(subject.count).to eq 1
@@ -198,4 +194,3 @@ describe Dynameister::Queries do
   end
 
 end
-
