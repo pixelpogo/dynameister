@@ -97,9 +97,11 @@ The maximum number for both local and global indexes is five.
 
 Supported methods for querying:
 
-* by hash_key (uses DynamoDB query)
-* filter on matching values for attributes (uses DynamoDB scan)
-* return a whole collection of documents (uses DynamoDB scan without a filter)
+* `query` by hash_key (uses DynamoDB `query`)
+* `find` with a single hash_key (uses DynamaDB `get_item`)
+* `find` with an array of hash_keys (uses DynamoDb `scan`)
+* filter on matching values for attributes (uses DynamoDB `scan`)
+* `all` return a whole collection of documents (uses DynamoDB `scan` without a filter)
 
 The Queries are built lazily, via the DSL for adding attributes to the query and comparison or logical operators.
 Calling `.all` on the query, will execute the query and return the result. 
@@ -121,9 +123,13 @@ Book.query(hash_key: "72c62052").and(range_key: 42).limit(1)
 # e.g. returning objects with ranges less than or equal to 42
 Book.query(hash_key: "72c62052").le(range_key: 42).all 
 
-
 # Same as above but uses get_item underneath
 Book.find_by(hash_key: { uuid: "a17871e56c14" })
+Book.find("a17871e56c14")
+
+# Using DynamoDB scan
+Book.find ["ane85rna", "nelg94" "h384hen"] # only for compliance with ActiveRecord API
+Book.all  # no filter 
 ```
 
 ### Scans
@@ -150,7 +156,7 @@ Book.scan(author_id: 1..3).all # providing a range will return all books with au
 
 #### Comparison operators
 
-The default is equals `=`.Aliases are `and`, `eq`, `in` and `between`.
+The default is equals `=`. Aliases are `and`, `eq`, `in` and `between`.
 
 Other supported operators are:
 * Less than or equal to `<=`, as `le` 

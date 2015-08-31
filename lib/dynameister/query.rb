@@ -110,7 +110,7 @@ module Dynameister
 
     def serialize_condition(condition, expression, operator = "=")
       if condition.any?
-        Queries::Parameters.new(model, expression, condition, operator, @negation).to_h
+        Queries::Parameters.new(model, expression, operator, @negation, condition).to_h
       end
     end
 

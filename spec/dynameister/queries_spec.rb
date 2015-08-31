@@ -172,22 +172,24 @@ describe Dynameister::Queries do
 
       subject { Book.scan(author_id: 40..42).all }
 
-      it "returns the books with author_id greater than or equal to 40, and less than or equal to 42" do
-        expect(subject.count).to eq 1
+      it "returs the books between the range of 40 and 42" do
+        expect(subject.map(&:author_id).first).to be_within(1).of(41)
       end
 
     end
 
     describe "limit" do
 
-      before do
-        3.times { |n| Book.create(author_id: n, rank: n, name: "bog#{n}") }
+      3.times do |index|
+        let!("book_#{index}") do
+          Book.create(name: "book#{index}", rank: index, author_id: index)
+        end
       end
 
-      subject { Book.scan(rank: [0, 1, 2]).limit(1).all }
+      subject { Book.scan({}).limit(2).all }
 
-      it "limits the number of results" do
-        expect(subject.count).to eq 1
+      it "returns two books unordered" do
+        expect(subject.count).to eq 2
       end
     end
 

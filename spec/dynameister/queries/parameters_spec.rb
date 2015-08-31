@@ -97,7 +97,7 @@ describe Dynameister::Queries::Parameters do
 
   end
 
-  subject { described_class.new(model, :filter_expression, options, comparator, negation).to_h }
+  subject { described_class.new(model, :filter_expression, comparator, negation, options).to_h }
 
   describe "parameters for a model without indexes" do
 

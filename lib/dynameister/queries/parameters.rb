@@ -4,7 +4,7 @@ module Dynameister
 
     class Parameters
 
-      def initialize(model, expression_key, options = {}, comparator = "=", negation = nil)
+      def initialize(model, expression_key, comparator = "=", negation = nil, options = {})
         @model          = model
         @expression_key = expression_key
         @options        = options
