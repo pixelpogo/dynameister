@@ -13,25 +13,6 @@ module Dynameister
 
     end
 
-    attr_accessor :client, :table_name
-
-    def initialize(client, table_name)
-      @client     = client
-      @table_name = table_name.to_s
-    end
-
-    def query(options = {}, previous_response = nil)
-      response = client.query_table(options.merge(table_name: table_name))
-      deserialize_response(response, previous_response)
-    end
-
-    def scan(options = {}, previous_response = nil)
-      response = client.scan_table(options.merge(table_name: table_name))
-      deserialize_response(response, previous_response)
-    end
-
-    private
-
     def deserialize_response(response, previous_response = nil)
       Response.new.tap do |current_response|
         current_response = previous_response if previous_response

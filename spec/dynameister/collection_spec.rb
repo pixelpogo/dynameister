@@ -2,33 +2,27 @@ require_relative "../app/models/language"
 
 describe Dynameister::Collection do
 
-  let(:client)     { Language.client }
-
-  let(:table_name) { "languages" }
-
-  subject { described_class.new(client, table_name) }
-
-  let(:response) { double("response", items: []) }
-
-  before do
-    allow(client).to receive(:query_table).with(table_name: table_name).and_return response
-    allow(client).to receive(:scan_table).with(table_name: table_name).and_return response
+  let(:items) do
+    [
+      { "some_hash" => "here" },
+      { "another" => "response" }
+    ]
   end
 
-  describe "#scan" do
+  let(:response) { double("response", items: items, count: 2) }
 
-    it "takes an aws dynamodb response and deserializes" do
-      expect(subject).to receive(:deserialize_response).with(response, nil)
-      subject.scan({})
+  describe "a deserialized aws query response" do
+
+    subject { described_class.new.deserialize_response(response) }
+
+    it "returns an instance of response" do
+      expect(subject).to be_an_instance_of Dynameister::Collection::Response
     end
 
-  end
-
-  describe "#query" do
-
-    it "takes an aws dynamodb response and deserializes" do
-      expect(subject).to receive(:deserialize_response).with(response, nil)
-      subject.query({})
+    it "stores the deserialized output in entities" do
+      expect(subject.entities).to eq(
+        [{ some_hash:  "here" }, { another: "response" }]
+      )
     end
 
   end

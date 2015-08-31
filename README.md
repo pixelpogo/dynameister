@@ -150,7 +150,9 @@ Book.scan(author_id: 1..3).all # providing a range will return all books with au
 
 #### Comparison operators
 
-The default is equals `=`. Aliases are `and`, `eq` and `in`. Other supported operators are:
+The default is equals `=`.Aliases are `and`, `eq`, `in` and `between`.
+
+Other supported operators are:
 * Less than or equal to `<=`, as `le` 
 * Greater than `>`, as `gt`
 * Less than`<`, as `lt`

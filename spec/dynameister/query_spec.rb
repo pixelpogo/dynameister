@@ -3,15 +3,10 @@ require_relative "../app/models/book"
 describe Dynameister::Query do
 
   let(:table_name) { "books" }
+  let(:query)      { described_class.new(Book) }
 
-  let(:collection) do
-    Dynameister::Collection.new(Book.client, table_name)
-  end
-
-  before { Book.create_table }
-  after { delete_table table_name }
-
-  let(:query) { described_class.new(collection, Book) }
+  before           { Book.create_table }
+  after            { delete_table table_name }
 
   describe "operation" do
 
@@ -19,48 +14,48 @@ describe Dynameister::Query do
 
       subject { query }
 
-      its(:operation) { is_expected.to eq :scan }
+      its(:operation) { is_expected.to eq :scan_table }
 
       it "equals after query call" do
-        expect(subject.having(something: "anything").operation).to eq :scan
+        expect(subject.having(something: "anything").operation).to eq :scan_table
       end
 
       it "equals after or call" do
-        expect(subject.or.operation).to eq :scan
+        expect(subject.or.operation).to eq :scan_table
       end
 
       it "equals after limit call" do
-        expect(subject.limit(1).operation).to eq :scan
+        expect(subject.limit(1).operation).to eq :scan_table
       end
 
       it "equals after count call" do
         subject.count
-        expect(subject.operation).to eq :scan
+        expect(subject.operation).to eq :scan_table
       end
 
     end
 
     describe "query" do
 
-      subject { described_class.new(collection, Book, :query) }
+      subject { described_class.new(Book, :query_table) }
 
       describe "after query call" do
 
-        its(:operation) { is_expected.to eq :query }
+        its(:operation) { is_expected.to eq :query_table }
 
         it "equals after or call" do
-          expect(subject.or.operation).to eq :query
+          expect(subject.or.operation).to eq :query_table
         end
 
         it "equals after limit call" do
-          expect(subject.limit(1).operation).to eq :query
+          expect(subject.limit(1).operation).to eq :query_table
         end
 
         describe "key condition expression" do
 
           let(:options) { { uuid: "some uuid" } }
 
-          subject { described_class.new(collection, Book, :query).having(options).options }
+          subject { described_class.new(Book, :query_table).having(options).options }
 
           it "builds the query hash with the correct key" do
             expect(subject[:key_condition_expression]).to eq "#uuid = :uuid"

@@ -18,8 +18,8 @@ module Dynameister
       end
 
       def all(options = {})
-        response = Collection.new(client, table_name).scan(options)
-        response.entities.map { |entity| new(entity) }
+        limit = options.delete(:limit)
+        scan(options).limit(limit).all
       end
 
     end

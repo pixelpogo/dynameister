@@ -5,13 +5,14 @@ module Dynameister
   class Query
 
     AND_OPERATOR = " and "
+    OR_OPERATOR  = " or "
 
-    attr_reader :dataset, :model, :operation, :options
+    attr_reader :model, :operation, :dataset, :options
 
-    def initialize(dataset, model, operation = :scan)
-      @dataset    = dataset
+    def initialize(model, operation = :scan_table)
       @model      = model
       @operation  = operation
+      @dataset    = Collection.new
       @operator   = AND_OPERATOR
 
       @options    = {}
@@ -33,14 +34,17 @@ module Dynameister
     def having(condition)
       key = key_for_condition(condition)
       serialized = serialize_condition(condition, key)
-      build_options_query(serialized)
+      if serialized
+        build_options_query(serialized)
+      end
 
       self
     end
 
-    alias_method :in,  :having
-    alias_method :and, :having
-    alias_method :eq,  :having
+    alias_method :in,      :having
+    alias_method :and,     :having
+    alias_method :eq,      :having
+    alias_method :between, :having
 
     def build_options_query(serialized)
       options.merge!(serialized) do |_, initial, additional|
@@ -53,7 +57,7 @@ module Dynameister
     end
 
     def or
-      @operator = " or "
+      @operator = OR_OPERATOR
       self
     end
 
@@ -97,19 +101,24 @@ module Dynameister
     private
 
     def serialize_condition(condition, expression, operator = "=")
-      Queries::Parameters.new(model, expression, condition, operator).to_h
+      if condition.any?
+        Queries::Parameters.new(model, expression, condition, operator).to_h
+      end
     end
 
     def comparison(condition, operator)
       key = key_for_condition(condition)
       serialized = serialize_condition(condition, key, operator)
-      build_options_query(serialized)
+      if serialized
+        build_options_query(serialized)
+      end
 
       self
     end
 
     def run(previous_response = nil)
-      dataset.public_send(operation, options, previous_response)
+      response = model.client.public_send(operation, options.merge(table_name: model.table_name))
+      dataset.deserialize_response(response, previous_response)
     end
 
     def continue?(previous_response)
@@ -129,9 +138,9 @@ module Dynameister
     end
 
     def key_for_condition(condition)
-      if (operation == :query) && (model.key_schema_keys.include? condition.keys.first)
+      if (operation == :query_table) && (model.key_schema_keys.include? condition.keys.first)
         :key_condition_expression
-      else
+      elsif condition.any?
         :filter_expression
       end
     end
