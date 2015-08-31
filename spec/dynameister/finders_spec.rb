@@ -106,7 +106,7 @@ describe Dynameister::Finders do
         expect(Language.find "some id").to be_nil
       end
 
-      it "with a single hash_key returns an empty array" do
+      it "with multiple hash_keys returns an empty array" do
         expect(Language.find "some id", "another_id here").to be_empty
       end
 

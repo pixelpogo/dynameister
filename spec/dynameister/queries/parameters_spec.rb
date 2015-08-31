@@ -28,10 +28,9 @@ describe Dynameister::Queries::Parameters do
 
       let(:model)    { double('model', local_indexes: []) }
       let(:options)  { { age: [12, 42] } }
-      let(:negation) { "not " }
 
       it "includes a proper filter expression" do
-        expect(subject[:filter_expression]).to eq "not #age in (:age0, :age1)"
+        expect(subject[:filter_expression]).to eq "#age in (:age0, :age1)"
       end
 
       it "includes proper expression attribute names" do
@@ -74,10 +73,11 @@ describe Dynameister::Queries::Parameters do
 
     describe "negated filter expression" do
 
-      let(:options) { { age: [12, 42] } }
+      let(:negation) { "not " }
+      let(:options)  { { age: [12, 42] } }
 
       it "includes a proper filter expression" do
-        expect(subject[:filter_expression]).to eq "#age in (:age0, :age1)"
+        expect(subject[:filter_expression]).to eq "not #age in (:age0, :age1)"
       end
 
       it "includes proper expression attribute names" do
@@ -114,11 +114,11 @@ describe Dynameister::Queries::Parameters do
 
   describe "parameters for a model with local indexes" do
 
-    let(:local_index) { Dynameister::Indexes::LocalIndex.new(:age).to_h }
-    let(:model)       { double('model', local_indexes: [local_index]) }
-    let(:comparator)  { "=" }
-    let(:options)     { { age: 42 } }
-    let(:negation)    { nil }
+    let(:local_index)  { Dynameister::Indexes::LocalIndex.new(:age).to_h }
+    let(:model)        { double('model', local_indexes: [local_index]) }
+    let(:comparator)   { "=" }
+    let(:options)      { { age: 42 } }
+    let(:negation)     { nil }
 
     its([:index_name]) { is_expected.to eq "by_age" }
 

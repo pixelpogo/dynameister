@@ -201,14 +201,14 @@ describe Dynameister::Queries do
       subject { Book.scan(name: book.name).not.having(rank: book.rank).all }
 
       it "does not return a book" do
-        expect(subject.count).to eq 0
+        expect(subject).to be_empty
       end
     end
 
     context "matching filter" do
       subject { Book.scan(name: book.name).not.having(rank: 1).all }
 
-      it "does not return a book" do
+      it "returns the book" do
         expect(subject.count).to eq 1
       end
     end
@@ -216,16 +216,16 @@ describe Dynameister::Queries do
     context "with comparison" do
       subject { Book.scan(name: book.name).not.ge(rank: 43).all }
 
-      it "does not return a book" do
-        expect(subject.count).to eq 1
+      it "returns the book" do
+        expect(subject.map(&:name)).to eq [book.name]
       end
     end
 
     context "between values" do
-      subject { Book.scan(name: book.name).not.between(rank: 2..9).all }
+      subject { Book.scan(name: book.name).not.between(rank: 2..8).all }
 
-      it "does not return a book" do
-        expect(subject.count).to eq 1
+      it "returns the book" do
+        expect(subject.map(&:rank).first).not_to be_within(4).of(4)
       end
     end
 

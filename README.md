@@ -128,7 +128,7 @@ Book.find_by(hash_key: { uuid: "a17871e56c14" })
 Book.find("a17871e56c14")
 
 # Using DynamoDB scan
-Book.find ["ane85rna", "nelg94" "h384hen"] # only for compliance with ActiveRecord API
+Book.find ["ane85rna", "nelg94", "h384hen"] # only for compliance with ActiveRecord API
 Book.all  # no filter 
 ```
 
