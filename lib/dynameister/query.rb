@@ -6,6 +6,7 @@ module Dynameister
 
     AND_OPERATOR = " and "
     OR_OPERATOR  = " or "
+    NOT_OPERATOR = "not "
 
     attr_reader :model, :operation, :dataset, :options
 
@@ -61,6 +62,13 @@ module Dynameister
       self
     end
 
+    def exclude
+      @negation = NOT_OPERATOR
+      self
+    end
+
+    alias_method :not, :exclude
+
     def limit(number)
       options[:limit] = number
       self
@@ -102,7 +110,7 @@ module Dynameister
 
     def serialize_condition(condition, expression, operator = "=")
       if condition.any?
-        Queries::Parameters.new(model, expression, condition, operator).to_h
+        Queries::Parameters.new(model, expression, condition, operator, @negation).to_h
       end
     end
 

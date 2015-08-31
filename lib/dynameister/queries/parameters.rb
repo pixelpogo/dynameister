@@ -4,11 +4,12 @@ module Dynameister
 
     class Parameters
 
-      def initialize(model, expression_key, options = {}, comparator = "=")
+      def initialize(model, expression_key, options = {}, comparator = "=", negation = nil)
         @model          = model
         @expression_key = expression_key
         @options        = options
         @comparator     = comparator
+        @negation       = negation
       end
 
       def to_h
@@ -73,11 +74,11 @@ module Dynameister
         values = key_mapping.values.flatten
         case
         when @options.values.first.is_a?(Array)
-          "#{name} in (#{values.join(', ')})"
+          "#{@negation}#{name} in (#{values.join(', ')})"
         when @options.values.first.is_a?(Range)
-          "#{name} between #{values.first} and #{values.last}"
+          "#{@negation}#{name} between #{values.first} and #{values.last}"
         else
-          "#{name} #{@comparator} #{values.first}"
+          "#{@negation}#{name} #{@comparator} #{values.first}"
         end
       end
 

@@ -157,6 +157,7 @@ Other supported operators are:
 * Greater than `>`, as `gt`
 * Less than`<`, as `lt`
 * Greater than or equal to `>=`, as `ge`
+* Negation `NOT`, as `not` or `exclude`
  
 When using scan with an attribute that corresponds to a local secondary index, internally it will use this index to optimise the query.
 

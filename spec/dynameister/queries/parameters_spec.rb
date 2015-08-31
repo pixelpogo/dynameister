@@ -26,10 +26,12 @@ describe Dynameister::Queries::Parameters do
 
     describe "filter expression with sets of values" do
 
-      let(:options) { { age: [12, 42] } }
+      let(:model)    { double('model', local_indexes: []) }
+      let(:options)  { { age: [12, 42] } }
+      let(:negation) { "not " }
 
       it "includes a proper filter expression" do
-        expect(subject[:filter_expression]).to eq "#age in (:age0, :age1)"
+        expect(subject[:filter_expression]).to eq "not #age in (:age0, :age1)"
       end
 
       it "includes proper expression attribute names" do
@@ -69,15 +71,40 @@ describe Dynameister::Queries::Parameters do
       end
 
     end
+
+    describe "negated filter expression" do
+
+      let(:options) { { age: [12, 42] } }
+
+      it "includes a proper filter expression" do
+        expect(subject[:filter_expression]).to eq "#age in (:age0, :age1)"
+      end
+
+      it "includes proper expression attribute names" do
+        expect(
+          subject[:expression_attribute_names]
+        ).to eq("#age" => "age")
+      end
+
+      it "includes proper expression attribute values" do
+        expect(
+          subject[:expression_attribute_values]
+        ).to eq(":age0" => 12, ":age1" => 42)
+
+      end
+
+    end
+
   end
 
-  subject { described_class.new(model, :filter_expression, options, comparator).to_h }
+  subject { described_class.new(model, :filter_expression, options, comparator, negation).to_h }
 
   describe "parameters for a model without indexes" do
 
     let(:model)      { double('model', local_indexes: []) }
     let(:comparator) { "=" }
     let(:options)    { { age: 42 } }
+    let(:negation)   { nil }
 
     it               { is_expected.to_not have_key(:index_name) }
 
@@ -88,9 +115,10 @@ describe Dynameister::Queries::Parameters do
   describe "parameters for a model with local indexes" do
 
     let(:local_index) { Dynameister::Indexes::LocalIndex.new(:age).to_h }
-    let(:model)   { double('model', local_indexes: [local_index]) }
-    let(:comparator) { "=" }
-    let(:options) { { age: 42 } }
+    let(:model)       { double('model', local_indexes: [local_index]) }
+    let(:comparator)  { "=" }
+    let(:options)     { { age: 42 } }
+    let(:negation)    { nil }
 
     its([:index_name]) { is_expected.to eq "by_age" }
 
@@ -100,8 +128,9 @@ describe Dynameister::Queries::Parameters do
 
   describe "comparison operators" do
 
-    let(:model)   { double('model', local_indexes: []) }
-    let(:options) { { age: 42 } }
+    let(:model)    { double('model', local_indexes: []) }
+    let(:options)  { { age: 42 } }
+    let(:negation) { nil }
 
     context "less than" do
 

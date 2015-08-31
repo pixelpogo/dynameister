@@ -193,4 +193,40 @@ describe Dynameister::Queries do
 
   end
 
+  describe "negation" do
+
+    context "no matching filter" do
+      subject { Book.scan(name: book.name).not.having(rank: book.rank).all }
+
+      it "does not return a book" do
+        expect(subject.count).to eq 0
+      end
+    end
+
+    context "matching filter" do
+      subject { Book.scan(name: book.name).not.having(rank: 1).all }
+
+      it "does not return a book" do
+        expect(subject.count).to eq 1
+      end
+    end
+
+    context "with comparison" do
+      subject { Book.scan(name: book.name).not.ge(rank: 43).all }
+
+      it "does not return a book" do
+        expect(subject.count).to eq 1
+      end
+    end
+
+    context "between values" do
+      subject { Book.scan(name: book.name).not.between(rank: 2..9).all }
+
+      it "does not return a book" do
+        expect(subject.count).to eq 1
+      end
+    end
+
+  end
+
 end
