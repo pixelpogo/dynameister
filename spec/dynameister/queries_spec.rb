@@ -229,4 +229,14 @@ describe Dynameister::Queries do
 
   end
 
+  describe "using an index" do
+
+    subject { Book.scan(name: book.name).index("by_monkeys").options }
+
+    it "uses the supplied index" do
+      expect(subject[:index_name]).to eq "by_monkeys"
+    end
+
+  end
+
 end
