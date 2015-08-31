@@ -41,7 +41,6 @@ describe Dynameister::Finders do
   describe "retrieving all documents of a given model" do
 
     before do
-      Language.create_table
       3.times { |n| Language.create(locale: "lang#{n}") }
     end
 
@@ -65,6 +64,50 @@ describe Dynameister::Finders do
 
       it "returns an array with limited data" do
         expect(subject.first).to be_an_instance_of Language
+      end
+
+    end
+
+  end
+
+  describe "find" do
+
+    3.times do |index|
+      let("lang#{index}") { Language.create }
+    end
+
+    context "with a single hash_key" do
+
+      subject { Language.find(lang0.id) }
+
+      it "returns the language with the corresponding hash_key" do
+        expect(subject.id).to eq lang0.id
+      end
+
+      it "returns an instance of language" do
+        expect(subject).to be_an_instance_of Language
+      end
+
+    end
+
+    context "with an array of hash_keys" do
+
+      subject { Language.find lang0.id, lang2.id }
+
+      it "returns the languages with the corresponding hash_keys" do
+        expect(subject.map(&:id)).to match_array [lang0.id, lang2.id]
+      end
+
+    end
+
+    context "nothing found" do
+
+      it "with a single hash_key returns nil" do
+        expect(Language.find "some id").to be_nil
+      end
+
+      it "with a single hash_key returns an empty array" do
+        expect(Language.find "some id", "another_id here").to be_empty
       end
 
     end
