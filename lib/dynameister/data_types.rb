@@ -2,7 +2,9 @@ require "dynameister/data_types/value"
 require "dynameister/data_types/date_time"
 
 module Dynameister
+
   module DataTypes
+
     extend ActiveSupport::Concern
 
     DATA_TYPE_CASTER = {
@@ -11,7 +13,7 @@ module Dynameister
 
     module ClassMethods
 
-      def type_caster(type: type)
+      def type_caster(type: data_type)
         DATA_TYPE_CASTER[type] || Dynameister::DataTypes::Value.new
       end
 
