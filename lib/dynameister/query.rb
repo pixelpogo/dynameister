@@ -108,15 +108,15 @@ module Dynameister
 
     private
 
-    def serialize_condition(condition, expression, operator = "=")
+    def serialize_condition(condition, expression, comparator = "=")
       if condition.any?
-        Queries::Parameters.new(model, expression, operator, @negation, condition).to_h
+        Queries::Parameters.new(model, expression, comparator, @negation, condition).to_h
       end
     end
 
-    def comparison(condition, operator)
+    def comparison(condition, comparator)
       key = key_for_condition(condition)
-      serialized = serialize_condition(condition, key, operator)
+      serialized = serialize_condition(condition, key, comparator)
       if serialized
         build_options_query(serialized)
       end

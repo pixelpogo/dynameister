@@ -172,7 +172,7 @@ describe Dynameister::Queries do
 
       subject { Book.scan(author_id: 40..42).all }
 
-      it "returs the books between the range of 40 and 42" do
+      it "returns the books between the range of 40 and 42" do
         expect(subject.map(&:author_id).first).to be_within(1).of(41)
       end
 
