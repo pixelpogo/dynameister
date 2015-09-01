@@ -11,7 +11,7 @@ module Dynameister
       end
 
       def client
-        @client ||= Dynameister::Client.new
+        @client ||= Dynameister::Client.new(attribute_casters: attribute_casters)
       end
 
       def create_table(options: {})
@@ -34,6 +34,13 @@ module Dynameister
       def create(attrs = {})
         new(attrs).save
       end
+
+      def attribute_casters
+        attributes.each_with_object({}) do |(key, value), rules|
+          rules[key] = type_caster(type: value[:type])
+        end.with_indifferent_access
+      end
+
     end
 
     def save
