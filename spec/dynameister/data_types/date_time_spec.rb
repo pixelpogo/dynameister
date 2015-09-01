@@ -3,6 +3,8 @@ require_relative "shared_examples_for_data_types.rb"
 describe Dynameister::DataTypes::DateTime do
 
   let(:datetime) { DateTime.now }
+  let(:attribute) { datetime }
+
   subject { described_class.new }
 
   its(:type) { is_expected.to be(:datetime) }

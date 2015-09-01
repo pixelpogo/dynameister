@@ -1,6 +1,7 @@
 describe Dynameister::DataTypes::Value do
 
-  let(:datetime) { DateTime.now }
+  let(:attribute) { "foo" }
+
   subject { described_class.new }
 
   its(:type) { is_expected.to be_nil }

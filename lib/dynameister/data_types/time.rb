@@ -2,10 +2,10 @@ module Dynameister
 
   module DataTypes
 
-    class DateTime < Value
+    class Time < Value
 
       def type
-        :datetime
+        :time
       end
 
       def serialize(value)
@@ -15,7 +15,7 @@ module Dynameister
       private
 
       def cast_value(value)
-        ::Time.at(value).to_datetime
+        ::Time.at(value)
       end
 
     end
