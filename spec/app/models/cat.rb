@@ -1,4 +1,5 @@
 class Cat
+
   include Dynameister::Document
 
   field :pet_food
@@ -10,4 +11,5 @@ class Cat
   local_index :adopted_at # projection: :all, :keys_only, [:attr1, :attr2]
 
   global_index [:pet_food, :adpoted_at], projection: :all, throughput: [2, 3]
+
 end

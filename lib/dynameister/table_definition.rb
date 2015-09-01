@@ -1,6 +1,7 @@
 module Dynameister
 
   class TableDefinition
+
     PROJECTION_TYPE = {
       all: "ALL",
       keys_only: "KEYS_ONLY",
@@ -200,4 +201,3 @@ module Dynameister
   end
 
 end
-

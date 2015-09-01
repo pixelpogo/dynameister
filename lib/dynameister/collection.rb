@@ -1,4 +1,5 @@
 module Dynameister
+
   class Collection < Array
 
     attr_reader :pager, :model
@@ -22,7 +23,7 @@ module Dynameister
       self.class.new
     end
 
-    def each_page(&block)
+    def each_page(&_block)
       pager.each do |page|
         yield self.class.new(page, model)
       end
@@ -31,6 +32,7 @@ module Dynameister
     def last_evaluated_key
       pager.last_evaluated_key
     end
+
   end
 
 end

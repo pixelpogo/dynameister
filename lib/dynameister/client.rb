@@ -9,10 +9,10 @@ module Dynameister
     end
 
     def create_table(table_name:, hash_key: :id, options: {})
-      options[:hash_key]       ||= { hash_key.to_sym => :string }
-      options[:read_capacity]  ||= Dynameister.read_capacity
+      options[:hash_key] ||= { hash_key.to_sym => :string }
+      options[:read_capacity] ||= Dynameister.read_capacity
       options[:write_capacity] ||= Dynameister.write_capacity
-      options[:local_indexes]  ||= []
+      options[:local_indexes] ||= []
       options[:global_indexes] ||= []
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
@@ -24,38 +24,36 @@ module Dynameister
     end
 
     def delete_table(table_name:)
-      begin
-        table = aws_client.delete_table(table_name: table_name)
-      rescue Aws::DynamoDB::Errors::ResourceNotFoundException
-        false
-      else
-        sleep 0.5 while table.table_description.table_status == 'DELETING'
-        true
-      end
+      table = aws_client.delete_table(table_name: table_name)
+    rescue Aws::DynamoDB::Errors::ResourceNotFoundException
+      false
+    else
+      sleep 0.5 while table.table_description.table_status == 'DELETING'
+      true
     end
 
     def get_item(table_name:, hash_key:, range_key: nil)
       serialized = Dynameister::Serializers::GetItemSerializer.new(
-                    table_name: table_name,
-                    hash_key:   hash_key,
-                    range_key:  range_key)
+        table_name: table_name,
+        hash_key:   hash_key,
+        range_key:  range_key)
 
       deserialize_attribute_values(aws_client.get_item(serialized.to_h))
     end
 
     def put_item(table_name:, item:)
       serialized = Dynameister::Serializers::PutItemSerializer.new(
-                    table_name: table_name,
-                    item:       serialize_attribute_values(item) )
+        table_name: table_name,
+        item:       serialize_attribute_values(item))
 
       aws_client.put_item(serialized.to_h)
     end
 
     def delete_item(table_name:, hash_key:, range_key: nil)
       serialized = Dynameister::Serializers::DeleteItemSerializer.new(
-                    table_name: table_name,
-                    hash_key:   hash_key,
-                    range_key:  range_key)
+        table_name: table_name,
+        hash_key:   hash_key,
+        range_key:  range_key)
 
       aws_client.delete_item(serialized.to_h)
     end
@@ -103,7 +101,7 @@ module Dynameister
 
     def apply_attribute_casting(item, operation)
       item = item.with_indifferent_access
-      @attribute_casters.each_pair do | attr_name, type_caster|
+      @attribute_casters.each_pair do |attr_name, type_caster|
         item[attr_name] = type_caster.send(operation, item[attr_name])
       end
 

@@ -1,5 +1,7 @@
 module Dynameister
+
   module Document
+
     extend ActiveSupport::Concern
 
     include Dynameister::DataTypes
@@ -14,7 +16,7 @@ module Dynameister
 
       def expanded(assigned = nil)
         assigned = (assigned || {}).symbolize_keys
-        self.attributes.inject({}) do |hash, (attribute, _)|
+        attributes.inject({}) do |hash, (attribute, _)|
           hash[attribute] = assigned[attribute]
           hash
         end
@@ -36,4 +38,5 @@ module Dynameister
     end
 
   end
+
 end

@@ -119,7 +119,7 @@ describe Dynameister::Client do
   describe "#get_item" do
 
     let(:hash_key)       { { id: "123" } }
-    let(:item)           { hash_key.merge({ user: "john doe", skills: ["ruby", "html", "javascript"] }) }
+    let(:item)           { hash_key.merge(user: "john doe", skills: ["ruby", "html", "javascript"]) }
     let(:expected_item)  { item.stringify_keys }
 
     let(:put_hash) { { table_name: table_name, item: item } }
@@ -234,7 +234,7 @@ describe Dynameister::Client do
   describe "#delete_item" do
 
     let(:hash_key) { { id: "123" } }
-    let(:item)     { hash_key.merge({ user: "john doe", skills: ["ruby", "html", "javascript"] }) }
+    let(:item)     { hash_key.merge(user: "john doe", skills: ["ruby", "html", "javascript"]) }
 
     let(:put_hash) { { table_name: table_name, item: item } }
 

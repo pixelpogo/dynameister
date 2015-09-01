@@ -15,7 +15,7 @@ describe Dynameister::TableDefinition do
   end
   let(:global_indexes) do
     [
-      { name: "my_global_index1", hash_key: hash_key, range_key: range_key, projection: :all, throughput: [1,1] }
+      { name: "my_global_index1", hash_key: hash_key, range_key: range_key, projection: :all, throughput: [1, 1] }
     ]
   end
   let(:options) do
@@ -29,7 +29,7 @@ describe Dynameister::TableDefinition do
     }
   end
   let(:local_indexes_with_other_range_key) do
-    [ { name: 'index3',  range_key: { my_attribute: :string }, projection: :all } ]
+    [{ name: 'index3',  range_key: { my_attribute: :string }, projection: :all }]
   end
 
   let(:definition) { described_class.new(table_name, options) }
@@ -159,7 +159,11 @@ describe Dynameister::TableDefinition do
 
     context "when there are more than five global secondary indexes" do
       let(:global_indexes) do
-        Array.new(6, { name: "my_index1", hash_key: hash_key, range_key: other_range_key, projection: :keys_only, throughput: [2,3] })
+        Array.new(6, name: "my_index1",
+                     hash_key: hash_key,
+                     range_key: other_range_key,
+                     projection: :keys_only,
+                     throughput: [2, 3])
       end
 
       it "raises an ArgumentError" do
@@ -174,7 +178,7 @@ describe Dynameister::TableDefinition do
 
       context "when there are more than five local secondary indexes" do
         let(:local_indexes) do
-          Array.new(6, { name: "my_index2", range_key: other_range_key, projection: :keys_only })
+          Array.new(6, name: "my_index2", range_key: other_range_key, projection: :keys_only)
         end
 
         it "raises an ArgumentError" do
@@ -183,7 +187,7 @@ describe Dynameister::TableDefinition do
       end
 
       context "when projection is of type INCLUDE" do
-        let(:included_attribute_keys) { [ :attribute1, :attribute2 ] }
+        let(:included_attribute_keys) { [:attribute1, :attribute2] }
         let(:local_indexes) do
           [
             { name: 'my_index1', range_key: range_key, projection: included_attribute_keys },
@@ -267,7 +271,7 @@ describe Dynameister::TableDefinition do
                 hash_key:   { hash_key_for_global_index:  :string },
                 range_key:  { range_key_for_global_index: :number },
                 projection: :all,
-                throughput: [1,1]
+                throughput: [1, 1]
               }
             ]
           end
@@ -306,13 +310,13 @@ describe Dynameister::TableDefinition do
               hash_key:   { hash_key_for_global_index:  :string },
               range_key:  duplicate_range_key,
               projection: :all,
-              throughput: [1,1]
+              throughput: [1, 1]
             }
           ]
         end
 
         let(:local_indexes_with_duplicate_range_key) do
-          [ { name: 'index3',  range_key: duplicate_range_key, projection: :all } ]
+          [{ name: 'index3',  range_key: duplicate_range_key, projection: :all }]
         end
 
         let(:options) do
@@ -365,5 +369,3 @@ describe Dynameister::TableDefinition do
   end
 
 end
-
-
