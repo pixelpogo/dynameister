@@ -5,7 +5,7 @@ describe Dynameister::DataTypes::Time do
   let(:time) { Time.now }
   let(:attribute) { time }
 
-  subject { described_class.new }
+  subject { described_class.instance }
 
   its(:type) { is_expected.to be(:time) }
 

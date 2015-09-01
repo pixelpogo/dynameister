@@ -2,7 +2,7 @@ describe Dynameister::DataTypes::Value do
 
   let(:attribute) { "foo" }
 
-  subject { described_class.new }
+  subject { described_class.instance }
 
   its(:type) { is_expected.to be_nil }
 

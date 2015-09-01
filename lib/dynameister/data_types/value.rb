@@ -4,6 +4,8 @@ module Dynameister
 
     class Value
 
+      include Singleton
+
       def type # :nodoc:
       end
 

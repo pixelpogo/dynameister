@@ -5,7 +5,7 @@ describe Dynameister::DataTypes::Integer do
   let(:integer) { 3 }
   let(:attribute) { integer }
 
-  subject { described_class.new }
+  subject { described_class.instance }
 
   its(:type) { is_expected.to be(:integer) }
 

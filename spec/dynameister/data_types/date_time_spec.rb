@@ -5,7 +5,7 @@ describe Dynameister::DataTypes::DateTime do
   let(:datetime) { DateTime.now }
   let(:attribute) { datetime }
 
-  subject { described_class.new }
+  subject { described_class.instance }
 
   its(:type) { is_expected.to be(:datetime) }
 

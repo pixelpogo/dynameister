@@ -11,16 +11,16 @@ module Dynameister
     extend ActiveSupport::Concern
 
     DATA_TYPE_CASTER = {
-      datetime: Dynameister::DataTypes::DateTime.new,
-      float: Dynameister::DataTypes::Float.new,
-      integer: Dynameister::DataTypes::Integer.new,
-      time: Dynameister::DataTypes::Time.new
+      datetime: Dynameister::DataTypes::DateTime.instance,
+      float: Dynameister::DataTypes::Float.instance,
+      integer: Dynameister::DataTypes::Integer.instance,
+      time: Dynameister::DataTypes::Time.instance
     }
 
     module ClassMethods
 
       def type_caster(type: data_type)
-        DATA_TYPE_CASTER[type] || Dynameister::DataTypes::Value.new
+        DATA_TYPE_CASTER[type] || Dynameister::DataTypes::Value.instance
       end
 
     end
