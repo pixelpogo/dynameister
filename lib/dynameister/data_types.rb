@@ -19,7 +19,7 @@ module Dynameister
 
     module ClassMethods
 
-      def type_caster(type: data_type)
+      def type_caster(type: )
         DATA_TYPE_CASTER[type] || Dynameister::DataTypes::Value.instance
       end
 
