@@ -37,6 +37,8 @@ module Dynameister
         new(attrs).save
       end
 
+      private
+
       def attribute_casters
         attributes.each_with_object({}) do |(key, value), rules|
           rules[key] = type_caster(type: value[:type])
