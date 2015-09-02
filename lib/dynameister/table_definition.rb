@@ -168,7 +168,7 @@ module Dynameister
     end
 
     def validate_number_of_indexes!
-      if (options[:local_indexes].length | options[:global_indexes].length) > MAX_INDEXES
+      if [ options[:local_indexes].length, options[:global_indexes].length ].max > MAX_INDEXES
         raise ArgumentError, "A maximum of 5 global or local Secondary Indexes are supported"
       end
     end
