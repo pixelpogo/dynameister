@@ -67,4 +67,28 @@ describe Dynameister::Persistence do
 
   end
 
+  describe "table schema" do
+
+    before  { Language.create_table }
+
+    subject { Language.schema }
+
+    it "has a representation of its schema" do
+      expect(subject).to be_an_instance_of Aws::DynamoDB::Types::TableDescription
+    end
+
+  end
+
+  describe "key schema keys" do
+
+    before  { Language.create_table }
+
+    subject { Language.key_schema_keys }
+
+    it "has a representation of its schema" do
+      expect(subject).to eq [:id]
+    end
+
+  end
+
 end
