@@ -9,13 +9,13 @@ module Dynameister
       end
 
       def serialize(value)
-        BigDecimal.new(value.to_f.to_s)
+        value.to_r
       end
 
       private
 
       def cast_value(value)
-        ::Time.at(value)
+        ::Time.at(value.to_r)
       end
 
     end

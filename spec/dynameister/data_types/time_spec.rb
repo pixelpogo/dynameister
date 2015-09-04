@@ -10,14 +10,14 @@ describe Dynameister::DataTypes::Time do
   its(:type) { is_expected.to be(:time) }
 
   describe "#serialize" do
-    it "converts Time value into a BigDecimal" do
-      expect(subject.serialize(time)).to be_kind_of BigDecimal
+    it "converts Time value into a Rational" do
+      expect(subject.serialize(time)).to be_kind_of Rational
     end
   end
 
   describe "#deserialize" do
-    it "converts a BigDecimal value into a Time" do
-      expect(subject.cast(time)).to be_kind_of Time
+    it "converts a Rational value into a Time" do
+      expect(subject.deserialize(time.to_r)).to be_kind_of Time
     end
   end
 
