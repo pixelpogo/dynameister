@@ -2,7 +2,9 @@ require_relative "../app/models/book"
 
 describe Dynameister::Queries do
 
-  let(:book) { Book.create(author_id: 42, rank: 42, name: "bog") }
+  let(:book) do
+    Book.create(author_id: 42, rank: 42, name: "bog", created_at: Time.now - 2.days)
+  end
 
   before do
     Book.create_table
@@ -237,6 +239,20 @@ describe Dynameister::Queries do
 
     it "uses the supplied index" do
       expect(subject[:index_name]).to eq "by_monkeys"
+    end
+
+  end
+
+  describe "converts the data types" do
+
+    context "datetime" do
+
+      subject { Book.scan(name: book.name).le(created_at: Time.now - 1.day).all }
+
+      it "returns the book that was created before yesterday" do
+        expect(subject.map(&:created_at).first).to be_kind_of(DateTime)
+      end
+
     end
 
   end

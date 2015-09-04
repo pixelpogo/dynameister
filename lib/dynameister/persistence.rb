@@ -47,6 +47,18 @@ module Dynameister
         end
       end
 
+      def serialize_attribute(attribute)
+        key = attribute.keys.first
+        attribute[key] = attribute_casters[key].serialize(attribute[key])
+        attribute
+      end
+
+      def deserialize_attributes(raw_attributes)
+        raw_attributes.each_with_object({}) do |(key, value), item|
+          item[key] = attribute_casters[key].deserialize(value)
+        end
+      end
+
       private
 
       def attribute_casters

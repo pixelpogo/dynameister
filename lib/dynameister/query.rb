@@ -28,7 +28,8 @@ module Dynameister
       end
 
       response.entities.map do |item|
-        model.new(item)
+        deserialized_item = model.deserialize_attributes(item)
+        model.new(deserialized_item)
       end
     end
 
@@ -110,7 +111,8 @@ module Dynameister
 
     def serialize_condition(condition, expression, comparator = "=")
       if condition.any?
-        Queries::Parameters.new(model, expression, comparator, @negation, condition).to_h
+        serialized_condition = model.serialize_attribute(condition)
+        Queries::Parameters.new(model, expression, comparator, @negation, serialized_condition).to_h
       end
     end
 
