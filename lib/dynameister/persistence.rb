@@ -49,13 +49,23 @@ module Dynameister
 
       def serialize_attribute(attribute)
         key = attribute.keys.first
-        attribute[key] = attribute_casters[key].serialize(attribute[key])
+        if attribute_casters[key]
+          attribute[key] = attribute_casters[key].serialize(attribute[key])
+        end
         attribute
+      end
+
+      def serialize_attributes(item)
+        item.each_with_object({}) do |(key, value), serialized_item|
+          serialized_item[key] = serialize_attribute(key => value)[key]
+        end
       end
 
       def deserialize_attributes(raw_attributes)
         raw_attributes.each_with_object({}) do |(key, value), item|
-          item[key] = attribute_casters[key].deserialize(value)
+          if attribute_casters[key]
+            item[key] = attribute_casters[key].deserialize(value)
+          end
         end
       end
 
@@ -91,7 +101,8 @@ module Dynameister
 
     def persist
       self.hash_key ||= SecureRandom.uuid unless hash_key
-      client.put_item(table_name: table_name, item: attributes)
+      serialized_attributes = self.class.serialize_attributes(attributes)
+      client.put_item(table_name: table_name, item: serialized_attributes)
     end
 
   end
