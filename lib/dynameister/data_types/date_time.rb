@@ -9,13 +9,13 @@ module Dynameister
       end
 
       def serialize(value)
-        BigDecimal.new(value.to_f.to_s)
+        value.as_json
       end
 
       private
 
       def cast_value(value)
-        ::Time.at(value).to_datetime
+        ::Time.parse(value).to_datetime
       end
 
     end
