@@ -10,7 +10,7 @@ describe Dynameister::DataTypes::Time do
   its(:type) { is_expected.to be(:time) }
 
   describe "#serialize" do
-    it "converts Time value into a Rational" do
+    it "converts Time value into a String" do
       expect(subject.serialize(time)).to be_kind_of String
     end
   end
