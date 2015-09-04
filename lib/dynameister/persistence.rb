@@ -13,7 +13,7 @@ module Dynameister
       end
 
       def client
-        @client ||= Dynameister::Client.new(attribute_casters: attribute_casters)
+        @client ||= Dynameister::Client.new
       end
 
       def create_table(options: {})

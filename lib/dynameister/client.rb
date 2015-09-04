@@ -4,10 +4,6 @@ module Dynameister
 
   class Client
 
-    def initialize(attribute_casters: {})
-      @attribute_casters = attribute_casters
-    end
-
     def create_table(table_name:, hash_key: :id, options: {})
       options[:hash_key] ||= { hash_key.to_sym => :string }
       options[:read_capacity] ||= Dynameister.read_capacity
@@ -38,13 +34,13 @@ module Dynameister
         hash_key:   hash_key,
         range_key:  range_key)
 
-      deserialize_attribute_values(aws_client.get_item(serialized.to_h))
+      aws_client.get_item(serialized.to_h)
     end
 
     def put_item(table_name:, item:)
       serialized = Dynameister::Serializers::PutItemSerializer.new(
         table_name: table_name,
-        item:       serialize_attribute_values(item))
+        item:       item)
 
       aws_client.put_item(serialized.to_h)
     end
@@ -90,26 +86,6 @@ module Dynameister
       else
         {}
       end
-    end
-
-    def deserialize_attribute_values(item)
-      return item unless item.respond_to?(:item) && item.item.present?
-
-      item.item = apply_attribute_casting(item.item, :deserialize)
-      item
-    end
-
-    def serialize_attribute_values(item)
-      apply_attribute_casting(item, :serialize)
-    end
-
-    def apply_attribute_casting(item, operation)
-      item = item.with_indifferent_access
-      @attribute_casters.each_pair do |attr_name, type_caster|
-        item[attr_name] = type_caster.send(operation, item[attr_name])
-      end
-
-      item
     end
 
   end
