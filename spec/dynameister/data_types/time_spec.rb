@@ -11,7 +11,7 @@ describe Dynameister::DataTypes::Time do
 
   describe "#serialize" do
     it "converts Time value into a Rational" do
-      expect(subject.serialize(time)).to be_kind_of Rational
+      expect(subject.serialize(time)).to be_kind_of String
     end
   end
 

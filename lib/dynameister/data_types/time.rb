@@ -9,7 +9,7 @@ module Dynameister
       end
 
       def serialize(value)
-        value.to_r
+        value.to_r.to_s
       end
 
       private
