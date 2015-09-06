@@ -91,4 +91,59 @@ describe Dynameister::Persistence do
 
   end
 
+  describe "serialize_attribute" do
+
+    subject { Cat.serialize_attribute(attr_hash) }
+
+    context "Dynameister convenience DataType handling" do
+      let(:attr_hash) { { adopted_at: DateTime.now } }
+      it "converts attribute value of non-default DataTypes, e.g. a DateTime attribute from DateTime into String" do
+        expect { subject }.to change { attr_hash[:adopted_at].class }.from(DateTime).to(String)
+      end
+    end
+
+    context "default DataType handling" do
+      let(:attr_hash) { { pet_food: "Meat" } }
+      it "does not change attribute value of default DataType, e.g. a String attribute" do
+        expect { subject }.not_to change { attr_hash[:adopted_at].class }
+      end
+    end
+  end
+
+  describe "serialize_attributes" do
+
+    let(:item) {
+      { id: "8d629240-d319-41a9-b39e-9df1d376476e",
+        name: "Garfield",
+        adopted_at: DateTime.now,
+        pet_food: "Meat" }
+    }
+
+    subject { Cat.serialize_attributes(item) }
+
+    it "calls serialize_attribute method for each attribute" do
+      expect(Cat).to receive(:serialize_attribute).exactly(4).times.and_call_original
+      subject
+    end
+  end
+
+  describe "deserialize_attributes" do
+
+    let(:raw_attributes) {
+      { name: "Garfield",
+        adopted_at: "1987-06-01T00:00:00.000+00:00" }
+    }
+
+    subject { Cat.deserialize_attributes(raw_attributes) }
+
+    it "converts attribute value of non-default DataTypes, e.g. a DateTime attribute from String into DateTime" do
+      expect(subject[:adopted_at]).to be_kind_of DateTime
+    end
+
+    it "does not change attribute value of default DataType, e.g. a String attribute" do
+      expect(subject[:name]).to be_kind_of String
+    end
+
+  end
+
 end
