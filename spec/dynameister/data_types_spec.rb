@@ -11,14 +11,14 @@ describe Dynameister::DataTypes do
   let(:release_date) { DateTime.new(1987, 6, 1) }
   let(:produced_at) { Time.new(1987, 5, 1) }
 
-  let(:cd) {
+  let(:cd) do
     CompactDisc.create(
       name: name,
       tracks: tracks,
       price: price,
       release_date: release_date,
       produced_at: produced_at)
-  }
+  end
 
   describe "creating a document" do
 

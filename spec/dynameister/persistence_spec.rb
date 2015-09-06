@@ -112,12 +112,12 @@ describe Dynameister::Persistence do
 
   describe "serialize_attributes" do
 
-    let(:item) {
+    let(:item) do
       { id: "8d629240-d319-41a9-b39e-9df1d376476e",
         name: "Garfield",
         adopted_at: DateTime.now,
         pet_food: "Meat" }
-    }
+    end
 
     subject { Cat.serialize_attributes(item) }
 
@@ -129,10 +129,10 @@ describe Dynameister::Persistence do
 
   describe "deserialize_attributes" do
 
-    let(:raw_attributes) {
+    let(:raw_attributes) do
       { name: "Garfield",
         adopted_at: "1987-06-01T00:00:00.000+00:00" }
-    }
+    end
 
     subject { Cat.deserialize_attributes(raw_attributes) }
 
