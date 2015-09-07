@@ -11,7 +11,7 @@ describe Dynameister::DataTypes::Integer do
 
   describe "#deserialize" do
     it "converts a BigDecimal value into an Integer" do
-      expect(subject.cast(integer)).to be_kind_of Integer
+      expect(subject.deserialize(BigDecimal.new(integer.to_s))).to be_kind_of Integer
     end
   end
 

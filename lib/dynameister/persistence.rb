@@ -47,24 +47,24 @@ module Dynameister
         end
       end
 
-      def serialize_attribute(attribute)
-        key = attribute.keys.first
-        if attribute_casters[key]
-          attribute[key] = attribute_casters[key].serialize(attribute[key])
-        end
-        attribute
-      end
-
       def serialize_attributes(item)
         item.each_with_object({}) do |(key, value), serialized_item|
           serialized_item[key] = serialize_attribute(key => value)[key]
         end
       end
 
+      def serialize_attribute(attribute)
+        key = attribute.keys.first
+        if caster = attribute_casters[key]
+          attribute[key] = caster.serialize(attribute[key])
+        end
+        attribute
+      end
+
       def deserialize_attributes(raw_attributes)
         raw_attributes.each_with_object({}) do |(key, value), item|
-          if attribute_casters[key]
-            item[key] = attribute_casters[key].deserialize(value)
+          if caster = attribute_casters[key]
+            item[key] = caster.deserialize(value)
           end
         end
       end

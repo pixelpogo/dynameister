@@ -1,5 +1,3 @@
-require_relative "shared_examples_for_data_types.rb"
-
 describe Dynameister::DataTypes::DateTime do
 
   let(:datetime) { DateTime.now }
@@ -16,7 +14,6 @@ describe Dynameister::DataTypes::DateTime do
     it "converts a deserialized DateTime to same value as the initial serialized DateTime object" do
       expect(subject.serialize(subject.deserialize(subject.serialize(datetime)))).to eq subject.serialize(datetime)
     end
-
   end
 
   describe "#deserialize" do

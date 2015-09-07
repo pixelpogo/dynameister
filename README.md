@@ -59,7 +59,7 @@ In addition to the default [DynamoDB DataTypes for AttributeValues](http://docs.
 
 The values of custom DataType attributes will be automatically converted (serialized) into DynamoDB compliant DataTypes before they are stored.
 
-They are re-convereted (deserialized) back into the non-default DataTypes when they are retrieved from DynamoDB.
+They are reconvereted (deserialized) back into the non-default DataTypes when they are retrieved from DynamoDB.
 
 ```ruby
 class CompactDisc

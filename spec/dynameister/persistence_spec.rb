@@ -116,7 +116,8 @@ describe Dynameister::Persistence do
       { id: "8d629240-d319-41a9-b39e-9df1d376476e",
         name: "Garfield",
         adopted_at: DateTime.now,
-        pet_food: "Meat" }
+        pet_food: "Meat"
+      }
     end
 
     subject { Cat.serialize_attributes(item) }

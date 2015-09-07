@@ -1,5 +1,3 @@
-require_relative "shared_examples_for_data_types.rb"
-
 describe Dynameister::DataTypes::Time do
 
   let(:time) { Time.now }
