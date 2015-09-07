@@ -69,14 +69,16 @@ module Dynameister
         end
       end
 
-      private
-
       def attribute_casters
         attributes.each_with_object({}) do |(key, value), rules|
           rules[key] = type_caster(type: value[:type])
         end.with_indifferent_access
       end
 
+    end
+
+    included do
+      private_class_method :attribute_casters
     end
 
     def save
