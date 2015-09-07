@@ -123,7 +123,7 @@ describe Dynameister::Persistence do
     subject { Cat.serialize_attributes(item) }
 
     it "calls serialize_attribute method for each attribute" do
-      expect(Cat).to receive(:serialize_attribute).exactly(4).times.and_call_original
+      expect(Cat).to receive(:serialize_attribute).exactly(4).times.with(kind_of(Hash)).and_call_original
       subject
     end
   end
