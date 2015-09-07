@@ -26,7 +26,7 @@ module Dynameister
         if retrieved.empty?
           nil
         else
-          new(retrieved.item)
+          new(deserialize_attributes(retrieved.item))
         end
       end
 

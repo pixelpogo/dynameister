@@ -17,7 +17,7 @@ describe Dynameister::Query do
       its(:operation) { is_expected.to eq :scan_table }
 
       it "equals after query call" do
-        expect(subject.having(something: "anything").operation).to eq :scan_table
+        expect(subject.having(name: "anything").operation).to eq :scan_table
       end
 
       it "equals after or call" do
@@ -71,63 +71,63 @@ describe Dynameister::Query do
 
       subject { query.having(options).options }
 
-      let(:options) { { something: "anything" } }
+      let(:options) { { name: "anything" } }
 
       it "builds the query hash with a filter expression" do
-        expect(subject[:filter_expression]).to eq "#something = :something"
+        expect(subject[:filter_expression]).to eq "#name = :name"
       end
 
       it "builds the query hash with expression attribute names" do
-        expect(subject[:expression_attribute_names]).to eq("#something" => "something")
+        expect(subject[:expression_attribute_names]).to eq("#name" => "name")
       end
 
       it "builds the query hash with expression attribute values" do
-        expect(subject[:expression_attribute_values]).to eq(":something" => "anything")
+        expect(subject[:expression_attribute_values]).to eq(":name" => "anything")
       end
 
       context "combining queries" do
 
-        subject { query.having(options).and(more: "of something").options }
+        subject { query.having(options).and(uuid: "of name").options }
 
         it "builds the query hash with a filter expression" do
           expect(
             subject[:filter_expression]
-          ).to eq "#something = :something and #more = :more"
+          ).to eq "#name = :name and #uuid = :uuid"
         end
 
         it "builds the query hash with expression attribute names" do
           expect(
             subject[:expression_attribute_names]
-          ).to eq("#something" => "something", "#more" => "more")
+          ).to eq("#name" => "name", "#uuid" => "uuid")
         end
 
         it "builds the query hash with expression attribute names" do
           expect(
             subject[:expression_attribute_values]
-          ).to eq(":something" => "anything", ":more" => "of something")
+          ).to eq(":name" => "anything", ":uuid" => "of name")
         end
       end
 
       context "combining or queries" do
 
-        subject { query.having(options).or.having(more: "of something").options }
+        subject { query.having(options).or.having(uuid: "of name").options }
 
         it "builds the query hash with a filter expression" do
           expect(
             subject[:filter_expression]
-          ).to eq "#something = :something or #more = :more"
+          ).to eq "#name = :name or #uuid = :uuid"
         end
 
       end
 
       context "comparison" do
 
-        subject { query.having(options).le(age: 42).options }
+        subject { query.having(options).le(rank: 42).options }
 
         it "builds the query hash with a filter expression" do
           expect(
             subject[:filter_expression]
-          ).to eq "#something = :something and #age <= :age"
+          ).to eq "#name = :name and #rank <= :rank"
         end
 
       end

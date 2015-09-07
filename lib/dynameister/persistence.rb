@@ -47,6 +47,38 @@ module Dynameister
         end
       end
 
+      def serialize_attributes(item)
+        item.each_with_object({}) do |(key, value), serialized_item|
+          serialized_item[key] = serialize_attribute(key => value)[key]
+        end
+      end
+
+      def serialize_attribute(attribute)
+        key = attribute.keys.first
+        if caster = attribute_casters[key]
+          attribute[key] = caster.serialize(attribute[key])
+        end
+        attribute
+      end
+
+      def deserialize_attributes(raw_attributes)
+        raw_attributes.each_with_object({}) do |(key, value), item|
+          if caster = attribute_casters[key]
+            item[key] = caster.deserialize(value)
+          end
+        end
+      end
+
+      def attribute_casters
+        attributes.each_with_object({}) do |(key, value), rules|
+          rules[key] = type_caster(type: value[:type])
+        end.with_indifferent_access
+      end
+
+    end
+
+    included do
+      private_class_method :attribute_casters
     end
 
     def save
@@ -71,7 +103,8 @@ module Dynameister
 
     def persist
       self.hash_key ||= SecureRandom.uuid unless hash_key
-      client.put_item(table_name: table_name, item: attributes)
+      serialized_attributes = self.class.serialize_attributes(attributes)
+      client.put_item(table_name: table_name, item: serialized_attributes)
     end
 
   end

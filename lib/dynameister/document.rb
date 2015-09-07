@@ -4,6 +4,7 @@ module Dynameister
 
     extend ActiveSupport::Concern
 
+    include Dynameister::DataTypes
     include Dynameister::Fields
     include Dynameister::Finders
     include Dynameister::Indexes

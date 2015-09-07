@@ -48,6 +48,31 @@ class Cat
 end
 ```
 
+#### DataTypes
+
+In addition to the default [DynamoDB DataTypes for AttributeValues](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_AttributeValue.html) Dynameister offers a few more datatypes
+
+ * `:datetime`
+ * `:float`
+ * `:integer`
+ * `:time`
+
+The values of custom DataType attributes will be automatically converted (serialized) into DynamoDB compliant DataTypes before they are stored.
+
+They are reconverted (deserialized) back into the non-default DataTypes when they are retrieved from DynamoDB.
+
+```ruby
+class CompactDisc
+  include Dynameister::Document
+
+  field :name
+  field :tracks, :integer
+  field :price, :float
+  field :release_date, :datetime
+  field :produced_at, :time
+end
+```
+
 ### Document Creation
 
 First create the table for the model.
@@ -104,7 +129,7 @@ Supported methods for querying:
 * `all` return a whole collection of documents (uses DynamoDB `scan` without a filter)
 
 The Queries are built lazily, via the DSL for adding attributes to the query and comparison or logical operators.
-Calling `.all` on the query, will execute the query and return the result. 
+Calling `.all` on the query, will execute the query and return the result.
 
 ### Queries
 
@@ -121,7 +146,7 @@ Book.query(hash_key: "72c62052").and(range_key: 42).limit(1)
 
 # You can also do comparisons on the range_key,
 # e.g. returning objects with ranges less than or equal to 42
-Book.query(hash_key: "72c62052").le(range_key: 42).all 
+Book.query(hash_key: "72c62052").le(range_key: 42).all
 
 # Same as above but uses get_item underneath
 Book.find_by(hash_key: { uuid: "a17871e56c14" })
@@ -129,14 +154,14 @@ Book.find("a17871e56c14")
 
 # Using DynamoDB scan
 Book.find ["ane85rna", "nelg94", "h384hen"] # only for compliance with ActiveRecord API
-Book.all  # no filter 
+Book.all  # no filter
 ```
 
 ### Scans
 
 DynamoDB scan can be used when filtering on any attribute. A Scan operation reads every item in a table or a secondary index.
 
-Using 
+Using
 ```ruby
 
 # Filter on other attributes other than the hash_key
@@ -159,12 +184,12 @@ Book.scan(author_id: 1..3).all # providing a range will return all books with au
 The default is equals `=`. Aliases are `and`, `eq`, `in` and `between`.
 
 Other supported operators are:
-* Less than or equal to `<=`, as `le` 
+* Less than or equal to `<=`, as `le`
 * Greater than `>`, as `gt`
 * Less than`<`, as `lt`
 * Greater than or equal to `>=`, as `ge`
 * Negation `NOT`, as `not` or `exclude`
- 
+
 When using scan with an attribute that corresponds to a local secondary index, internally it will use this index to optimise the query.
 
 ## Development
