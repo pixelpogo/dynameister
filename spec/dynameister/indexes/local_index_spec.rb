@@ -30,4 +30,34 @@ describe Dynameister::Indexes::LocalIndex do
 
   end
 
+  context "given a range key with explicit type" do
+
+    subject { described_class.new(range_key) }
+
+    context "with valid format" do
+
+      let(:range_key) { { adopted_at: :string } }
+
+      it "has a hash representation" do
+        expect(subject.to_h).to eq(
+          name:       "by_adopted_at",
+          range_key:  range_key,
+          projection: :all
+        )
+      end
+
+    end
+
+    context "with invalid format" do
+
+      let(:range_key) { 10 }
+
+      it "raises an ArgumentError" do
+        expect { subject }.to raise_exception(ArgumentError)
+      end
+
+    end
+
+  end
+
 end
