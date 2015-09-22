@@ -1,3 +1,5 @@
+require_relative "shared_examples_for_indexes"
+
 describe Dynameister::Indexes::GlobalIndex do
 
   let(:keys) { [:uuid, :created_at] }
@@ -56,9 +58,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
         let(:keys) { [:uuid, 10] }
 
-        it "raises an Dynameister::IndexKeyDefinitionError" do
-          expect { subject }.to raise_exception(Dynameister::IndexKeyDefinitionError)
-        end
+        it_behaves_like "a handler for an invalid format"
 
       end
 
@@ -102,9 +102,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
         let(:keys) { [10] }
 
-        it "raises an Dynameister::IndexKeyDefinitionError" do
-          expect { subject }.to raise_exception(Dynameister::IndexKeyDefinitionError)
-        end
+        it_behaves_like "a handler for an invalid format"
 
       end
 

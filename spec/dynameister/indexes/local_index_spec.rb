@@ -1,3 +1,5 @@
+require_relative "shared_examples_for_indexes"
+
 describe Dynameister::Indexes::LocalIndex do
 
   let(:range_key) { :adopted_at }
@@ -52,9 +54,7 @@ describe Dynameister::Indexes::LocalIndex do
 
       let(:range_key) { 10 }
 
-      it "raises an Dynameister::IndexKeyDefinitionError" do
-        expect { subject }.to raise_exception(Dynameister::IndexKeyDefinitionError)
-      end
+      it_behaves_like "a handler for an invalid format"
 
     end
 
