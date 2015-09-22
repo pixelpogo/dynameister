@@ -34,17 +34,80 @@ describe Dynameister::Indexes::GlobalIndex do
 
   end
 
+  context "providing a hash and range key" do
+
+    subject { described_class.new(keys) }
+
+    context "with custom type" do
+
+      let(:keys) { [:uuid, created_at: :string] }
+
+      it "has a hash representation" do
+        expect(subject.to_h).to eq(
+          name:       "by_uuids_and_created_ats",
+          hash_key:   { uuid: :string },
+          range_key:  keys.last,
+          projection: :all,
+          throughput: [1, 1]
+        )
+      end
+
+      context "with invalid format" do
+
+        let(:keys) { [:uuid, 10] }
+
+        it "raises an Dynameister::IndexKeyDefinitionError" do
+          expect { subject }.to raise_exception(Dynameister::IndexKeyDefinitionError)
+        end
+
+      end
+
+    end
+
+  end
+
   context "only providing a hash key" do
 
-    subject { described_class.new([:uuid]) }
+    subject { described_class.new(keys) }
 
-    it "has a hash representation" do
-      expect(subject.to_h).to eq(
-        name:       "by_uuids",
-        hash_key:   { uuid: :string },
-        projection: :all,
-        throughput: [1, 1]
-      )
+    context "with default type" do
+
+      let(:keys) { [:uuid] }
+
+      it "has a hash representation" do
+        expect(subject.to_h).to eq(
+          name:       "by_uuids",
+          hash_key:   { uuid: :string },
+          projection: :all,
+          throughput: [1, 1]
+        )
+      end
+
+    end
+
+    context "with custom type" do
+
+      let(:keys) { [uuid: :number] }
+
+      it "has a hash representation" do
+        expect(subject.to_h).to eq(
+          name:       "by_uuids",
+          hash_key:   keys.first,
+          projection: :all,
+          throughput: [1, 1]
+        )
+      end
+
+      context "with invalid format" do
+
+        let(:keys) { [10] }
+
+        it "raises an Dynameister::IndexKeyDefinitionError" do
+          expect { subject }.to raise_exception(Dynameister::IndexKeyDefinitionError)
+        end
+
+      end
+
     end
 
   end
