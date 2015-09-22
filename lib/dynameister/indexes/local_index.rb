@@ -1,18 +1,11 @@
+require_relative "../errors"
+require_relative "range_key"
+
 module Dynameister
 
   module Indexes
 
     class LocalIndex
-
-      RangeKey = Struct.new(:name, :type) do
-
-        def to_h
-          {
-            range_key: { name => type }
-          }
-        end
-
-      end
 
       LOCAL_INDEX_PREFIX = "by_"
 
@@ -38,17 +31,8 @@ module Dynameister
         when String, Symbol then RangeKey.new(range_key.to_sym, :number)
         when Hash           then RangeKey.new(range_key.keys.first,
                                               range_key.values.first)
-        else raise_build_range_key_error(range_key)
+        else raise IndexKeyDefinitionError.new(range_key)
         end
-      end
-
-      def raise_build_range_key_error(range_key)
-        raise ArgumentError, <<-EOS
-                Not supported range key type #{range_key} for local index.
-                Supported types are String/Symbol for a default range key of
-                type :number and Hash to define a range key of type :string,
-                :number or :binary.
-              EOS
       end
 
     end

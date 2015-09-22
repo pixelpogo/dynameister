@@ -52,8 +52,8 @@ describe Dynameister::Indexes::LocalIndex do
 
       let(:range_key) { 10 }
 
-      it "raises an ArgumentError" do
-        expect { subject }.to raise_exception(ArgumentError)
+      it "raises an Dynameister::IndexKeyDefinitionError" do
+        expect { subject }.to raise_exception(Dynameister::IndexKeyDefinitionError)
       end
 
     end
