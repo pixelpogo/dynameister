@@ -1,6 +1,4 @@
-require_relative "../errors"
-require_relative "hash_key"
-require_relative "range_key"
+require_relative "../builder/key_builder"
 
 module Dynameister
 
@@ -32,26 +30,8 @@ module Dynameister
 
       def build_keys(keys)
         [].tap do |a|
-          a << build_hash_key(keys.first)
-          a << build_range_key(keys.last) if keys.length > 1
-        end
-      end
-
-      def build_hash_key(hash_key)
-        case hash_key
-        when String, Symbol then HashKey.new(hash_key.to_sym, :string)
-        when Hash           then HashKey.new(hash_key.keys.first,
-                                             hash_key.values.first)
-        else raise IndexKeyDefinitionError.new(hash_key)
-        end
-      end
-
-      def build_range_key(range_key)
-        case range_key
-        when String, Symbol then RangeKey.new(range_key.to_sym, :number)
-        when Hash           then RangeKey.new(range_key.keys.first,
-                                              range_key.values.first)
-        else raise IndexKeyDefinitionError.new(range_key)
+          a << Builder::KeyBuilder.build_hash_key(keys.first)
+          a << Builder::KeyBuilder.build_range_key(keys.last) if keys.length > 1
         end
       end
 
