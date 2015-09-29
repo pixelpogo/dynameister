@@ -3,13 +3,6 @@ require_relative "../app/models/cat"
 
 describe Dynameister::Fields do
 
-  before { Language.create_table }
-
-  after do
-    delete_table("languages")
-    delete_table("kittens")
-  end
-
   describe "auto-generated accessors" do
 
     subject { Language.new }
@@ -40,6 +33,10 @@ describe Dynameister::Fields do
   end
 
   describe "updating a document" do
+
+    before { Language.create_table }
+
+    after { delete_table("languages") }
 
     let!(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
 
@@ -77,6 +74,8 @@ describe Dynameister::Fields do
         cats_table.key_schema.first
       end
 
+      after { delete_table("kittens") }
+
       it "supports a custom hash key" do
         expect(subject.hash_key).to eq "neko atsume"
       end
@@ -93,6 +92,8 @@ describe Dynameister::Fields do
   end
 
   describe "range key" do
+
+    after { delete_table("kittens") }
 
     subject! do
       cats = Cat.create_table
