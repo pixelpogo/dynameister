@@ -10,11 +10,19 @@ describe Dynameister::Fields do
     delete_table("kittens")
   end
 
-  subject { Language.new }
+  describe "auto-generated accessors" do
 
-  it { is_expected.to respond_to(:locale) }
-  it { is_expected.to respond_to(:rank) }
-  it { is_expected.to respond_to(:displayable) }
+    subject { Language.new }
+
+    it { is_expected.to respond_to(:locale) }
+    it { is_expected.to respond_to(:rank) }
+    it { is_expected.to respond_to(:displayable) }
+
+    it { is_expected.to respond_to(:rank=) }
+    it { is_expected.to respond_to(:locale=) }
+    it { is_expected.to respond_to(:displayable=) }
+
+  end
 
   describe "class level attributes with type definition" do
 
