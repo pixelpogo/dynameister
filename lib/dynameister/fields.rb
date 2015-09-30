@@ -1,3 +1,5 @@
+require_relative "builder/key_builder"
+
 module Dynameister
 
   module Fields
@@ -25,7 +27,7 @@ module Dynameister
       end
 
       def hash_key
-        options[:hash_key] || :id
+        Builder::KeyBuilder.build_hash_key(options[:hash_key] || :id)
       end
 
       def range_key
@@ -34,9 +36,9 @@ module Dynameister
 
       def table(options = {})
         self.options = options
-        unless attributes.has_key? hash_key
+        unless attributes.has_key?(hash_key.name)
           remove_field :id
-          field(hash_key)
+          field(hash_key.name, hash_key.type)
         end
       end
 
@@ -60,11 +62,11 @@ module Dynameister
     end
 
     def hash_key
-      send(self.class.hash_key)
+      send(self.class.hash_key.name)
     end
 
     def hash_key=(value)
-      send("#{self.class.hash_key}=", value)
+      send("#{self.class.hash_key.name}=", value)
     end
 
     def range_key

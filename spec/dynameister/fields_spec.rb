@@ -1,5 +1,6 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
+require_relative "../app/models/cat_with_typed_indexes"
 
 describe Dynameister::Fields do
 
@@ -64,17 +65,11 @@ describe Dynameister::Fields do
 
     end
 
-    context "can be overriden" do
-
-      subject { Cat.new(name: "neko atsume") }
-
-      let(:cats_table) { Cat.create_table }
+    shared_examples_for "a table's hash key" do
 
       let(:hash_key_schema) do
-        cats_table.key_schema.first
+        table.key_schema.first
       end
-
-      after { delete_table("kittens") }
 
       it "supports a custom hash key" do
         expect(subject.hash_key).to eq "neko atsume"
@@ -89,6 +84,41 @@ describe Dynameister::Fields do
       end
 
     end
+
+    context "its name can be overriden" do
+
+      let!(:table) { Cat.create_table }
+
+      after { delete_table("kittens") }
+
+      subject { Cat.new(name: "neko atsume") }
+
+      it_behaves_like "a table's hash key"
+
+    end
+
+    context "its type can be overriden" do
+
+      let!(:table) { CatWithTypedIndexes.create_table }
+
+      let(:hash_key_type) do
+        table.attribute_definitions.detect do |a|
+          a.attribute_name == 'name'
+        end.attribute_type
+      end
+
+      after { delete_table("kittens_with_typed_indexes") }
+
+      subject { CatWithTypedIndexes.new(name: "neko atsume") }
+
+      it_behaves_like "a table's hash key"
+
+      it "sets the custom hash key type" do
+        expect(hash_key_type).to eq('N')
+      end
+
+    end
+
   end
 
   describe "range key" do
