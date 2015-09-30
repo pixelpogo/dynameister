@@ -72,7 +72,7 @@ describe Dynameister::Fields do
       end
 
       it "supports a custom hash key" do
-        expect(subject.hash_key).to eq "neko atsume"
+        expect(subject.hash_key).to eq hash_key_value
       end
 
       it "adds the attribute name to the table key schema" do
@@ -87,11 +87,12 @@ describe Dynameister::Fields do
 
     context "its name can be overriden" do
 
+      let(:hash_key_value) { "neko atsume" }
       let!(:table) { Cat.create_table }
 
       after { delete_table("kittens") }
 
-      subject { Cat.new(name: "neko atsume") }
+      subject { Cat.new(name: hash_key_value) }
 
       it_behaves_like "a table's hash key"
 
@@ -99,6 +100,7 @@ describe Dynameister::Fields do
 
     context "its type can be overriden" do
 
+      let(:hash_key_value) { 10 }
       let!(:table) { CatWithTypedIndexes.create_table }
 
       let(:hash_key_type) do
@@ -109,7 +111,7 @@ describe Dynameister::Fields do
 
       after { delete_table("kittens_with_typed_indexes") }
 
-      subject { CatWithTypedIndexes.new(name: "neko atsume") }
+      subject { CatWithTypedIndexes.new(name: hash_key_value) }
 
       it_behaves_like "a table's hash key"
 
