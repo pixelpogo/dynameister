@@ -20,10 +20,10 @@ module Dynameister
       def to_h
         {
           name:       name,
-          hash_key:   hash_key.to_h,
+          hash_key:   hash_key_hash,
           projection: projection,
           throughput: throughput
-        }.merge(range_key.to_h)
+        }.merge(range_key_hash)
       end
 
       def name
@@ -36,6 +36,16 @@ module Dynameister
         [].tap do |a|
           a << Builder::KeyBuilder.build_hash_key(keys.first)
           a << Builder::KeyBuilder.build_range_key(keys.last) if keys.length > 1
+        end
+      end
+
+      def hash_key_hash
+        { hash_key.name => hash_key.type }
+      end
+
+      def range_key_hash
+        {}.tap do |h|
+          h[:range_key] = { range_key.name => range_key.type } if range_key
         end
       end
 
