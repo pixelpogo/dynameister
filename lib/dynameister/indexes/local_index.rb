@@ -19,8 +19,6 @@ module Dynameister
         { name: name, projection: projection }.merge(range_key.to_h)
       end
 
-      private
-
       def name
         "#{LOCAL_INDEX_PREFIX}#{range_key.name}"
       end

@@ -4,15 +4,7 @@ module Dynameister
 
   module Builder
 
-    HashKey = Struct.new(:name, :type) do
-
-      def to_h
-        { name => type }
-      end
-
-    end
-
-    RangeKey = Struct.new(:name, :type) do
+    Key = Struct.new(:name, :type) do
 
       def to_h
         {
@@ -26,18 +18,18 @@ module Dynameister
 
       def self.build_hash_key(hash_key)
         case hash_key
-        when String, Symbol then HashKey.new(hash_key.to_sym, :string)
-        when Hash           then HashKey.new(hash_key.keys.first,
-                                             hash_key.values.first)
+        when String, Symbol then Key.new(hash_key.to_sym, :string)
+        when Hash           then Key.new(hash_key.keys.first,
+                                         hash_key.values.first)
         else raise IndexKeyDefinitionError.new(hash_key)
         end
       end
 
       def self.build_range_key(range_key)
         case range_key
-        when String, Symbol then RangeKey.new(range_key.to_sym, :number)
-        when Hash           then RangeKey.new(range_key.keys.first,
-                                              range_key.values.first)
+        when String, Symbol then Key.new(range_key.to_sym, :number)
+        when Hash           then Key.new(range_key.keys.first,
+                                         range_key.values.first)
         else raise IndexKeyDefinitionError.new(range_key)
         end
       end

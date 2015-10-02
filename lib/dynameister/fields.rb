@@ -31,9 +31,12 @@ module Dynameister
       end
 
       def range_key
-        { options[:range_key] => :number } if options[:range_key]
+        if key = options[:range_key]
+          Builder::KeyBuilder.build_hash_key(key)
+        end
       end
 
+      # TODO: Add range key method generation
       def table(options = {})
         self.options = options
         unless attributes.has_key?(hash_key.name)
@@ -71,7 +74,7 @@ module Dynameister
 
     def range_key
       if range_key = self.class.range_key
-        send(range_key)
+        send(range_key.name)
       end
     end
 

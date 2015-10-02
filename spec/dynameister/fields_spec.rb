@@ -125,19 +125,61 @@ describe Dynameister::Fields do
 
   describe "range key" do
 
-    after { delete_table("kittens") }
+    let(:range_key_schema) { table.key_schema.last }
 
-    subject! do
-      cats = Cat.create_table
-      cats.key_schema.last
+    context "with default type" do
+
+      let!(:table) { Cat.create_table }
+
+      after { delete_table("kittens") }
+
+      subject { Cat.new(name: "name", created_at: "today") }
+
+      it "supports defining a range key" do
+        expect(subject.range_key).to eq "today"
+      end
+
+      it "adds the attribute name to the table key schema" do
+        expect(range_key_schema.attribute_name).to eq "created_at"
+      end
+
+      it "adds the range key type to the table key schema" do
+        expect(range_key_schema.key_type).to eq "RANGE"
+      end
+
     end
 
-    it "adds the attribute name to the table key schema" do
-      expect(subject.attribute_name).to eq "created_at"
-    end
+    context "its default type can be overriden" do
 
-    it "adds the range key type to the table key schema" do
-      expect(subject.key_type).to eq "RANGE"
+      let!(:table) { CatWithTypedIndexes.create_table }
+
+      let(:range_key_type) do
+        table.attribute_definitions.detect do |a|
+          a.attribute_name == 'created_at'
+        end.attribute_type
+      end
+
+      after { delete_table("kittens_with_typed_indexes") }
+
+      subject { CatWithTypedIndexes.new(name: "name", created_at: "today") }
+
+      it "supports defining a range key" do
+        expect(subject.range_key).to eq "today"
+      end
+
+      it "adds the attribute name to the table key schema" do
+        expect(range_key_schema.attribute_name).to eq "created_at"
+      end
+
+      it "adds the range key type to the table key schema" do
+        expect(range_key_schema.key_type).to eq "RANGE"
+      end
+
+      it "sets the custom range key type" do
+        # binding.pry
+        expect(range_key_type).to eq('B')
+      end
+
     end
 
   end

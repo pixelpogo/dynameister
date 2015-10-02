@@ -26,6 +26,10 @@ module Dynameister
         }.merge(range_key.to_h)
       end
 
+      def name
+        GLOBAL_INDEX_PREFIX + combined_keys
+      end
+
       private
 
       def build_keys(keys)
@@ -33,10 +37,6 @@ module Dynameister
           a << Builder::KeyBuilder.build_hash_key(keys.first)
           a << Builder::KeyBuilder.build_range_key(keys.last) if keys.length > 1
         end
-      end
-
-      def name
-        GLOBAL_INDEX_PREFIX + combined_keys
       end
 
       def combined_keys
