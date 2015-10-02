@@ -1,17 +1,18 @@
 describe Dynameister::Client do
 
-  let(:client)     { Dynameister::Client.new }
-  let(:table_name) { "my-table" }
+  let(:client)           { Dynameister::Client.new }
+  let(:table_name)       { "my-table" }
+  let(:default_hash_key) { create_hash_key :id }
 
   describe "#create_table" do
 
-    let(:hash_key)      { :my_hash_key }
-    let(:capacity)      { 99 }
+    let(:hash_key)         { create_hash_key :my_hash_key }
+    let(:capacity)         { 99 }
     let(:table_options) do
       {
         read_capacity:  capacity,
         write_capacity: capacity,
-        range_key: { created_at: :number }
+        range_key: create_range_key(:created_at)
       }
     end
 
@@ -44,7 +45,7 @@ describe Dynameister::Client do
 
         subject { table.attribute_definitions[0] }
 
-        its(:attribute_name) { is_expected.to eq(hash_key.to_s) }
+        its(:attribute_name) { is_expected.to eq(hash_key.name.to_s) }
         its(:attribute_type) { is_expected.to eq("S") }
 
       end
@@ -66,7 +67,7 @@ describe Dynameister::Client do
 
         subject { table.key_schema[0] }
 
-        its(:attribute_name) { is_expected.to eq(hash_key.to_s) }
+        its(:attribute_name) { is_expected.to eq(hash_key.name.to_s) }
         its(:key_type)       { is_expected.to eq("HASH") }
 
       end
@@ -99,7 +100,7 @@ describe Dynameister::Client do
     context "with a preexisting table" do
 
       before do
-        client.create_table(table_name: table_name)
+        client.create_table(table_name: table_name, hash_key: default_hash_key)
       end
 
       it "returns true" do
@@ -118,9 +119,9 @@ describe Dynameister::Client do
 
   describe "#get_item" do
 
-    let(:hash_key)       { { id: "123" } }
-    let(:item)           { hash_key.merge(user: "john doe", skills: ["ruby", "html", "javascript"]) }
-    let(:expected_item)  { item.stringify_keys }
+    let(:item_hash_key) { { id: "123" } }
+    let(:item)          { item_hash_key.merge(user: "john doe", skills: ["ruby", "html", "javascript"]) }
+    let(:expected_item) { item.stringify_keys }
 
     let(:put_hash) { { table_name: table_name, item: item } }
 
@@ -136,11 +137,11 @@ describe Dynameister::Client do
 
     context "for a hash key only table" do
 
-      let(:table) { client.create_table(table_name: table_name) }
+      let(:table) { client.create_table(table_name: table_name, hash_key: default_hash_key) }
 
       it "retrieves the item" do
         expect(
-          client.get_item(table_name: table_name, hash_key: hash_key).item
+          client.get_item(table_name: table_name, hash_key: item_hash_key).item
         ).to eq(expected_item)
       end
 
@@ -148,12 +149,16 @@ describe Dynameister::Client do
 
     context "for a hash and range key table" do
 
-      let(:table)     { client.create_table(table_name: table_name, options: { range_key: { user: :string } }) }
-      let(:range_key) { { user: "john doe" } }
+      let(:table) do
+        client.create_table(table_name: table_name,
+                            hash_key: default_hash_key,
+                            options: { range_key: create_range_key(user: :string) })
+      end
+      let(:item_range_key) { { user: "john doe" } }
 
       it "retrieves the item" do
         expect(
-          client.get_item(table_name: table_name, hash_key: hash_key, range_key: range_key).item
+          client.get_item(table_name: table_name, hash_key: item_hash_key, range_key: item_range_key).item
         ).to eq(expected_item)
       end
 
@@ -163,7 +168,7 @@ describe Dynameister::Client do
 
   describe "#put_item" do
 
-    let(:table)          { client.create_table(table_name: table_name) }
+    let(:table)          { client.create_table(table_name: table_name, hash_key: default_hash_key) }
     let(:item)           { { id: "123", user: "john doe", skills: ["ruby", "html", "javascript"] } }
     let(:expected_item)  { item.stringify_keys }
 
@@ -233,8 +238,8 @@ describe Dynameister::Client do
 
   describe "#delete_item" do
 
-    let(:hash_key) { { id: "123" } }
-    let(:item)     { hash_key.merge(user: "john doe", skills: ["ruby", "html", "javascript"]) }
+    let(:item_hash_key) { { id: "123" } }
+    let(:item)          { item_hash_key.merge(user: "john doe", skills: ["ruby", "html", "javascript"]) }
 
     let(:put_hash) { { table_name: table_name, item: item } }
 
@@ -250,11 +255,11 @@ describe Dynameister::Client do
 
     context "for a hash key only table" do
 
-      let(:table)    { client.create_table(table_name: table_name) }
-      let(:get_hash) { { table_name: table_name, key: hash_key } }
+      let(:table)    { client.create_table(table_name: table_name, hash_key: default_hash_key) }
+      let(:get_hash) { { table_name: table_name, key: item_hash_key } }
 
       it "deletes the item" do
-        client.delete_item(table_name: table_name, hash_key: hash_key)
+        client.delete_item(table_name: table_name, hash_key: item_hash_key)
 
         expect(
           client.aws_client.get_item(get_hash).item
@@ -265,13 +270,17 @@ describe Dynameister::Client do
 
     context "for a hash and range key table" do
 
-      let(:table)     { client.create_table(table_name: table_name, options: { range_key: { user: :string } }) }
-      let(:range_key) { { user: "john doe" } }
+      let(:table) do
+        client.create_table(table_name: table_name,
+                            hash_key: default_hash_key,
+                            options: { range_key: create_range_key(user: :string) })
+      end
+      let(:item_range_key) { { user: "john doe" } }
 
-      let(:get_hash)  { { table_name: table_name, key: hash_key.merge(range_key) } }
+      let(:get_hash)  { { table_name: table_name, key: item_hash_key.merge(item_range_key) } }
 
       it "deletes the item" do
-        client.delete_item(table_name: table_name, hash_key: hash_key, range_key: range_key)
+        client.delete_item(table_name: table_name, hash_key: item_hash_key, range_key: item_range_key)
 
         expect(
           client.aws_client.get_item(get_hash).item
