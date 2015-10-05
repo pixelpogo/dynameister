@@ -1,4 +1,4 @@
-require_relative "../builder/key_builder"
+require_relative "../key"
 
 module Dynameister
 
@@ -11,7 +11,7 @@ module Dynameister
       attr_accessor :range_key, :projection
 
       def initialize(range_key, options = {})
-        @range_key = Builder::KeyBuilder.build_range_key(range_key)
+        @range_key = Key.build_range_key(range_key)
         @projection = options[:projection] || :all
       end
 

@@ -1,4 +1,4 @@
-require_relative "../builder/key_builder"
+require_relative "../key"
 
 module Dynameister
 
@@ -25,8 +25,8 @@ module Dynameister
 
       def build_keys(keys)
         [].tap do |a|
-          a << Builder::KeyBuilder.build_hash_key(keys.first)
-          a << Builder::KeyBuilder.build_range_key(keys.last) if keys.length > 1
+          a << Key.build_hash_key(keys.first)
+          a << Key.build_range_key(keys.last) if keys.length > 1
         end
       end
 

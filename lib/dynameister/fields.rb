@@ -1,5 +1,3 @@
-require_relative "builder/key_builder"
-
 module Dynameister
 
   module Fields
@@ -29,12 +27,12 @@ module Dynameister
       end
 
       def hash_key
-        Builder::KeyBuilder.build_hash_key(options[:hash_key] || :id)
+        Key.build_hash_key(options[:hash_key] || :id)
       end
 
       def range_key
         if key = options[:range_key]
-          Builder::KeyBuilder.build_range_key(key)
+          Key.build_range_key(key)
         end
       end
 
