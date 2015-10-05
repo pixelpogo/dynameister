@@ -32,7 +32,7 @@ module Dynameister
 
       def range_key
         if key = options[:range_key]
-          Builder::KeyBuilder.build_hash_key(key)
+          Builder::KeyBuilder.build_range_key(key)
         end
       end
 
