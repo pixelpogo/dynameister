@@ -19,7 +19,7 @@ module Dynameister
       when String, Symbol then Key.new(key_information.to_sym, default_key_data_type)
       when Hash           then Key.new(key_information.keys.first,
                                        key_information.values.first)
-      else raise IndexKeyDefinitionError.new(key_information)
+      else raise KeyDefinitionError.new(key_information, key_type)
       end
     end
 

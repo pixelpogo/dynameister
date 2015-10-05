@@ -1,13 +1,13 @@
 module Dynameister
 
-  class IndexKeyDefinitionError < StandardError
+  class KeyDefinitionError < StandardError
 
-    def initialize(key)
+    def initialize(key, key_type)
       super(
         <<-EOS
-          Not supported range key type #{key} for local index.
-          Supported types are String/Symbol for a default range key of
-          type :number and Hash to define a range key of type :string,
+          Not supported #{key_type} key #{key}.
+          Supported are String/Symbol for a #{key_type} key of default
+          type and Hash to define a #{key_type} key of type :string,
           :number or :binary.
         EOS
       )
