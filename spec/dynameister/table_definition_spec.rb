@@ -161,11 +161,7 @@ describe Dynameister::TableDefinition do
 
     context "when there are more than five global secondary indexes" do
       let(:global_indexes) do
-        Array.new(6, name: "my_index1",
-                     hash_key: hash_key,
-                     range_key: other_range_key,
-                     projection: :keys_only,
-                     throughput: [2, 3])
+        Array.new(6, Dynameister::Indexes::GlobalIndex.new([hash_key, other_range_key]))
       end
 
       it "raises an ArgumentError" do
@@ -180,7 +176,7 @@ describe Dynameister::TableDefinition do
 
       context "when there are more than five local secondary indexes" do
         let(:local_indexes) do
-          Array.new(6, name: "my_index2", range_key: other_range_key, projection: :keys_only)
+          Array.new(6, Dynameister::Indexes::LocalIndex.new(other_range_key))
         end
 
         it "raises an ArgumentError" do
@@ -269,10 +265,8 @@ describe Dynameister::TableDefinition do
           let(:global_indexes_with_other_hash_and_range_keys) do
             [
               Dynameister::Indexes::GlobalIndex.new(
-                [
-                  { hash_key_for_global_index:  :string },
-                  { range_key_for_global_index: :number }
-                ])
+                [:hash_key_for_global_index, :range_key_for_global_index]
+              )
             ]
           end
 
@@ -301,15 +295,13 @@ describe Dynameister::TableDefinition do
 
       context "local secondary indexes and global secondary indexes with the same range key" do
 
-        let(:duplicate_range_key) { { range_key_for_index: :number } }
+        let(:duplicate_range_key) { :range_key_for_index }
 
         let(:global_indexes_with_other_hash_and_range_keys) do
           [
             Dynameister::Indexes::GlobalIndex.new(
-              [
-                { hash_key_for_global_index:  :string },
-                duplicate_range_key
-              ])
+              [:hash_key_for_global_index, duplicate_range_key]
+            )
           ]
         end
 
