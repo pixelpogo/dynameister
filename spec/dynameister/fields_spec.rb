@@ -176,7 +176,6 @@ describe Dynameister::Fields do
       end
 
       it "sets the custom range key type" do
-        # binding.pry
         expect(range_key_type).to eq('B')
       end
 
