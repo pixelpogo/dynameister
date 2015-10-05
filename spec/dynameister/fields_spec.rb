@@ -1,6 +1,7 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
 require_relative "../app/models/cat_with_typed_indexes"
+require_relative "../app/models/range_key_accessors"
 
 describe Dynameister::Fields do
 
@@ -121,6 +122,27 @@ describe Dynameister::Fields do
 
     end
 
+    context "its attribute accessors" do
+
+      let(:hash_key_value) { "a name" }
+      let!(:table) { Cat.create_table }
+
+      after { delete_table(Cat.table_name) }
+
+      subject { Cat.new(name: hash_key_value) }
+
+      it "a getter is being generated" do
+        expect(subject.name).to eq hash_key_value
+      end
+
+      it "a setter is being generated" do
+        expect {
+          subject.name = "name"
+        }.to change { subject.name }.from(hash_key_value).to("name")
+      end
+
+    end
+
   end
 
   describe "range key" do
@@ -177,6 +199,26 @@ describe Dynameister::Fields do
 
       it "sets the custom range key type" do
         expect(range_key_type).to eq('B')
+      end
+
+    end
+
+    context "its attribute accessors" do
+
+      let!(:table) { RangeKeyAccessors.create_table }
+
+      after { delete_table(RangeKeyAccessors.table_name) }
+
+      subject { RangeKeyAccessors.new(created_at: 1234) }
+
+      it "a getter is being generated" do
+        expect(subject.created_at).to eq 1234
+      end
+
+      it "a setter is being generated" do
+        expect {
+          subject.created_at = 4321
+        }.to change { subject.created_at }.from(1234).to(4321)
       end
 
     end

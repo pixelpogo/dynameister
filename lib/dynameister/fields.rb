@@ -36,12 +36,16 @@ module Dynameister
         end
       end
 
-      # TODO: Add range key method generation
       def table(options = {})
         self.options = options
+
         unless attributes.has_key?(hash_key.name)
           remove_field :id
           field(hash_key.name, hash_key.type)
+        end
+
+        if range_key.present? && !attributes.has_key?(range_key.name)
+          field(range_key.name, range_key.type)
         end
       end
 
