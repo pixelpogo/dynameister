@@ -4,15 +4,7 @@ module Dynameister
 
   module Builder
 
-    Key = Struct.new(:name, :type) do
-
-      def to_h
-        {
-          range_key: { name => type }
-        }
-      end
-
-    end
+    Key = Struct.new(:name, :type)
 
     class KeyBuilder
 

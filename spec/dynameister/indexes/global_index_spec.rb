@@ -8,14 +8,26 @@ describe Dynameister::Indexes::GlobalIndex do
 
     subject { described_class.new(keys) }
 
-    it "has a hash representation" do
-      expect(subject.to_h).to eq(
-        name:       "by_uuids_and_created_ats",
-        hash_key:   { uuid: :string },
-        range_key:  { created_at: :number },
-        projection: :all,
-        throughput: [1, 1]
-      )
+    its(:name) { is_expected.to eq "by_uuids_and_created_ats" }
+    its(:projection) { is_expected.to eq :all }
+    its(:throughput) { is_expected.to eq [1, 1] }
+
+    context "the hash key" do
+
+      subject { described_class.new(keys).hash_key }
+
+      its(:name) { is_expected.to eq :uuid }
+      its(:type) { is_expected.to eq :string }
+
+    end
+
+    context "the range key" do
+
+      subject { described_class.new(keys).range_key }
+
+      its(:name) { is_expected.to eq :created_at }
+      its(:type) { is_expected.to eq :number }
+
     end
 
   end
@@ -24,14 +36,26 @@ describe Dynameister::Indexes::GlobalIndex do
 
     subject { described_class.new(keys, projection: :keys_only) }
 
-    it "has a hash representation" do
-      expect(subject.to_h).to eq(
-        name:       "by_uuids_and_created_ats",
-        hash_key:   { uuid: :string },
-        range_key:  { created_at: :number },
-        projection: :keys_only,
-        throughput: [1, 1]
-      )
+    its(:name) { is_expected.to eq "by_uuids_and_created_ats" }
+    its(:projection) { is_expected.to eq :keys_only }
+    its(:throughput) { is_expected.to eq [1, 1] }
+
+    context "the hash key" do
+
+      subject { described_class.new(keys).hash_key }
+
+      its(:name) { is_expected.to eq :uuid }
+      its(:type) { is_expected.to eq :string }
+
+    end
+
+    context "the range key" do
+
+      subject { described_class.new(keys).range_key }
+
+      its(:name) { is_expected.to eq :created_at }
+      its(:type) { is_expected.to eq :number }
+
     end
 
   end
@@ -44,14 +68,26 @@ describe Dynameister::Indexes::GlobalIndex do
 
       let(:keys) { [:uuid, created_at: :string] }
 
-      it "has a hash representation" do
-        expect(subject.to_h).to eq(
-          name:       "by_uuids_and_created_ats",
-          hash_key:   { uuid: :string },
-          range_key:  keys.last,
-          projection: :all,
-          throughput: [1, 1]
-        )
+      its(:name) { is_expected.to eq "by_uuids_and_created_ats" }
+      its(:projection) { is_expected.to eq :all }
+      its(:throughput) { is_expected.to eq [1, 1] }
+
+      context "the hash key" do
+
+        subject { described_class.new(keys).hash_key }
+
+        its(:name) { is_expected.to eq :uuid }
+        its(:type) { is_expected.to eq :string }
+
+      end
+
+      context "the range key" do
+
+        subject { described_class.new(keys).range_key }
+
+        its(:name) { is_expected.to eq :created_at }
+        its(:type) { is_expected.to eq :string }
+
       end
 
       context "with invalid format" do
@@ -74,13 +110,25 @@ describe Dynameister::Indexes::GlobalIndex do
 
       let(:keys) { [:uuid] }
 
-      it "has a hash representation" do
-        expect(subject.to_h).to eq(
-          name:       "by_uuids",
-          hash_key:   { uuid: :string },
-          projection: :all,
-          throughput: [1, 1]
-        )
+      its(:name) { is_expected.to eq "by_uuids" }
+      its(:projection) { is_expected.to eq :all }
+      its(:throughput) { is_expected.to eq [1, 1] }
+
+      context "the hash key" do
+
+        subject { described_class.new(keys).hash_key }
+
+        its(:name) { is_expected.to eq :uuid }
+        its(:type) { is_expected.to eq :string }
+
+      end
+
+      context "the range key" do
+
+        subject { described_class.new(keys).range_key }
+
+        it { is_expected.to be_nil }
+
       end
 
     end
@@ -89,13 +137,25 @@ describe Dynameister::Indexes::GlobalIndex do
 
       let(:keys) { [uuid: :number] }
 
-      it "has a hash representation" do
-        expect(subject.to_h).to eq(
-          name:       "by_uuids",
-          hash_key:   keys.first,
-          projection: :all,
-          throughput: [1, 1]
-        )
+      its(:name) { is_expected.to eq "by_uuids" }
+      its(:projection) { is_expected.to eq :all }
+      its(:throughput) { is_expected.to eq [1, 1] }
+
+      context "the hash key" do
+
+        subject { described_class.new(keys).hash_key }
+
+        its(:name) { is_expected.to eq :uuid }
+        its(:type) { is_expected.to eq :number }
+
+      end
+
+      context "the range key" do
+
+        subject { described_class.new(keys).range_key }
+
+        it { is_expected.to be_nil }
+
       end
 
       context "with invalid format" do
@@ -112,15 +172,29 @@ describe Dynameister::Indexes::GlobalIndex do
 
   context "non-default throughput" do
 
-    subject { described_class.new([:uuid], throughput: [2, 3]) }
+    subject { described_class.new(keys, throughput: [2, 3]) }
 
-    it "has a hash representation" do
-      expect(subject.to_h).to eq(
-        name:       "by_uuids",
-        hash_key:   { uuid: :string },
-        projection: :all,
-        throughput: [2, 3]
-      )
+    let(:keys) { [:uuid] }
+
+    its(:name) { is_expected.to eq "by_uuids" }
+    its(:projection) { is_expected.to eq :all }
+    its(:throughput) { is_expected.to eq [2, 3] }
+
+    context "the hash key" do
+
+      subject { described_class.new(keys).hash_key }
+
+      its(:name) { is_expected.to eq :uuid }
+      its(:type) { is_expected.to eq :string }
+
+    end
+
+    context "the range key" do
+
+      subject { described_class.new(keys).range_key }
+
+      it { is_expected.to be_nil }
+
     end
 
   end

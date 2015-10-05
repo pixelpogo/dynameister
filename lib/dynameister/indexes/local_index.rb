@@ -15,10 +15,6 @@ module Dynameister
         @projection = options[:projection] || :all
       end
 
-      def to_h
-        { name: name, projection: projection }.merge(range_key.to_h)
-      end
-
       def name
         "#{LOCAL_INDEX_PREFIX}#{range_key.name}"
       end
