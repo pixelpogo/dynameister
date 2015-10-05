@@ -7,6 +7,8 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
+      private_class_method :create_key_accessors!
+
       class_attribute :attributes, :options
       self.attributes = {}
       self.options    = {}
@@ -39,6 +41,16 @@ module Dynameister
       def table(options = {})
         self.options = options
 
+        create_key_accessors!
+      end
+
+      def remove_field(field)
+        attributes.delete(field) || raise("No such field")
+        remove_method field
+        remove_method :"#{field}="
+      end
+
+      def create_key_accessors!
         unless attributes.has_key?(hash_key.name)
           remove_field :id
           field(hash_key.name, hash_key.type)
@@ -47,12 +59,6 @@ module Dynameister
         if range_key.present? && !attributes.has_key?(range_key.name)
           field(range_key.name, range_key.type)
         end
-      end
-
-      def remove_field(field)
-        attributes.delete(field) || raise("No such field")
-        remove_method field
-        remove_method :"#{field}="
       end
 
     end
