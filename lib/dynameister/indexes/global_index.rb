@@ -25,8 +25,8 @@ module Dynameister
 
       def build_keys(keys)
         [].tap do |a|
-          a << Key.build_hash_key(keys.first)
-          a << Key.build_range_key(keys.last) if keys.length > 1
+          a << Key.create_hash_key(keys.first)
+          a << Key.create_range_key(keys.last) if keys.length > 1
         end
       end
 

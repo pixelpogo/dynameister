@@ -4,12 +4,12 @@ module Dynameister
 
   Key = Struct.new(:name, :type) do
 
-    def self.build_hash_key(hash_key)
-      create_key hash_key, :hash
+    def self.create_hash_key(hash_key)
+      create_key(hash_key, :hash)
     end
 
-    def self.build_range_key(range_key)
-      create_key range_key, :range
+    def self.create_range_key(range_key)
+      create_key(range_key, :range)
     end
 
     def self.create_key(key_information, key_type)

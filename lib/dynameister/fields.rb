@@ -27,12 +27,12 @@ module Dynameister
       end
 
       def hash_key
-        Key.build_hash_key(options[:hash_key] || :id)
+        Key.create_hash_key(options[:hash_key] || :id)
       end
 
       def range_key
         if key = options[:range_key]
-          Key.build_range_key(key)
+          Key.create_range_key(key)
         end
       end
 
