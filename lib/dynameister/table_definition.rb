@@ -153,7 +153,7 @@ module Dynameister
     def projection_non_key_attributes_for(index)
       return nil unless projection_type_for(index) == PROJECTION_TYPE[:include]
 
-      index[:projection].map(&:to_s)
+      index.projection.map(&:to_s)
     end
 
     def range_key_for_index(index)
