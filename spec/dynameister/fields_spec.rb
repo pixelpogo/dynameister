@@ -59,7 +59,7 @@ describe Dynameister::Fields do
 
     before { Language.create_table }
 
-    after { delete_table("languages") }
+    after { delete_table(Language.table_name) }
 
     let!(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
 
@@ -92,7 +92,7 @@ describe Dynameister::Fields do
       let(:hash_key_value) { "neko atsume" }
       let!(:table) { Cat.create_table }
 
-      after { delete_table("kittens") }
+      after { delete_table(Cat.table_name) }
 
       subject { Cat.new(name: hash_key_value) }
 
@@ -111,7 +111,7 @@ describe Dynameister::Fields do
         end.attribute_type
       end
 
-      after { delete_table("kittens_with_typed_indexes") }
+      after { delete_table(CatWithTypedIndexes.table_name) }
 
       subject { CatWithTypedIndexes.new(name: hash_key_value) }
 
@@ -154,7 +154,7 @@ describe Dynameister::Fields do
 
       let!(:table) { Cat.create_table }
 
-      after { delete_table("kittens") }
+      after { delete_table(Cat.table_name) }
 
       subject { Cat.new(name: "name", created_at: "today") }
 
@@ -182,7 +182,7 @@ describe Dynameister::Fields do
         end.attribute_type
       end
 
-      after { delete_table("kittens_with_typed_indexes") }
+      after { delete_table(CatWithTypedIndexes.table_name) }
 
       subject { CatWithTypedIndexes.new(name: "name", created_at: "today") }
 

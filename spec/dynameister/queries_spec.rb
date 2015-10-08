@@ -11,7 +11,7 @@ describe Dynameister::Queries do
     book
   end
 
-  after { delete_table "books" }
+  after { delete_table Book.table_name }
 
   describe "query with a given hash_key" do
 
