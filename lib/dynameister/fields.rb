@@ -49,12 +49,14 @@ module Dynameister
       end
 
       def create_key_accessors!
-        unless attributes.has_key?(hash_key.name)
+        if !attributes.has_key?(hash_key.name) ||
+              attributes[hash_key.name] != hash_key.type
           remove_field :id
           field(hash_key.name, hash_key.type)
         end
 
-        if range_key.present? && !attributes.has_key?(range_key.name)
+        if range_key.present? &&
+            (!attributes.has_key?(range_key.name) || attributes[range_key.name] != range_key.type)
           field(range_key.name, range_key.type)
         end
       end

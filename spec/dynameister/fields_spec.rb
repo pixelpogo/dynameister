@@ -1,9 +1,30 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
 require_relative "../app/models/cat_with_typed_indexes"
+require_relative "../app/models/cat_with_overwritten_index_types"
 require_relative "../app/models/range_key_accessors"
 
 describe Dynameister::Fields do
+
+  shared_examples_for "a table's hash key" do
+
+    let(:hash_key_schema) do
+      table.key_schema.first
+    end
+
+    it "supports a custom hash key" do
+      expect(subject.hash_key).to eq hash_key_value
+    end
+
+    it "adds the attribute name to the table key schema" do
+      expect(hash_key_schema.attribute_name).to eq "name"
+    end
+
+    it "adds the hash key type to the table key schema" do
+      expect(hash_key_schema.key_type).to eq "HASH"
+    end
+
+  end
 
   describe "auto-generated accessors" do
 
@@ -62,26 +83,6 @@ describe Dynameister::Fields do
 
       it "has id as the default hash key" do
         expect(subject.hash_key).to eq "my_hash_key"
-      end
-
-    end
-
-    shared_examples_for "a table's hash key" do
-
-      let(:hash_key_schema) do
-        table.key_schema.first
-      end
-
-      it "supports a custom hash key" do
-        expect(subject.hash_key).to eq hash_key_value
-      end
-
-      it "adds the attribute name to the table key schema" do
-        expect(hash_key_schema.attribute_name).to eq "name"
-      end
-
-      it "adds the hash key type to the table key schema" do
-        expect(hash_key_schema.key_type).to eq "HASH"
       end
 
     end
@@ -224,4 +225,53 @@ describe Dynameister::Fields do
     end
 
   end
+
+  describe "overwritten index types" do
+
+    let(:hash_key_value) { "Henry" }
+    let!(:table) { CatWithOverwrittenIndexTypes.create_table }
+
+    let(:hash_key_type) do
+      table.attribute_definitions.detect do |a|
+        a.attribute_name == 'name'
+      end.attribute_type
+    end
+
+    let(:range_key_type) do
+      table.attribute_definitions.detect do |a|
+        a.attribute_name == 'created_at'
+      end.attribute_type
+    end
+
+    let(:expected_model_attributes) do
+      {
+        name: { type: :number },
+        pet_food: { type: :string },
+        adopted_at: { type: :datetime },
+        created_at: { type: :binary }
+      }
+    end
+
+    after { delete_table(CatWithOverwrittenIndexTypes.table_name) }
+
+    subject { CatWithOverwrittenIndexTypes.new(name: hash_key_value) }
+
+    it_behaves_like "a table's hash key"
+
+    it "overwrites the hash key type defined in the field definition" do
+      expect(hash_key_type).to eq('N')
+    end
+
+    it "overwrites the range key type defined in the field definition" do
+      expect(range_key_type).to eq('B')
+    end
+
+    it "has the proper overwritten hash and range key types" do
+      expect(
+        CatWithOverwrittenIndexTypes.attributes
+      ).to eq expected_model_attributes
+    end
+
+  end
+
 end
