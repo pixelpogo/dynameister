@@ -5,7 +5,9 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
-      private_class_method :create_key_accessors!
+      private_class_method :create_key_accessors!,
+                           :create_hash_key_accessors?,
+                           :create_range_key_accessors?
 
       class_attribute :attributes, :options
       self.attributes = {}
@@ -49,16 +51,23 @@ module Dynameister
       end
 
       def create_key_accessors!
-        if !attributes.has_key?(hash_key.name) ||
-              attributes[hash_key.name] != hash_key.type
+        if create_hash_key_accessors?
           remove_field :id
           field(hash_key.name, hash_key.type)
         end
 
-        if range_key.present? &&
-            (!attributes.has_key?(range_key.name) || attributes[range_key.name] != range_key.type)
+        if create_range_key_accessors?
           field(range_key.name, range_key.type)
         end
+      end
+
+      def create_hash_key_accessors?
+        !attributes.has_key?(hash_key.name) || attributes[hash_key.name] != hash_key.type
+      end
+
+      def create_range_key_accessors?
+        range_key.present? &&
+          (!attributes.has_key?(range_key.name) || attributes[range_key.name] != range_key.type)
       end
 
     end
