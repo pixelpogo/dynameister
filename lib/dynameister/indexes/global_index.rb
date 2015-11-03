@@ -30,16 +30,6 @@ module Dynameister
         end
       end
 
-      def hash_key_hash
-        { hash_key.name => hash_key.type }
-      end
-
-      def range_key_hash
-        {}.tap do |h|
-          h[:range_key] = { range_key.name => range_key.type } if range_key
-        end
-      end
-
       def combined_keys
         [hash_key, range_key]
           .compact
