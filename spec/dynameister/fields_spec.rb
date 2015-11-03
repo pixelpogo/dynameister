@@ -228,7 +228,7 @@ describe Dynameister::Fields do
 
   describe "overwritten index types" do
 
-    let(:hash_key_value) { "Henry" }
+    let(:hash_key_value) { 123 }
     let!(:table) { CatWithOverwrittenIndexTypes.create_table }
 
     let(:hash_key_type) do
