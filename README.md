@@ -1,3 +1,7 @@
+[![Build Status](https://magnum.travis-ci.com/lessonnine/dynameister.gem.svg?token=zWpv6o77Tg8cykyRm1NZ&branch=master)](https://magnum.travis-ci.com/lessonnine/dynameister.gem)
+[![Code Climate](https://codeclimate.com/repos/561b7f04695680467e001fa7/badges/c528ab5c05ecb5da1464/gpa.svg)](https://codeclimate.com/repos/561b7f04695680467e001fa7/feed)
+[![Test Coverage](https://codeclimate.com/repos/561b7f04695680467e001fa7/badges/c528ab5c05ecb5da1464/coverage.svg)](https://codeclimate.com/repos/561b7f04695680467e001fa7/coverage)
+
 # Dynameister
 
 A Ruby convenience wrapper for Amazons DynamoDB.

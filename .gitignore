@@ -1,17 +1,21 @@
-/.bundle/
-/.yardoc
+# Ignore bundler config.
+/.bundle
+
+# Ignore local rspec config.
+/.rspec-local
+
+# simplecov configuration
+/.simplecov
+
+# rpsec's code coverage.
+/coverage
+
+# Ignore Gemfile.lock.
 /Gemfile.lock
-/_yardoc/
-/coverage/
-/doc/
-/pkg/
+
+# ignore env files used for tests
 /spec/.env.test
-/spec/reports/
-/tmp/
-*.bundle
-*.so
-*.o
-*.a
-mkmf.log
 .env
-.overcommit.yml
+
+# ignore tmp folder
+/tmp
