@@ -23,6 +23,10 @@ module Dynameister
 
     end
 
+    included do
+      private_class_method :perform_operation
+    end
+
   end
 
 end

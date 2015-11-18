@@ -14,9 +14,9 @@ module Dynameister
       def find(*hash_keys)
         hash_keys = Array(hash_keys.flatten.uniq)
         if hash_keys.count == 1
-          find_by(hash_key: { hash_key => hash_keys.first })
+          find_by(hash_key: { hash_key.name => hash_keys.first })
         else
-          options = { hash_key => hash_keys }
+          options = { hash_key.name => hash_keys }
           all(options)
         end
       end

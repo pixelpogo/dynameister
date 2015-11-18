@@ -1,20 +1,44 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
+require_relative "../app/models/cat_with_typed_indexes"
+require_relative "../app/models/cat_with_overwritten_index_types"
+require_relative "../app/models/range_key_accessors"
 
 describe Dynameister::Fields do
 
-  before { Language.create_table }
+  shared_examples_for "a table's hash key" do
 
-  after do
-    delete_table("languages")
-    delete_table("kittens")
+    let(:hash_key_schema) do
+      table.key_schema.first
+    end
+
+    it "supports a custom hash key" do
+      expect(subject.hash_key).to eq hash_key_value
+    end
+
+    it "adds the attribute name to the table key schema" do
+      expect(hash_key_schema.attribute_name).to eq "name"
+    end
+
+    it "adds the hash key type to the table key schema" do
+      expect(hash_key_schema.key_type).to eq "HASH"
+    end
+
   end
 
-  subject { Language.new }
+  describe "auto-generated accessors" do
 
-  it { is_expected.to respond_to(:locale) }
-  it { is_expected.to respond_to(:rank) }
-  it { is_expected.to respond_to(:displayable) }
+    subject { Language.new }
+
+    it { is_expected.to respond_to(:locale) }
+    it { is_expected.to respond_to(:rank) }
+    it { is_expected.to respond_to(:displayable) }
+
+    it { is_expected.to respond_to(:rank=) }
+    it { is_expected.to respond_to(:locale=) }
+    it { is_expected.to respond_to(:displayable=) }
+
+  end
 
   describe "class level attributes with type definition" do
 
@@ -32,6 +56,10 @@ describe Dynameister::Fields do
   end
 
   describe "updating a document" do
+
+    before { Language.create_table }
+
+    after { delete_table(Language.table_name) }
 
     let!(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
 
@@ -59,45 +87,191 @@ describe Dynameister::Fields do
 
     end
 
-    context "can be overriden" do
+    context "its name can be overriden" do
 
-      subject { Cat.new(name: "neko atsume") }
+      let(:hash_key_value) { "neko atsume" }
+      let!(:table) { Cat.create_table }
 
-      let(:cats_table) { Cat.create_table }
+      after { delete_table(Cat.table_name) }
 
-      let(:hash_key_schema) do
-        cats_table.key_schema.first
+      subject { Cat.new(name: hash_key_value) }
+
+      it_behaves_like "a table's hash key"
+
+    end
+
+    context "its type can be overriden" do
+
+      let(:hash_key_value) { 10 }
+      let!(:table) { CatWithTypedIndexes.create_table }
+
+      let(:hash_key_type) do
+        table.attribute_definitions.detect do |a|
+          a.attribute_name == 'name'
+        end.attribute_type
       end
 
-      it "supports a custom hash key" do
-        expect(subject.hash_key).to eq "neko atsume"
-      end
+      after { delete_table(CatWithTypedIndexes.table_name) }
 
-      it "adds the attribute name to the table key schema" do
-        expect(hash_key_schema.attribute_name).to eq "name"
-      end
+      subject { CatWithTypedIndexes.new(name: hash_key_value) }
 
-      it "adds the hash key type to the table key schema" do
-        expect(hash_key_schema.key_type).to eq "HASH"
+      it_behaves_like "a table's hash key"
+
+      it "sets the custom hash key type" do
+        expect(hash_key_type).to eq('N')
       end
 
     end
+
+    context "its attribute accessors" do
+
+      let(:hash_key_value) { "a name" }
+      let!(:table) { Cat.create_table }
+
+      after { delete_table(Cat.table_name) }
+
+      subject { Cat.new(name: hash_key_value) }
+
+      it "a getter is being generated" do
+        expect(subject.name).to eq hash_key_value
+      end
+
+      it "a setter is being generated" do
+        expect {
+          subject.name = "name"
+        }.to change { subject.name }.from(hash_key_value).to("name")
+      end
+
+    end
+
   end
 
   describe "range key" do
 
-    subject! do
-      cats = Cat.create_table
-      cats.key_schema.last
+    let(:range_key_schema) { table.key_schema.last }
+
+    context "with default type" do
+
+      let!(:table) { Cat.create_table }
+
+      after { delete_table(Cat.table_name) }
+
+      subject { Cat.new(name: "name", created_at: "today") }
+
+      it "supports defining a range key" do
+        expect(subject.range_key).to eq "today"
+      end
+
+      it "adds the attribute name to the table key schema" do
+        expect(range_key_schema.attribute_name).to eq "created_at"
+      end
+
+      it "adds the range key type to the table key schema" do
+        expect(range_key_schema.key_type).to eq "RANGE"
+      end
+
     end
 
-    it "adds the attribute name to the table key schema" do
-      expect(subject.attribute_name).to eq "created_at"
+    context "its default type can be overriden" do
+
+      let!(:table) { CatWithTypedIndexes.create_table }
+
+      let(:range_key_type) do
+        table.attribute_definitions.detect do |a|
+          a.attribute_name == 'created_at'
+        end.attribute_type
+      end
+
+      after { delete_table(CatWithTypedIndexes.table_name) }
+
+      subject { CatWithTypedIndexes.new(name: "name", created_at: "today") }
+
+      it "supports defining a range key" do
+        expect(subject.range_key).to eq "today"
+      end
+
+      it "adds the attribute name to the table key schema" do
+        expect(range_key_schema.attribute_name).to eq "created_at"
+      end
+
+      it "adds the range key type to the table key schema" do
+        expect(range_key_schema.key_type).to eq "RANGE"
+      end
+
+      it "sets the custom range key type" do
+        expect(range_key_type).to eq('B')
+      end
+
     end
 
-    it "adds the range key type to the table key schema" do
-      expect(subject.key_type).to eq "RANGE"
+    context "its attribute accessors" do
+
+      let!(:table) { RangeKeyAccessors.create_table }
+
+      after { delete_table(RangeKeyAccessors.table_name) }
+
+      subject { RangeKeyAccessors.new(created_at: 1234) }
+
+      it "a getter is being generated" do
+        expect(subject.created_at).to eq 1234
+      end
+
+      it "a setter is being generated" do
+        expect {
+          subject.created_at = 4321
+        }.to change { subject.created_at }.from(1234).to(4321)
+      end
+
     end
 
   end
+
+  describe "overwritten index types" do
+
+    let(:hash_key_value) { 123 }
+    let!(:table) { CatWithOverwrittenIndexTypes.create_table }
+
+    let(:hash_key_type) do
+      table.attribute_definitions.detect do |a|
+        a.attribute_name == 'name'
+      end.attribute_type
+    end
+
+    let(:range_key_type) do
+      table.attribute_definitions.detect do |a|
+        a.attribute_name == 'created_at'
+      end.attribute_type
+    end
+
+    let(:expected_model_attributes) do
+      {
+        name: { type: :number },
+        pet_food: { type: :string },
+        adopted_at: { type: :datetime },
+        created_at: { type: :binary }
+      }
+    end
+
+    after { delete_table(CatWithOverwrittenIndexTypes.table_name) }
+
+    subject { CatWithOverwrittenIndexTypes.new(name: hash_key_value) }
+
+    it_behaves_like "a table's hash key"
+
+    it "overwrites the hash key type defined in the field definition" do
+      expect(hash_key_type).to eq('N')
+    end
+
+    it "overwrites the range key type defined in the field definition" do
+      expect(range_key_type).to eq('B')
+    end
+
+    it "has the proper overwritten hash and range key types" do
+      expect(
+        CatWithOverwrittenIndexTypes.attributes
+      ).to eq expected_model_attributes
+    end
+
+  end
+
 end

@@ -4,7 +4,7 @@
 
 # Dynameister
 
-A Ruby convenience wrapper from Amazons DynamoDB.
+A Ruby convenience wrapper for Amazons DynamoDB.
 
 ## Installation
 
@@ -102,13 +102,19 @@ There are two different kinds of indexes supported by DynamoDB:
 
 ### Local Secondary Indexes
 
-Only a different range key than in the table definition needs to be supplied here. The `hash_key` remains the same.
+Only a different range key than in the table definition needs to be supplied here. The hash key remains the same.
 
 ### Global Secondary Indexes
 
 Different hash and range keys than defined on the table.
 
+### Examples
+
 ```ruby
+# Hash and range keys for the table and the secondary
+# indexes in this example use the default types :string
+# (hash key) and :number (range key).
+
 class Cat
   field :pet_food
   field :feed_at, :datetime
@@ -120,7 +126,28 @@ class Cat
   global_index [:pet_food, :feed_at] # Uses pet_food as hash key and feed_at as range key
 end
 ```
-The maximum number for both local and global indexes is five.
+
+```ruby
+# The types for hash and range keys for the table and the
+# secondary indexes in this example get partly overridden.
+# You can choose between :string, :number and :binary.
+
+class Cat
+  field :pet_food
+  field :feed_at, :datetime
+
+  table hash_key: { name: :number }, range_key: { created_at: :string }
+
+  local_index :feed_at
+
+  global_index [ { pet_food: :number }, :feed_at]
+end
+```
+
+### Important notes on Secondary Indexes
+
+* The maximum number for both local and global indexes is five.
+* If you define hash and/or range key(s) via the `table` method in your model those definitions will take precedence over any `field` definitions for the corresponding hash and/or range key(s).
 
 ## Querying
 

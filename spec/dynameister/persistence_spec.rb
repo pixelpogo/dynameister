@@ -5,11 +5,6 @@ describe Dynameister::Persistence do
 
   let(:table_name) { "languages" }
 
-  after do
-    delete_table table_name
-    delete_table "kittens"
-  end
-
   describe "defaults for model" do
 
     subject { Language }
@@ -21,6 +16,8 @@ describe Dynameister::Persistence do
   describe "creating a table" do
 
     subject! { Language.create_table }
+
+    after { delete_table table_name }
 
     it "creates the table for the object" do
       expect(Dynameister::Client.new.table_names).to include(table_name)
@@ -34,6 +31,8 @@ describe Dynameister::Persistence do
 
       subject! { Cat.create_table }
 
+      after { delete_table Cat.table_name }
+
       it "creates a table" do
         expect(Dynameister::Client.new.table_names).to include("kittens")
       end
@@ -44,6 +43,8 @@ describe Dynameister::Persistence do
   describe "creating a document" do
 
     before { Language.create_table }
+
+    after { delete_table Language.table_name }
 
     subject! { Language.create(locale: "JPN") }
 
@@ -57,6 +58,8 @@ describe Dynameister::Persistence do
 
     before { Language.create_table }
 
+    after { delete_table Language.table_name }
+
     let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
 
     subject!        { language.delete }
@@ -69,7 +72,9 @@ describe Dynameister::Persistence do
 
   describe "table schema" do
 
-    before  { Language.create_table }
+    before { Language.create_table }
+
+    after { delete_table Language.table_name }
 
     subject { Language.schema }
 
@@ -81,7 +86,9 @@ describe Dynameister::Persistence do
 
   describe "key schema keys" do
 
-    before  { Language.create_table }
+    before { Language.create_table }
+
+    after { delete_table Language.table_name }
 
     subject { Language.key_schema_keys }
 

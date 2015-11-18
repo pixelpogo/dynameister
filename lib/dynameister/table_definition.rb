@@ -81,26 +81,22 @@ module Dynameister
       end
     end
 
-    def key_schema_element(desc, key_type)
-      name = desc.keys.first
-
+    def key_schema_element(key, key_type)
       {
-        attribute_name: name.to_s,
+        attribute_name: key.name.to_s,
         key_type:       key_type.to_s.upcase
       }
     end
 
-    def attribute_definitions_element(desc)
-      (name, type) = desc.to_a.first
-
-      unless [:string, :number, :binary].include?(type)
-        msg = "Invalid #{type} key type, expected :string, :number or :binary."
+    def attribute_definitions_element(key)
+      unless [:string, :number, :binary].include?(key.type)
+        msg = "Invalid #{key.type} key type, expected :string, :number or :binary."
         raise ArgumentError, msg
       end
 
       {
-        attribute_name: name.to_s,
-        attribute_type: type.to_s[0].upcase
+        attribute_name: key.name.to_s,
+        attribute_type: key.type.to_s[0].upcase
       }
     end
 
@@ -115,7 +111,7 @@ module Dynameister
     def local_secondary_indexes
       options[:local_indexes].map do |index|
         {
-          index_name: index[:name],
+          index_name: index.name,
           key_schema: [
             hash_key,
             range_key_for_index(index)
@@ -131,7 +127,7 @@ module Dynameister
     def global_secondary_indexes
       options[:global_indexes].map do |index|
         {
-          index_name: index[:name],
+          index_name: index.name,
           key_schema: [
             hash_key_for_index(index),
             range_key_for_index(index)
@@ -141,15 +137,15 @@ module Dynameister
             non_key_attributes: projection_non_key_attributes_for(index)
           },
           provisioned_throughput: {
-            read_capacity_units: index[:throughput].first,
-            write_capacity_units: index[:throughput].last
+            read_capacity_units: index.throughput.first,
+            write_capacity_units: index.throughput.last
           }
         }
       end
     end
 
     def projection_type_for(index)
-      projection = index[:projection].is_a?(Array) ? :include : index[:projection]
+      projection = index.projection.is_a?(Array) ? :include : index.projection
 
       PROJECTION_TYPE[projection]
     end
@@ -157,12 +153,12 @@ module Dynameister
     def projection_non_key_attributes_for(index)
       return nil unless projection_type_for(index) == PROJECTION_TYPE[:include]
 
-      index[:projection].map(&:to_s)
+      index.projection.map(&:to_s)
     end
 
     def range_key_for_index(index)
       {
-        attribute_name: index[:range_key].keys.first.to_s,
+        attribute_name: index.range_key.name.to_s,
         key_type:       'RANGE'
       }
     end
@@ -179,7 +175,7 @@ module Dynameister
 
     def hash_key_for_index(index)
       {
-        attribute_name: index[:hash_key].keys.first.to_s,
+        attribute_name: index.hash_key.name.to_s,
         key_type: 'HASH'
       }
     end
@@ -187,13 +183,16 @@ module Dynameister
     # We have to make sure to only return unique range keys here,
     # so that they are not added multiple times to the attribute definitions
     def range_keys_for_indexes
-      (options[:local_indexes] + options[:global_indexes]).map { |index| index[:range_key] }.reject do |range_key|
+      all_keys = options[:local_indexes].map(&:range_key) +
+                   options[:global_indexes].map(&:range_key)
+
+      all_keys.reject do |range_key|
         range_key == options[:range_key]
       end.uniq
     end
 
     def hash_keys_for_global_indexes
-      options[:global_indexes].map { |index| index[:hash_key] }.reject do |hash_key|
+      options[:global_indexes].map(&:hash_key).reject do |hash_key|
         hash_key == options[:hash_key]
       end
     end

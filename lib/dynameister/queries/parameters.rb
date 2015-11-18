@@ -25,10 +25,10 @@ module Dynameister
         local_indexes = []
         @options.each do |attribute, _|
           local_indexes << @model.local_indexes.detect do |index|
-            index[:range_key].keys.first == attribute
+            index.range_key.name == attribute
           end
         end
-        local_indexes.compact.first[:name] if local_indexes.any?
+        local_indexes.compact.first.name if local_indexes.any?
       end
 
       def filter_expression

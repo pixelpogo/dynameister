@@ -4,24 +4,24 @@ describe Dynameister::TableDefinition do
 
   let(:table_name)      { "a_table_name" }
   let(:capacity)        { 99 }
-  let(:hash_key)        { { my_hash_key:  :string } }
-  let(:range_key)       { { my_range_key: :number } }
+  let(:hash_key)        { :my_hash_key }
+  let(:range_key)       { :my_range_key }
   let(:other_range_key) { { my_other_range_key: :string } }
   let(:local_indexes) do
     [
-      { name: "my_index1", range_key: range_key, projection: :all },
-      { name: "my_index2", range_key: other_range_key, projection: :keys_only }
+      Dynameister::Indexes::LocalIndex.new(range_key),
+      Dynameister::Indexes::LocalIndex.new(other_range_key, projection: :keys_only)
     ]
   end
   let(:global_indexes) do
     [
-      { name: "my_global_index1", hash_key: hash_key, range_key: range_key, projection: :all, throughput: [1, 1] }
+      Dynameister::Indexes::GlobalIndex.new([hash_key, range_key])
     ]
   end
   let(:options) do
     {
-      hash_key: hash_key,
-      range_key: range_key,
+      hash_key: create_hash_key(hash_key),
+      range_key: create_range_key(range_key),
       read_capacity:  capacity,
       write_capacity: capacity,
       local_indexes: local_indexes,
@@ -29,7 +29,9 @@ describe Dynameister::TableDefinition do
     }
   end
   let(:local_indexes_with_other_range_key) do
-    [{ name: 'index3',  range_key: { my_attribute: :string }, projection: :all }]
+    [
+      Dynameister::Indexes::LocalIndex.new(my_attribute: :string),
+    ]
   end
 
   let(:definition) { described_class.new(table_name, options) }
@@ -69,7 +71,7 @@ describe Dynameister::TableDefinition do
     let(:expected_local_secondary_indexes) do
       [
         {
-          index_name: "my_index1",
+          index_name: "by_my_range_key",
           key_schema: [
             {
               attribute_name: "my_hash_key",
@@ -86,7 +88,7 @@ describe Dynameister::TableDefinition do
           }
         },
         {
-          index_name: "my_index2",
+          index_name: "by_my_other_range_key",
           key_schema: [
             {
               attribute_name: "my_hash_key",
@@ -108,7 +110,7 @@ describe Dynameister::TableDefinition do
     let(:expected_global_secondary_indexes) do
       [
         {
-          index_name: "my_global_index1",
+          index_name: "by_my_hash_keys_and_my_range_keys",
           key_schema: [
             {
               attribute_name: "my_hash_key",
@@ -159,11 +161,7 @@ describe Dynameister::TableDefinition do
 
     context "when there are more than five global secondary indexes" do
       let(:global_indexes) do
-        Array.new(6, name: "my_index1",
-                     hash_key: hash_key,
-                     range_key: other_range_key,
-                     projection: :keys_only,
-                     throughput: [2, 3])
+        Array.new(6, Dynameister::Indexes::GlobalIndex.new([hash_key, other_range_key]))
       end
 
       it "raises an ArgumentError" do
@@ -178,7 +176,7 @@ describe Dynameister::TableDefinition do
 
       context "when there are more than five local secondary indexes" do
         let(:local_indexes) do
-          Array.new(6, name: "my_index2", range_key: other_range_key, projection: :keys_only)
+          Array.new(6, Dynameister::Indexes::LocalIndex.new(other_range_key))
         end
 
         it "raises an ArgumentError" do
@@ -190,13 +188,13 @@ describe Dynameister::TableDefinition do
         let(:included_attribute_keys) { [:attribute1, :attribute2] }
         let(:local_indexes) do
           [
-            { name: 'my_index1', range_key: range_key, projection: included_attribute_keys },
+            Dynameister::Indexes::LocalIndex.new(range_key, projection: included_attribute_keys),
           ]
         end
         let(:expected_local_secondary_indexes) do
           [
             {
-              index_name: 'my_index1',
+              index_name: 'by_my_range_key',
               key_schema: [
                 {
                   attribute_name: 'my_hash_key',
@@ -224,8 +222,8 @@ describe Dynameister::TableDefinition do
 
         let(:options) do
           {
-            hash_key: hash_key,
-            range_key: range_key,
+            hash_key: create_hash_key(hash_key),
+            range_key: create_range_key(range_key),
             read_capacity:  capacity,
             write_capacity: capacity,
             local_indexes: local_indexes_with_other_range_key,
@@ -266,20 +264,16 @@ describe Dynameister::TableDefinition do
 
           let(:global_indexes_with_other_hash_and_range_keys) do
             [
-              {
-                name:       'global_index',
-                hash_key:   { hash_key_for_global_index:  :string },
-                range_key:  { range_key_for_global_index: :number },
-                projection: :all,
-                throughput: [1, 1]
-              }
+              Dynameister::Indexes::GlobalIndex.new(
+                [:hash_key_for_global_index, :range_key_for_global_index]
+              )
             ]
           end
 
           let(:options) do
             {
-              hash_key:       hash_key,
-              range_key:      range_key,
+              hash_key:       create_hash_key(hash_key),
+              range_key:      create_range_key(range_key),
               read_capacity:  capacity,
               write_capacity: capacity,
               local_indexes:  local_indexes_with_other_range_key,
@@ -301,28 +295,24 @@ describe Dynameister::TableDefinition do
 
       context "local secondary indexes and global secondary indexes with the same range key" do
 
-        let(:duplicate_range_key) { { range_key_for_index: :number } }
+        let(:duplicate_range_key) { :range_key_for_index }
 
         let(:global_indexes_with_other_hash_and_range_keys) do
           [
-            {
-              name:       'global_index',
-              hash_key:   { hash_key_for_global_index:  :string },
-              range_key:  duplicate_range_key,
-              projection: :all,
-              throughput: [1, 1]
-            }
+            Dynameister::Indexes::GlobalIndex.new(
+              [:hash_key_for_global_index, duplicate_range_key]
+            )
           ]
         end
 
         let(:local_indexes_with_duplicate_range_key) do
-          [{ name: 'index3',  range_key: duplicate_range_key, projection: :all }]
+          [Dynameister::Indexes::LocalIndex.new(duplicate_range_key)]
         end
 
         let(:options) do
           {
-            hash_key:       hash_key,
-            range_key:      range_key,
+            hash_key:       create_hash_key(hash_key),
+            range_key:      create_range_key(range_key),
             read_capacity:  capacity,
             write_capacity: capacity,
             local_indexes:  local_indexes_with_duplicate_range_key,

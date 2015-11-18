@@ -4,8 +4,8 @@ module Dynameister
 
   class Client
 
-    def create_table(table_name:, hash_key: :id, options: {})
-      options[:hash_key] ||= { hash_key.to_sym => :string }
+    def create_table(table_name:, hash_key:, options: {})
+      options[:hash_key] ||= hash_key
       options[:read_capacity] ||= Dynameister.read_capacity
       options[:write_capacity] ||= Dynameister.write_capacity
       options[:local_indexes] ||= []

@@ -1,3 +1,5 @@
+require_relative "../key"
+
 module Dynameister
 
   module Indexes
@@ -9,18 +11,12 @@ module Dynameister
       attr_accessor :range_key, :projection
 
       def initialize(range_key, options = {})
-        @range_key = range_key
+        @range_key = Key.create_range_key(range_key)
         @projection = options[:projection] || :all
       end
 
-      def to_h
-        { name: name, range_key: { range_key => :number }, projection: projection }
-      end
-
-      private
-
       def name
-        "#{LOCAL_INDEX_PREFIX}#{range_key}"
+        "#{LOCAL_INDEX_PREFIX}#{range_key.name}"
       end
 
     end

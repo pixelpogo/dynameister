@@ -87,7 +87,7 @@ module Dynameister
     end
 
     def delete
-      params = { self.class.hash_key => hash_key }
+      params = { self.class.hash_key.name => hash_key }
       client.delete_item(table_name: table_name, hash_key: params)
     end
 

@@ -5,6 +5,10 @@ module Dynameister
     extend ActiveSupport::Concern
 
     included do
+      private_class_method :create_key_accessors!,
+                           :create_hash_key_accessors?,
+                           :create_range_key_accessors?
+
       class_attribute :attributes, :options
       self.attributes = {}
       self.options    = {}
@@ -25,25 +29,45 @@ module Dynameister
       end
 
       def hash_key
-        options[:hash_key] || :id
+        Key.create_hash_key(options[:hash_key] || :id)
       end
 
       def range_key
-        { options[:range_key] => :number } if options[:range_key]
+        if key = options[:range_key]
+          Key.create_range_key(key)
+        end
       end
 
       def table(options = {})
         self.options = options
-        unless attributes.has_key? hash_key
-          remove_field :id
-          field(hash_key)
-        end
+
+        create_key_accessors!
       end
 
       def remove_field(field)
         attributes.delete(field) || raise("No such field")
         remove_method field
         remove_method :"#{field}="
+      end
+
+      def create_key_accessors!
+        if create_hash_key_accessors?
+          remove_field :id
+          field(hash_key.name, hash_key.type)
+        end
+
+        if create_range_key_accessors?
+          field(range_key.name, range_key.type)
+        end
+      end
+
+      def create_hash_key_accessors?
+        !attributes.has_key?(hash_key.name) || attributes[hash_key.name] != hash_key.type
+      end
+
+      def create_range_key_accessors?
+        range_key.present? &&
+          (!attributes.has_key?(range_key.name) || attributes[range_key.name] != range_key.type)
       end
 
     end
@@ -60,16 +84,16 @@ module Dynameister
     end
 
     def hash_key
-      send(self.class.hash_key)
+      send(self.class.hash_key.name)
     end
 
     def hash_key=(value)
-      send("#{self.class.hash_key}=", value)
+      send("#{self.class.hash_key.name}=", value)
     end
 
     def range_key
       if range_key = self.class.range_key
-        send(range_key)
+        send(range_key.name)
       end
     end
 

@@ -3,7 +3,7 @@ require_relative "../app/models/compact_disc"
 describe Dynameister::DataTypes do
 
   before { CompactDisc.create_table }
-  after { delete_table "compact_discs" }
+  after { delete_table CompactDisc.table_name }
 
   let(:name) { "Give Me Convenience or Give Me Death" }
   let(:tracks) { 17 }
