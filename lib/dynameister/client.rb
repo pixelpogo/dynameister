@@ -81,11 +81,7 @@ module Dynameister
     private
 
     def aws_client_options
-      if %w(ci test).include?(ENV['DYNAMEISTER_ENV'])
-        { endpoint: ENV['DYNAMEISTER_ENDPOINT'] }
-      else
-        {}
-      end
+      { endpoint: Dynameister.endpoint }.delete_if { |_, v| v.nil? }
     end
 
   end
