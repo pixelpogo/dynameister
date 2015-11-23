@@ -1,11 +1,13 @@
 describe Dynameister do
 
   let(:capacity) { 99 }
+  let(:endpoint) { 'foo.bar' }
 
   before :each do
     Dynameister.configure do |config|
       config.read_capacity capacity
       config.write_capacity capacity
+      config.endpoint endpoint
     end
   end
 
@@ -13,6 +15,7 @@ describe Dynameister do
 
   its(:read_capacity)  { is_expected.to eq(capacity) }
   its(:write_capacity) { is_expected.to eq(capacity) }
+  its(:endpoint)       { is_expected.to eq(endpoint) }
 
   context "when configuration is set on different threads" do
 

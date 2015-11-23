@@ -27,6 +27,7 @@ Or install it yourself as:
 ### Environment variables
 
 * `DYNAMEISTER_ENV`: defines the environment dynameister is running in, this is mainly important for testing locally and on a CI server as it defines which `/spec/.env.<environment>` file is loaded
+* `DYNAMEISTER_ENDPOINT`: defines the endpoint used by dynameister to access DynamoDB. This should only be necessary when using dynameister locally, in specs and on the CI when a DynamoDB local is in use.
 
 ### Turn your Model into a Document
 

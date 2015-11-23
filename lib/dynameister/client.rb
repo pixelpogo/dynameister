@@ -80,12 +80,9 @@ module Dynameister
 
     private
 
+    # TODO: Figure out how to get the computed endpoint from the AWS SDK on production.
     def aws_client_options
-      if %w(ci test).include?(ENV['DYNAMEISTER_ENV'])
-        { endpoint: ENV['DYNAMEISTER_ENDPOINT'] }
-      else
-        {}
-      end
+      { endpoint: Dynameister.endpoint }
     end
 
   end

@@ -39,6 +39,15 @@ module Dynameister
     end
   end
 
+  # The AWS endpoint for accessing DynamoDB.
+  def self.endpoint(endpoint = nil)
+    if endpoint
+      Thread.current[:endpoint] = endpoint
+    else
+      Thread.current[:endpoint]
+    end
+  end
+
   def self.configure
     yield self
   end
