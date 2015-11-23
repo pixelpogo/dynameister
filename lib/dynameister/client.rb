@@ -80,9 +80,8 @@ module Dynameister
 
     private
 
-    # TODO: Figure out how to get the computed endpoint from the AWS SDK on production.
     def aws_client_options
-      { endpoint: Dynameister.endpoint }
+      { endpoint: Dynameister.endpoint }.delete_if { |_, v| v.nil? }
     end
 
   end
