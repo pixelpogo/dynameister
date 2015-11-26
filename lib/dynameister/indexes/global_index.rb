@@ -31,12 +31,11 @@ module Dynameister
       end
 
       def combined_keys
-        [hash_key, range_key]
-          .compact
-          .map(&:name)
-          .map(&:to_s)
-          .map(&:pluralize)
-          .join(GLOBAL_INDEX_CONJUGATION)
+        combined_keys_names.map(&:pluralize).join(GLOBAL_INDEX_CONJUGATION)
+      end
+
+      def combined_keys_names
+        [hash_key, range_key].compact.map(&:name).map(&:to_s)
       end
 
     end
