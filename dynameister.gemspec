@@ -13,7 +13,7 @@ Gem::Specification.new do |spec|
                         DynamoDB. It provides a convenient interface for CRUD operations
                         of your models. Besides that, global and local secondary
                         indexes are supported."
-  spec.homepage      = "https://github.com/lessonnine/dynameister.gem"
+  spec.homepage      = "https://github.com/babbel/dynameister"
 
   spec.files         = `git ls-files -z`.split("\x0")
   spec.executables   = spec.files.grep(%r{^bin/}) { |f| File.basename(f) }
