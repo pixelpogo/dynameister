@@ -245,3 +245,7 @@ Have a look at [existing issues](https://github.com/lessonnine/dynameister.gem/i
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
 5. Create a new Pull Request
+
+## License
+
+Dynameister is released under the [MIT License](http://www.opensource.org/licenses/MIT).
