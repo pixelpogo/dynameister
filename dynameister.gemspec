@@ -21,7 +21,6 @@ Gem::Specification.new do |spec|
   spec.require_paths = ["lib"]
 
   spec.add_dependency "aws-sdk",                               "~> 2.0"
-  spec.add_dependency "dotenv"
   spec.add_dependency "activesupport",                         "> 4.0"
 
   spec.add_development_dependency "bundler",                   "~> 1.7"
@@ -31,5 +30,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "pry"
   spec.add_development_dependency "rubocop"
   spec.add_development_dependency "simplecov"
+  spec.add_development_dependency "dotenv"
   spec.add_development_dependency "codeclimate-test-reporter"
 end
