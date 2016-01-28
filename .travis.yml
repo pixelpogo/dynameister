@@ -1,9 +1,5 @@
 sudo: false # http://docs.travis-ci.com/user/migrating-from-legacy/
 
-addons:
-  code_climate:
-    repo_token: 738462170bd3cc68eab974fb156df0840d545ce75b49c0b5675c645940008cff
-
 language: ruby
 rvm:
   - 2.1.2
