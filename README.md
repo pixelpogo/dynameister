@@ -1,4 +1,4 @@
-[![Build Status](https://magnum.travis-ci.com/lessonnine/dynameister.gem.svg?token=zWpv6o77Tg8cykyRm1NZ&branch=master)](https://magnum.travis-ci.com/lessonnine/dynameister.gem)
+[![Build Status](https://travis-ci.org/babbel/dynameister.svg?branch=master)](https://travis-ci.org/babbel/dynameister)
 
 
 # Dynameister
