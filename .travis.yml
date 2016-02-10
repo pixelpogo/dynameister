@@ -9,7 +9,6 @@ cache:
   - bundler
 
 env:
-  - DYNAMEISTER_ENV=ci
 
 before_install:
   - mkdir /tmp/dynamodb

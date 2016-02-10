@@ -9,9 +9,6 @@ require "rspec/its"
 
 require "dynameister"
 
-# Load environment-specific settings
-ENV['DYNAMEISTER_ENV'] ||= "test"
-
 Dynameister.endpoint ENV['DYNAMEISTER_ENDPOINT']
 
 Dir[File.join(File.dirname(__FILE__), "/support/**/*.rb")].each { |f| require f }
