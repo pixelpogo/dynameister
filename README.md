@@ -25,8 +25,31 @@ Or install it yourself as:
 
 ### Environment variables
 
-* `DYNAMEISTER_ENV`: defines the environment dynameister is running in, this is mainly important for testing locally and on a CI server as it defines which `/spec/.env.<environment>` file is loaded
-* `DYNAMEISTER_ENDPOINT`: defines the endpoint used by dynameister to access DynamoDB. This should only be necessary when using dynameister locally, in specs and on the CI when a DynamoDB local is in use.
+* `DYNAMEISTER_ENV`: defines the environment Dynameister is running in, this is mainly important for testing locally and on a CI server as it defines which `/spec/.env.<environment>` file is loaded
+* `DYNAMEISTER_ENDPOINT`: defines the endpoint used by Dynameister to access DynamoDB. This should only be necessary when using Dynameister locally, in specs and on the CI when a DynamoDB local is in use.
+* `AWS_REGION`: is required by the [AWS SDK to make API calls](http://docs.aws.amazon.com/sdkforruby/api/#Configuration). It can be omitted, or overwritten, if the `region` for the Dynameister is configured explicitly.
+
+### Configuration
+
+Dynameister provides some configuration options:
+
+* `read_capacity`: Defines the **default** provisioned throughput for read requests, see [read capacity units](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughputIntro.html#ProvisionedThroughputIntro.Reads).
+* `write_capacity`: Defines the **default** provisioned throughput for write requests, see [write capacity units](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughputIntro.html#ProvisionedThroughputIntro.Writes).
+* `endpoint`: As mentioned above this is only necessary when [DynamoDB Local](https://aws.amazon.com/de/blogs/aws/dynamodb-local-for-desktop-development/) is used.
+* `region`: Specifies the AWS Region for DynamoDB tables. It overwrites the global configuration of the AWS SDK (e.g. `ENV[‚AWS_REGION‘]`), so that different AWS regions can be used in parallel.
+
+This is how Dynameister can be configured, e.g. in an initializer in a Rails app:
+
+```ruby
+  Dynameister.configure do |config|
+    config.read_capacity 1000
+    config.write_capacity 350
+    # config.endpoint "http://192.168.99.100:32768"
+    config.region "eu-west-1"
+  end
+```
+
+
 
 ### Turn your Model into a Document
 
