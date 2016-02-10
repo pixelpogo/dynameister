@@ -9,7 +9,10 @@ require "rspec/its"
 
 require "dynameister"
 
-Dynameister.endpoint ENV['DYNAMEISTER_ENDPOINT']
+Dynameister.configure do |config|
+  config.endpoint (ENV['DYNAMEISTER_ENDPOINT'] || "http://192.168.99.100:32768")
+  config.region "dynameister-test"
+end
 
 Dir[File.join(File.dirname(__FILE__), "/support/**/*.rb")].each { |f| require f }
 

@@ -9,6 +9,7 @@ cache:
   - bundler
 
 env:
+  - DYNAMEISTER_ENDPOINT=http://localhost:8000
 
 before_install:
   - mkdir /tmp/dynamodb
