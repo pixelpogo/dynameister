@@ -25,8 +25,8 @@ Or install it yourself as:
 
 ### Environment variables
 
-* `DYNAMEISTER_ENV`: defines the environment dynameister is running in, this is mainly important for testing locally and on a CI server as it defines which `/spec/.env.<environment>` file is loaded
-* `DYNAMEISTER_ENDPOINT`: defines the endpoint used by dynameister to access DynamoDB. This should only be necessary when using dynameister locally, in specs and on the CI when a DynamoDB local is in use.
+* `DYNAMEISTER_ENV`: defines the environment Dynameister is running in, this is mainly important for testing locally and on a CI server as it defines which `/spec/.env.<environment>` file is loaded
+* `DYNAMEISTER_ENDPOINT`: defines the endpoint used by Dynameister to access DynamoDB. This should only be necessary when using Dynameister locally, in specs and on the CI when a DynamoDB local is in use.
 * `AWS_REGION`: is required by the [AWS SDK to make API calls](http://docs.aws.amazon.com/sdkforruby/api/#Configuration). It can be omitted, or overwritten, if the `region` for the Dynameister is configured explicitly.
 
 ### Configuration
