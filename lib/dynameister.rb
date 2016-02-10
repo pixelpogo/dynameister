@@ -39,6 +39,15 @@ module Dynameister
     end
   end
 
+  # The AWS region for accessing DynamoDB.
+  def self.region(region = nil)
+    if region
+      Thread.current[:region] = region
+    else
+      Thread.current[:region]
+    end
+  end
+
   # The AWS endpoint for accessing DynamoDB.
   def self.endpoint(endpoint = nil)
     if endpoint
