@@ -3,7 +3,7 @@ sudo: false # http://docs.travis-ci.com/user/migrating-from-legacy/
 language: ruby
 rvm:
   - 2.1.2
-  - 2.2.1
+  - 2.2.4
 
 cache:
   - bundler
