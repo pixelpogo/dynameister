@@ -12,11 +12,7 @@ module Dynameister
       options[:global_indexes] ||= []
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
-      table            = aws_resource.create_table(table_definition)
-
-      sleep 0.5 while table.table_status == 'CREATING'
-
-      table
+      aws_resource.create_table(table_definition)
     end
 
     def delete_table(table_name:)
@@ -24,7 +20,6 @@ module Dynameister
     rescue Aws::DynamoDB::Errors::ResourceNotFoundException
       false
     else
-      sleep 0.5 while table.table_description.table_status == 'DELETING'
       true
     end
 
