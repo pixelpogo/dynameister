@@ -30,7 +30,10 @@ module Dynameister
       end
 
       def table_exists?
-        client.table_names.include? table_name
+        client.describe_table table_name: table_name
+        true
+      rescue Aws::DynamoDB::Errors::ResourceNotFoundException
+        false
       end
 
       def create(attrs = {})
