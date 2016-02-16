@@ -12,7 +12,11 @@ module Dynameister
       options[:global_indexes] ||= []
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
-      aws_resource.create_table(table_definition)
+      table            = aws_resource.create_table(table_definition)
+
+      sleep 0.5 while table.reload.table_status == 'CREATING'
+
+      table
     end
 
     def delete_table(table_name:)
