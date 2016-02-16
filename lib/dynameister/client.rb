@@ -21,7 +21,7 @@ module Dynameister
 
     def delete_table(table_name:)
       table = Aws::DynamoDB::Table.new(table_name, client: aws_client)
-      aws_client.delete_table(table_name: table_name)
+      table.delete
     rescue Aws::DynamoDB::Errors::ResourceNotFoundException
       false
     else
