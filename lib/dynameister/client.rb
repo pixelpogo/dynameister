@@ -24,6 +24,7 @@ module Dynameister
     rescue Aws::DynamoDB::Errors::ResourceNotFoundException
       false
     else
+      sleep 0.5 while table.reload.table_description.table_status == 'DELETING'
       true
     end
 
