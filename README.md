@@ -23,10 +23,6 @@ Or install it yourself as:
 
 ## Usage
 
-### Environment variables
-
-* `DYNAMEISTER_ENDPOINT`: defines the endpoint used by Dynameister to access DynamoDB. This is only necessary when using Dynameister locally, in specs and on the CI when a DynamoDB local is in use.
-
 ### Configuration
 
 Dynameister provides some configuration options:
@@ -252,9 +248,14 @@ To avoid too many complaints of HoundCI in your pull request use a [plugin for y
 
 ## Testing
 
-1. Copy `spec/.env.test.template` to `spec/.env.test`,
-2. Adapt `spec/.env.test` according to its comments,
-3. Run `bundle exec rspec`.
+In order to run the rspec test suite please enter
+
+`bundle exec rspec`
+
+Dynameister expects *DynamoDBLocal* to be running on localhost on port 80. If you’re local environment is different, then you have to specify `ENV['DYNAMEISTER_ENDPOINT‘]`.
+
+e.g. `DYNAMEISTER_ENDPOINT=somehost:12345 bundle exec rspec`
+
 
 ## Contributing
 
