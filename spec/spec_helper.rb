@@ -10,7 +10,7 @@ require "rspec/its"
 require "dynameister"
 
 Dynameister.configure do |config|
-  config.endpoint (ENV['DYNAMEISTER_ENDPOINT'] || "http://192.168.99.100:32768")
+  config.endpoint (ENV['DYNAMEISTER_ENDPOINT'] || "http://localhost:8000")
   config.region "dynameister-test"
 end
 
