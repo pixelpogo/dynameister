@@ -40,6 +40,22 @@ describe Dynameister::Persistence do
     end
   end
 
+  describe "table_exists?" do
+
+    subject { Language.table_exists? }
+
+    after { delete_table Language.table_name }
+
+    it "returns false if table does not exist" do
+      expect(subject).to be false
+    end
+
+    it "returns true if table exists" do
+      Language.create_table
+      expect(subject).to be true
+    end
+  end
+
   describe "creating a document" do
 
     before { Language.create_table }
