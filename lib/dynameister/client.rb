@@ -14,18 +14,22 @@ module Dynameister
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
       table            = aws_resource.create_table(table_definition)
 
-      sleep 0.5 while table.table_status == 'CREATING'
+      sleep 0.5 while table.reload.table_status == "CREATING"
 
       table
     end
 
     def delete_table(table_name:)
-      table = aws_client.delete_table(table_name: table_name)
+      table = Aws::DynamoDB::Table.new(table_name, client: aws_client)
+      table.delete
     rescue Aws::DynamoDB::Errors::ResourceNotFoundException
       false
     else
-      sleep 0.5 while table.table_description.table_status == 'DELETING'
-      true
+      begin
+        sleep 0.5 while table.reload.table_status == "DELETING"
+      rescue Aws::DynamoDB::Errors::ResourceNotFoundException
+        true
+      end
     end
 
     def get_item(table_name:, hash_key:, range_key: nil)
