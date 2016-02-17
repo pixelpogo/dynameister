@@ -254,7 +254,7 @@ In order to run the rspec test suite please enter
 
 `bundle exec rspec`
 
-Dynameister expects *DynamoDBLocal* to be running on localhost on port 80. If you’re local environment is different, then you have to specify `ENV['DYNAMEISTER_ENDPOINT‘]`.
+Dynameister expects *DynamoDBLocal* to be running on localhost on port 8000. If you’re local environment is different, then you have to specify `ENV['DYNAMEISTER_ENDPOINT‘]`.
 
 e.g. `DYNAMEISTER_ENDPOINT=somehost:12345 bundle exec rspec`
 
