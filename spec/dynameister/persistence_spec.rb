@@ -136,7 +136,8 @@ describe Dynameister::Persistence do
   describe "serialize_attributes" do
 
     let(:item) do
-      { id: "8d629240-d319-41a9-b39e-9df1d376476e",
+      {
+        id: "8d629240-d319-41a9-b39e-9df1d376476e",
         name: "Garfield",
         adopted_at: DateTime.now,
         pet_food: "Meat"
