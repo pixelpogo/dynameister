@@ -45,7 +45,7 @@ module Dynameister
 
     def reversed
       if operation != :query_table
-        raise ArgumentError, "Reversed can only be used qith .query"
+        raise ReversedScanNotSupported.new("Reversed can only be used with .query")
       end
 
       options[:scan_index_forward] = false

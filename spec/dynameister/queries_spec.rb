@@ -68,8 +68,8 @@ describe Dynameister::Queries do
 
     subject { Book.query(uuid: uuid).all }
 
-    it "returns the 2 books in reversed order" do
-      expect(subject.map(&:name)).to eq(["first book", "second book"])
+    it "returns the 2 books in normal order" do
+      expect(subject.map(&:rank)).to eq([1, 2])
     end
 
     describe "#reversed" do
@@ -77,15 +77,15 @@ describe Dynameister::Queries do
       subject { Book.query(uuid: uuid).reversed.all }
 
       it "returns the 2 books in reversed order" do
-        expect(subject.map(&:name)).to eq(["second book", "first book"])
+        expect(subject.map(&:rank)).to eq([2, 1])
       end
 
       context "when used with #scan" do
 
         subject { Book.scan(uuid: uuid).reversed.all }
 
-        it "returns the 2 books in reversed order" do
-          expect { subject }.to raise_exception(ArgumentError)
+        it "does not allow reversed order with scan" do
+          expect { subject }.to raise_exception(ReversedScanNotSupported)
         end
 
       end
