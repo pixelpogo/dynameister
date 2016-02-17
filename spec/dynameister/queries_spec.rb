@@ -60,6 +60,40 @@ describe Dynameister::Queries do
 
   end
 
+  describe "sort order for queries" do
+    let(:uuid) { "some uuid" }
+
+    let!(:first_book) { Book.create(uuid: uuid, rank: 1, author_id: 1, name: "first book") }
+    let!(:second_book) { Book.create(uuid: uuid, rank: 2, author_id: 1, name: "second book") }
+
+    subject { Book.query(uuid: uuid).all }
+
+    it "returns the 2 books in normal order" do
+      expect(subject.map(&:rank)).to eq([1, 2])
+    end
+
+    describe "#reversed" do
+
+      subject { Book.query(uuid: uuid).reversed.all }
+
+      it "returns the 2 books in reversed order" do
+        expect(subject.map(&:rank)).to eq([2, 1])
+      end
+
+      context "when used with #scan" do
+
+        subject { Book.scan(uuid: uuid).reversed.all }
+
+        it "does not allow reversed order with scan" do
+          expect { subject }.to raise_exception(Dynameister::ReversedScanNotSupported)
+        end
+
+      end
+
+    end
+
+  end
+
   describe "scan returns a collection" do
 
     context "scanning with one attribute" do

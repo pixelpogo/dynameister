@@ -198,6 +198,10 @@ Book.query(hash_key: "72c62052").and(range_key: 42).limit(1)
 # e.g. returning objects with ranges less than or equal to 42
 Book.query(hash_key: "72c62052").le(range_key: 42).all
 
+# Queries are sorted on the range key by default.
+# You can reverse the order:
+Book.query(hash_key: "72c62052").reversed.all
+
 # Same as above but uses get_item underneath
 Book.find_by(hash_key: { uuid: "a17871e56c14" })
 Book.find("a17871e56c14")
