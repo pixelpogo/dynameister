@@ -1,7 +1,7 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
-require_relative "../app/models/cat_with_typed_indexes"
-require_relative "../app/models/cat_with_overwritten_index_types"
+require_relative "../app/models/cat_with_typed_primary_key"
+require_relative "../app/models/cat_with_overwritten_primary_key_data_types"
 require_relative "../app/models/range_key_accessors"
 
 describe Dynameister::Fields do
@@ -103,7 +103,7 @@ describe Dynameister::Fields do
     context "its type can be overriden" do
 
       let(:hash_key_value) { 10 }
-      let!(:table) { CatWithTypedIndexes.create_table }
+      let!(:table) { CatWithTypedPrimaryKey.create_table }
 
       let(:hash_key_type) do
         table.attribute_definitions.detect do |a|
@@ -111,9 +111,9 @@ describe Dynameister::Fields do
         end.attribute_type
       end
 
-      after { delete_table(CatWithTypedIndexes.table_name) }
+      after { delete_table(CatWithTypedPrimaryKey.table_name) }
 
-      subject { CatWithTypedIndexes.new(name: hash_key_value) }
+      subject { CatWithTypedPrimaryKey.new(name: hash_key_value) }
 
       it_behaves_like "a table's hash key"
 
@@ -174,7 +174,7 @@ describe Dynameister::Fields do
 
     context "its default type can be overriden" do
 
-      let!(:table) { CatWithTypedIndexes.create_table }
+      let!(:table) { CatWithTypedPrimaryKey.create_table }
 
       let(:range_key_type) do
         table.attribute_definitions.detect do |a|
@@ -182,9 +182,9 @@ describe Dynameister::Fields do
         end.attribute_type
       end
 
-      after { delete_table(CatWithTypedIndexes.table_name) }
+      after { delete_table(CatWithTypedPrimaryKey.table_name) }
 
-      subject { CatWithTypedIndexes.new(name: "name", created_at: "today") }
+      subject { CatWithTypedPrimaryKey.new(name: "name", created_at: "today") }
 
       it "supports defining a range key" do
         expect(subject.range_key).to eq "today"
@@ -229,7 +229,7 @@ describe Dynameister::Fields do
   describe "overwritten index types" do
 
     let(:hash_key_value) { 123 }
-    let!(:table) { CatWithOverwrittenIndexTypes.create_table }
+    let!(:table) { CatWithOverwrittenPrimaryKeyDataTypes.create_table }
 
     let(:hash_key_type) do
       table.attribute_definitions.detect do |a|
@@ -252,9 +252,9 @@ describe Dynameister::Fields do
       }
     end
 
-    after { delete_table(CatWithOverwrittenIndexTypes.table_name) }
+    after { delete_table(CatWithOverwrittenPrimaryKeyDataTypes.table_name) }
 
-    subject { CatWithOverwrittenIndexTypes.new(name: hash_key_value) }
+    subject { CatWithOverwrittenPrimaryKeyDataTypes.new(name: hash_key_value) }
 
     it_behaves_like "a table's hash key"
 
@@ -268,7 +268,7 @@ describe Dynameister::Fields do
 
     it "has the proper overwritten hash and range key types" do
       expect(
-        CatWithOverwrittenIndexTypes.attributes
+        CatWithOverwrittenPrimaryKeyDataTypes.attributes
       ).to eq expected_model_attributes
     end
 
