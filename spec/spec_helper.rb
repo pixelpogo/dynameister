@@ -3,18 +3,17 @@ require 'simplecov'
 
 require "active_support"
 require "active_support/core_ext"
-require "dotenv"
 require "pry"
 require "rspec"
 require "rspec/its"
 
 require "dynameister"
 
-# Load environment-specific settings
-ENV['DYNAMEISTER_ENV'] ||= "test"
-Dotenv.load(File.join(File.dirname(__FILE__), ".env.#{ENV['DYNAMEISTER_ENV']}"))
-
-Dynameister.endpoint ENV['DYNAMEISTER_ENDPOINT']
+Dynameister.configure do |config|
+  config.endpoint (ENV["DYNAMEISTER_ENDPOINT"] || "http://localhost:8000")
+  config.region "dynameister-test"
+  config.credentials Aws::Credentials.new("access_key_id", "secret_access_key", "session_token")
+end
 
 Dir[File.join(File.dirname(__FILE__), "/support/**/*.rb")].each { |f| require f }
 
