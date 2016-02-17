@@ -85,7 +85,7 @@ describe Dynameister::Queries do
         subject { Book.scan(uuid: uuid).reversed.all }
 
         it "does not allow reversed order with scan" do
-          expect { subject }.to raise_exception(ReversedScanNotSupported)
+          expect { subject }.to raise_exception(Dynameister::ReversedScanNotSupported)
         end
 
       end
