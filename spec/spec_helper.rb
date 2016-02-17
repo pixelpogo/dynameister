@@ -12,6 +12,7 @@ require "dynameister"
 Dynameister.configure do |config|
   config.endpoint (ENV['DYNAMEISTER_ENDPOINT'] || "http://localhost:8000")
   config.region "dynameister-test"
+  config.credentials Aws::Credentials.new( "access_key_id", "secret_access_key","session_token")
 end
 
 Dir[File.join(File.dirname(__FILE__), "/support/**/*.rb")].each { |f| require f }

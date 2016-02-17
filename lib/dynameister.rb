@@ -57,6 +57,15 @@ module Dynameister
     end
   end
 
+  # The AWS credentials for accessing DynamoDB.
+  def self.credentials(credentials = nil)
+    if credentials
+      Thread.current[:credentials] = credentials
+    else
+      Thread.current[:credentials]
+    end
+  end
+
   def self.configure
     yield self
   end

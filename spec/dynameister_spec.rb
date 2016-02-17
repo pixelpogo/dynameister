@@ -1,8 +1,9 @@
 describe Dynameister do
 
-  let(:capacity) { 99 }
-  let(:endpoint) { 'foo.bar' }
-  let(:region)   { 'dyna-west-1' }
+  let(:capacity)    { 99 }
+  let(:endpoint)    { 'foo.bar' }
+  let(:region)      { 'dyna-west-1' }
+  let(:credentials) { Aws::Credentials.new( "access_key_id", "secret_access_key","session_token") }
 
   before :each do
     Dynameister.configure do |config|
@@ -19,6 +20,7 @@ describe Dynameister do
   its(:write_capacity) { is_expected.to eq(capacity) }
   its(:endpoint)       { is_expected.to eq(endpoint) }
   its(:region)         { is_expected.to eq(region) }
+  its(:credentials)    { is_expected.to be_an(Aws::Credentials) }
 
   context "when configuration is set on different threads" do
 
