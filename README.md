@@ -41,7 +41,7 @@ This is how Dynameister can be configured, e.g. in an initializer in a Rails app
     config.write_capacity 350
     # config.endpoint "http://192.168.99.100:32768"
     config.region "eu-west-1"
-    config.credentials Aws::Credentials.new( "access_key_id", "secret_access_key","session_token")
+    config.credentials Aws::Credentials.new("access_key_id", "secret_access_key", "session_token")
   end
 ```
 

@@ -3,7 +3,7 @@ describe Dynameister do
   let(:capacity)    { 99 }
   let(:endpoint)    { 'foo.bar' }
   let(:region)      { 'dyna-west-1' }
-  let(:credentials) { Aws::Credentials.new( "access_key_id", "secret_access_key","session_token") }
+  let(:credentials) { Aws::Credentials.new("access_key_id", "secret_access_key", "session_token") }
 
   before :each do
     Dynameister.configure do |config|
