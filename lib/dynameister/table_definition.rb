@@ -6,7 +6,8 @@ module Dynameister
       all: "ALL",
       keys_only: "KEYS_ONLY",
       include: "INCLUDE"
-    }
+    }.freeze
+
     MAX_INDEXES = 5
 
     attr_reader :table_name, :options
@@ -31,7 +32,7 @@ module Dynameister
         key_schema:               key_schema,
         provisioned_throughput: {
           read_capacity_units:    read_capacity,
-          write_capacity_units:   write_capacity,
+          write_capacity_units:   write_capacity
         },
         local_secondary_indexes:  local_secondary_indexes,
         global_secondary_indexes: global_secondary_indexes
@@ -69,12 +70,12 @@ module Dynameister
       when :attribute_definitions
         [
           attribute_definitions_element(hash_key),
-          (attribute_definitions_element(range_key) if range_key),
+          (attribute_definitions_element(range_key) if range_key)
         ].compact
       when :key_schema
         [
           key_schema_element(hash_key, :hash),
-          (key_schema_element(range_key, :range) if range_key),
+          (key_schema_element(range_key, :range) if range_key)
         ].compact
       else
         []

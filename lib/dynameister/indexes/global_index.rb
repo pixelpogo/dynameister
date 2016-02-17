@@ -6,8 +6,8 @@ module Dynameister
 
     class GlobalIndex
 
-      GLOBAL_INDEX_PREFIX      = "by_"
-      GLOBAL_INDEX_CONJUGATION = "_and_"
+      GLOBAL_INDEX_PREFIX      = "by_".freeze
+      GLOBAL_INDEX_CONJUGATION = "_and_".freeze
 
       attr_accessor :hash_key, :range_key, :projection, :throughput
 

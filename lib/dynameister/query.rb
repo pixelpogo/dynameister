@@ -4,9 +4,9 @@ module Dynameister
 
   class Query
 
-    AND_OPERATOR = " and "
-    OR_OPERATOR  = " or "
-    NOT_OPERATOR = "not "
+    AND_OPERATOR = " and ".freeze
+    OR_OPERATOR  = " or ".freeze
+    NOT_OPERATOR = "not ".freeze
 
     attr_reader :model, :operation, :dataset, :options
 
