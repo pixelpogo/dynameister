@@ -82,8 +82,9 @@ module Dynameister
 
     def aws_client_options
       {
-        endpoint: Dynameister.endpoint,
-        region:   Dynameister.region
+        endpoint:    Dynameister.endpoint,
+        region:      Dynameister.region,
+        credentials: Dynameister.credentials
       }.delete_if { |_, v| v.nil? }
     end
 
