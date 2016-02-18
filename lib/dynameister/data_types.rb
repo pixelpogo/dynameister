@@ -15,7 +15,7 @@ module Dynameister
       float: Dynameister::DataTypes::Float.instance,
       integer: Dynameister::DataTypes::Integer.instance,
       time: Dynameister::DataTypes::Time.instance
-    }
+    }.freeze
 
     module ClassMethods
 

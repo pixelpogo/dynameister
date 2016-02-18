@@ -30,7 +30,7 @@ describe Dynameister::TableDefinition do
   end
   let(:local_indexes_with_other_range_key) do
     [
-      Dynameister::Indexes::LocalIndex.new(my_attribute: :string),
+      Dynameister::Indexes::LocalIndex.new(my_attribute: :string)
     ]
   end
 
@@ -188,7 +188,7 @@ describe Dynameister::TableDefinition do
         let(:included_attribute_keys) { [:attribute1, :attribute2] }
         let(:local_indexes) do
           [
-            Dynameister::Indexes::LocalIndex.new(range_key, projection: included_attribute_keys),
+            Dynameister::Indexes::LocalIndex.new(range_key, projection: included_attribute_keys)
           ]
         end
         let(:expected_local_secondary_indexes) do

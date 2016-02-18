@@ -8,7 +8,7 @@ module Dynameister
     MAJOR = version[0]
     MINOR = version[1]
     PATCH = version[2]
-    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}"
+    STRING = "#{MAJOR}.#{MINOR}.#{PATCH}".freeze
 
   end
 
