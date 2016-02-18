@@ -43,6 +43,16 @@ module Dynameister
       self
     end
 
+    def reversed
+      if operation != :query_table
+        raise ReversedScanNotSupported.new("Reversed can only be used with .query")
+      end
+
+      options[:scan_index_forward] = false
+
+      self
+    end
+
     alias_method :in,      :having
     alias_method :and,     :having
     alias_method :eq,      :having
