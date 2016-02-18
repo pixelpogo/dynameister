@@ -6,7 +6,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
   context "default projection type" do
 
-    subject { described_class.new(keys) }
+    subject { described_class.new(keys, {}) }
 
     its(:name) { is_expected.to eq "by_uuids_and_created_ats" }
     its(:projection) { is_expected.to eq :all }
@@ -14,7 +14,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
     context "the hash key" do
 
-      subject { described_class.new(keys).hash_key }
+      subject { described_class.new(keys, {}).hash_key }
 
       its(:name) { is_expected.to eq :uuid }
       its(:type) { is_expected.to eq :string }
@@ -23,7 +23,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
     context "the range key" do
 
-      subject { described_class.new(keys).range_key }
+      subject { described_class.new(keys, {}).range_key }
 
       its(:name) { is_expected.to eq :created_at }
       its(:type) { is_expected.to eq :number }
@@ -34,7 +34,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
   context "non-default projection type" do
 
-    subject { described_class.new(keys, projection: :keys_only) }
+    subject { described_class.new(keys, {}, projection: :keys_only) }
 
     its(:name) { is_expected.to eq "by_uuids_and_created_ats" }
     its(:projection) { is_expected.to eq :keys_only }
@@ -42,7 +42,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
     context "the hash key" do
 
-      subject { described_class.new(keys).hash_key }
+      subject { described_class.new(keys, {}).hash_key }
 
       its(:name) { is_expected.to eq :uuid }
       its(:type) { is_expected.to eq :string }
@@ -51,7 +51,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
     context "the range key" do
 
-      subject { described_class.new(keys).range_key }
+      subject { described_class.new(keys, {}).range_key }
 
       its(:name) { is_expected.to eq :created_at }
       its(:type) { is_expected.to eq :number }
@@ -62,7 +62,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
   context "providing a hash and range key" do
 
-    subject { described_class.new(keys) }
+    subject { described_class.new(keys, {}) }
 
     context "with custom type" do
 
@@ -74,7 +74,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
       context "the hash key" do
 
-        subject { described_class.new(keys).hash_key }
+        subject { described_class.new(keys, {}).hash_key }
 
         its(:name) { is_expected.to eq :uuid }
         its(:type) { is_expected.to eq :string }
@@ -83,7 +83,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
       context "the range key" do
 
-        subject { described_class.new(keys).range_key }
+        subject { described_class.new(keys, {}).range_key }
 
         its(:name) { is_expected.to eq :created_at }
         its(:type) { is_expected.to eq :string }
@@ -104,7 +104,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
   context "only providing a hash key" do
 
-    subject { described_class.new(keys) }
+    subject { described_class.new(keys, {}) }
 
     context "with default type" do
 
@@ -116,7 +116,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
       context "the hash key" do
 
-        subject { described_class.new(keys).hash_key }
+        subject { described_class.new(keys, {}).hash_key }
 
         its(:name) { is_expected.to eq :uuid }
         its(:type) { is_expected.to eq :string }
@@ -125,7 +125,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
       context "the range key" do
 
-        subject { described_class.new(keys).range_key }
+        subject { described_class.new(keys, {}).range_key }
 
         it { is_expected.to be_nil }
 
@@ -143,7 +143,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
       context "the hash key" do
 
-        subject { described_class.new(keys).hash_key }
+        subject { described_class.new(keys, {}).hash_key }
 
         its(:name) { is_expected.to eq :uuid }
         its(:type) { is_expected.to eq :number }
@@ -152,7 +152,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
       context "the range key" do
 
-        subject { described_class.new(keys).range_key }
+        subject { described_class.new(keys, {}).range_key }
 
         it { is_expected.to be_nil }
 
@@ -172,7 +172,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
   context "non-default throughput" do
 
-    subject { described_class.new(keys, throughput: [2, 3]) }
+    subject { described_class.new(keys, {}, throughput: [2, 3]) }
 
     let(:keys) { [:uuid] }
 
@@ -182,7 +182,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
     context "the hash key" do
 
-      subject { described_class.new(keys).hash_key }
+      subject { described_class.new(keys, {}).hash_key }
 
       its(:name) { is_expected.to eq :uuid }
       its(:type) { is_expected.to eq :string }
@@ -191,7 +191,7 @@ describe Dynameister::Indexes::GlobalIndex do
 
     context "the range key" do
 
-      subject { described_class.new(keys).range_key }
+      subject { described_class.new(keys, {}).range_key }
 
       it { is_expected.to be_nil }
 

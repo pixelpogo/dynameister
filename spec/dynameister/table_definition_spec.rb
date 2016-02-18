@@ -15,7 +15,7 @@ describe Dynameister::TableDefinition do
   end
   let(:global_indexes) do
     [
-      Dynameister::Indexes::GlobalIndex.new([hash_key, range_key])
+      Dynameister::Indexes::GlobalIndex.new([hash_key, range_key], {})
     ]
   end
   let(:options) do
@@ -161,7 +161,7 @@ describe Dynameister::TableDefinition do
 
     context "when there are more than five global secondary indexes" do
       let(:global_indexes) do
-        Array.new(6, Dynameister::Indexes::GlobalIndex.new([hash_key, other_range_key]))
+        Array.new(6, Dynameister::Indexes::GlobalIndex.new([hash_key, other_range_key], {}))
       end
 
       it "raises an ArgumentError" do
@@ -265,7 +265,7 @@ describe Dynameister::TableDefinition do
           let(:global_indexes_with_other_hash_and_range_keys) do
             [
               Dynameister::Indexes::GlobalIndex.new(
-                [:hash_key_for_global_index, :range_key_for_global_index]
+                [:hash_key_for_global_index, :range_key_for_global_index], {}
               )
             ]
           end
@@ -300,7 +300,7 @@ describe Dynameister::TableDefinition do
         let(:global_indexes_with_other_hash_and_range_keys) do
           [
             Dynameister::Indexes::GlobalIndex.new(
-              [:hash_key_for_global_index, duplicate_range_key]
+              [:hash_key_for_global_index, duplicate_range_key], {}
             )
           ]
         end
