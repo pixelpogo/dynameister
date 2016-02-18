@@ -3,7 +3,7 @@ require_relative "../app/models/cat"
 require_relative "../app/models/cat_with_typed_primary_key"
 require_relative "../app/models/cat_with_overwritten_primary_key_data_types"
 require_relative "../app/models/range_key_accessors"
-require_relative "../app/models/compact_disc"
+require_relative "../app/models/pet_food"
 
 describe Dynameister::Fields do
 
@@ -128,19 +128,19 @@ describe Dynameister::Fields do
 
     context "its data_type can be derived from the field definition" do
 
-      let!(:table)         { CompactDisc.create_table }
-      let(:hash_key_name)  { "produced_at" }
-      let(:hash_key_value) { Time.now }
+      let!(:table)         { PetFood.create_table }
+      let(:hash_key_name)  { "valid_until" }
+      let(:hash_key_value) { DateTime.now }
 
       let(:hash_key_type) do
         table.attribute_definitions.detect do |a|
-          a.attribute_name == "produced_at"
+          a.attribute_name == "valid_until"
         end.attribute_type
       end
 
-      subject { CompactDisc.new(produced_at: hash_key_value) }
+      subject { PetFood.new(valid_until: hash_key_value) }
 
-      after { delete_table(CompactDisc.table_name) }
+      after { delete_table(PetFood.table_name) }
 
       it_behaves_like "a table's hash key"
 
@@ -233,15 +233,15 @@ describe Dynameister::Fields do
 
     context "derives its data type from the field definitions if given" do
 
-      let!(:table) { CompactDisc.create_table }
+      let!(:table) { PetFood.create_table }
 
       let(:range_key_type) do
         table.attribute_definitions.detect do |a|
-          a.attribute_name == "release_date"
+          a.attribute_name == "created_at"
         end.attribute_type
       end
 
-      after { delete_table(CompactDisc.table_name) }
+      after { delete_table(PetFood.table_name) }
 
       subject do
         CompactDisc.new(produced_at: Time.now, release_date: DateTime.tomorrow)
@@ -296,15 +296,6 @@ describe Dynameister::Fields do
       end.attribute_type
     end
 
-    let(:expected_model_attributes) do
-      {
-        name:       { type: :number },
-        pet_food:   { type: :string },
-        adopted_at: { type: :datetime },
-        created_at: { type: :binary }
-      }
-    end
-
     after { delete_table(CatWithOverwrittenPrimaryKeyDataTypes.table_name) }
 
     subject { CatWithOverwrittenPrimaryKeyDataTypes.new(name: hash_key_value) }
@@ -317,12 +308,6 @@ describe Dynameister::Fields do
 
     it "overwrites the range key type defined in the field definition" do
       expect(range_key_type).to eq("B")
-    end
-
-    it "has the proper overwritten hash and range key types" do
-      expect(
-        CatWithOverwrittenPrimaryKeyDataTypes.attributes
-      ).to eq expected_model_attributes
     end
 
   end

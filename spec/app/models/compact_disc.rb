@@ -8,6 +8,4 @@ class CompactDisc
   field :release_date, :datetime
   field :produced_at, :time
 
-  table hash_key: :produced_at, range_key: :release_date
-
 end

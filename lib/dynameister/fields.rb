@@ -72,12 +72,12 @@ module Dynameister
       end
 
       def create_hash_key_accessors?
-        !attributes.has_key?(hash_key.name) || attributes[hash_key.name] != hash_key.type
+        !attributes.has_key?(hash_key.name) # || attributes[hash_key.name] != hash_key.type
       end
 
       def create_range_key_accessors?
         range_key.present? &&
-          (!attributes.has_key?(range_key.name) || attributes[range_key.name] != range_key.type)
+          !attributes.has_key?(range_key.name) # || attributes[range_key.name] != range_key.type)
       end
 
     end
