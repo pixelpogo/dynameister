@@ -20,8 +20,8 @@ describe Dynameister::TableDefinition do
   end
   let(:options) do
     {
-      hash_key: create_hash_key(hash_key),
-      range_key: create_range_key(range_key),
+      hash_key: create_key(hash_key),
+      range_key: create_key(range_key),
       read_capacity:  capacity,
       write_capacity: capacity,
       local_indexes: local_indexes,
@@ -46,7 +46,7 @@ describe Dynameister::TableDefinition do
         },
         {
           attribute_name: "my_range_key",
-          attribute_type: "N"
+          attribute_type: "S"
         },
         {
           attribute_name: "my_other_range_key", # added via a local index
@@ -222,8 +222,8 @@ describe Dynameister::TableDefinition do
 
         let(:options) do
           {
-            hash_key: create_hash_key(hash_key),
-            range_key: create_range_key(range_key),
+            hash_key: create_key(hash_key),
+            range_key: create_key(range_key),
             read_capacity:  capacity,
             write_capacity: capacity,
             local_indexes: local_indexes_with_other_range_key,
@@ -258,7 +258,7 @@ describe Dynameister::TableDefinition do
           let(:expected_other_range_key) do
             {
               attribute_name: "range_key_for_global_index",
-              attribute_type: "N"
+              attribute_type: "S"
             }
           end
 
@@ -272,8 +272,8 @@ describe Dynameister::TableDefinition do
 
           let(:options) do
             {
-              hash_key:       create_hash_key(hash_key),
-              range_key:      create_range_key(range_key),
+              hash_key:       create_key(hash_key),
+              range_key:      create_key(range_key),
               read_capacity:  capacity,
               write_capacity: capacity,
               local_indexes:  local_indexes_with_other_range_key,
@@ -311,8 +311,8 @@ describe Dynameister::TableDefinition do
 
         let(:options) do
           {
-            hash_key:       create_hash_key(hash_key),
-            range_key:      create_range_key(range_key),
+            hash_key:       create_key(hash_key),
+            range_key:      create_key(range_key),
             read_capacity:  capacity,
             write_capacity: capacity,
             local_indexes:  local_indexes_with_duplicate_range_key,
@@ -330,7 +330,7 @@ describe Dynameister::TableDefinition do
         let(:expected_other_range_key) do
           {
             attribute_name: "range_key_for_index",
-            attribute_type: "N"
+            attribute_type: "S"
           }
         end
 
@@ -344,7 +344,7 @@ describe Dynameister::TableDefinition do
             },
             {
               attribute_name: "my_range_key",
-              attribute_type: "N"
+              attribute_type: "S"
             },
             expected_other_hash_key,
             expected_other_range_key

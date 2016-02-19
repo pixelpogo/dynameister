@@ -26,7 +26,7 @@ describe Dynameister::Indexes::LocalIndex do
 
     let(:options) { {} }
     let(:projection) { :all }
-    let(:range_key_type) { :number }
+    let(:range_key_type) { :string }
 
     it_behaves_like "a local index"
 
@@ -36,7 +36,7 @@ describe Dynameister::Indexes::LocalIndex do
 
     let(:options) { { projection: projection } }
     let(:projection) { :keys_only }
-    let(:range_key_type) { :number }
+    let(:range_key_type) { :string }
 
     it_behaves_like "a local index"
 

@@ -1,4 +1,4 @@
-require_relative "../key"
+require_relative "../coercer"
 
 module Dynameister
 
@@ -11,10 +11,10 @@ module Dynameister
 
       attr_accessor :hash_key, :range_key
       attr_accessor :projection, :throughput
-      attr_accessor :attribute_schema
+      attr_accessor :schema
 
-      def initialize(keys, attribute_schema, options = {})
-        @attribute_schema     = attribute_schema
+      def initialize(keys, schema, options = {})
+        @schema               = schema
         @hash_key, @range_key = build_keys(keys)
         @projection           = options[:projection] || :all
         @throughput           = options[:throughput] || [1, 1]
@@ -27,26 +27,9 @@ module Dynameister
       private
 
       def build_keys(keys)
-        typed_keys = data_types_for_keys(keys)
         [].tap do |a|
-          a << Key.create_hash_key(typed_keys.first)
-          a << Key.create_range_key(typed_keys.last) if typed_keys.length > 1
-        end
-      end
-
-      def data_types_for_keys(keys)
-        if keys.length > 1
-          [data_type_for(keys.first), data_type_for(keys.last)]
-        else
-          [data_type_for(keys.first)]
-        end
-      end
-
-      def data_type_for(key)
-        if attribute_schema[key]
-          { key => attribute_schema[key][:type] }
-        else
-          key
+          a << Coercer.new(schema).create_key(keys.first)
+          a << Coercer.new(schema).create_key(keys.last) if keys.length > 1
         end
       end
 

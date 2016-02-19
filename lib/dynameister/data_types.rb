@@ -17,6 +17,18 @@ module Dynameister
       time: Dynameister::DataTypes::Time.instance
     }.freeze
 
+    AWS_DATA_TYPE_MAP = {
+      time:     :string,
+      datetime: :string,
+      integer:  :number,
+      float:    :number,
+      string:   :string,
+      number:   :number,
+      binary:   :binary
+    }.freeze
+
+    DEFAULT_AWS_DATA_TYPE = :string
+
     module ClassMethods
 
       def type_caster(type:)
