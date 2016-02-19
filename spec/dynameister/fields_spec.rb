@@ -243,9 +243,7 @@ describe Dynameister::Fields do
 
       after { delete_table(PetFood.table_name) }
 
-      subject do
-        CompactDisc.new(produced_at: Time.now, release_date: DateTime.tomorrow)
-      end
+      subject { PetFood.create(valid_until: DateTime.now, created_at: Time.now) }
 
       it "sets the range key data type to string" do
         expect(range_key_type).to eq("S")
