@@ -6,7 +6,7 @@ describe Dynameister::Finders do
 
   before { Language.create_table }
 
-  after  { delete_table table_name }
+  after  { Language.delete_table }
 
   describe "fetching a document" do
 

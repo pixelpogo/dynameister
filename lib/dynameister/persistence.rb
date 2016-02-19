@@ -29,6 +29,10 @@ module Dynameister
         end
       end
 
+      def delete_table
+        client.delete_table(table_name: table_name)
+      end
+
       def table_exists?
         client.describe_table table_name: table_name
         true

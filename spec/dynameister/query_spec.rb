@@ -6,7 +6,7 @@ describe Dynameister::Query do
   let(:query)      { described_class.new(Book) }
 
   before           { Book.create_table }
-  after            { delete_table table_name }
+  after            { Book.delete_table }
 
   describe "operation" do
 
