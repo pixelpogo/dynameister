@@ -35,15 +35,15 @@ module Dynameister
                   when String, Symbol
                     attributes[key].nil? ? key : { key => attributes[key][:type] }
                   end
-        Key.create_hash_key(key_def || :id)
+        Coercer.new.create_hash_key(key_def || :id)
       end
 
       def range_key
         if key = options[:range_key]
           if attributes[key].nil?
-            Key.create_range_key(key)
+            Coercer.new.create_range_key(key)
           else
-            Key.create_range_key(key => attributes[key][:type])
+            Coercer.new.create_range_key(key => attributes[key][:type])
           end
         end
       end

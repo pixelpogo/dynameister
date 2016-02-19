@@ -1,4 +1,4 @@
-require_relative "../key"
+require_relative "../coercer"
 
 module Dynameister
 
@@ -11,7 +11,7 @@ module Dynameister
       attr_accessor :range_key, :projection
 
       def initialize(range_key, options = {})
-        @range_key = Key.create_range_key(range_key)
+        @range_key = Coercer.new.create_range_key(range_key)
         @projection = options[:projection] || :all
       end
 
