@@ -3,7 +3,7 @@
 
 # Dynameister
 
-A Ruby convenience wrapper for Amazons DynamoDB.
+A Ruby convenience wrapper for [Amazon DynamoDB](https://aws.amazon.com/de/documentation/dynamodb/).
 
 ## Installation
 
@@ -15,11 +15,15 @@ gem 'dynameister'
 
 And then execute:
 
-    $ bundle
+```bash
+bundle install
+```
 
 Or install it yourself as:
 
-    $ gem install dynameister
+```bash
+gem install dynameister
+```
 
 ## Usage
 
@@ -80,9 +84,7 @@ In addition to the default [DynamoDB DataTypes for AttributeValues](http://docs.
  * `:integer`
  * `:time`
 
-The values of custom DataType attributes will be automatically converted (serialized) into DynamoDB compliant DataTypes before they are stored.
-
-They are reconverted (deserialized) back into the non-default DataTypes when they are retrieved from DynamoDB.
+The values of attributes with custom data types will be serialized into DynamoDB compliant data types before they are stored. They are deserialized back into the their corresponding Ruby data types when they are retrieved from DynamoDB.
 
 ```ruby
 class CompactDisc
@@ -115,17 +117,23 @@ cat.id #=> "C43b9fe9-e264-4544-8e48-fa64c5eb5ddc"
 
 ## Secondary Indexes
 
-To improve access to data and faster queries, you can define indexes on fields. These indexes are only supported when the table is created using a hash-and-range key.
+To improve access to data and faster queries, you can define [secondary indexes](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html).
 
-There are two different kinds of indexes supported by DynamoDB:
+There are two different types of indexes supported by DynamoDB:
 
-### Local Secondary Indexes
+### Local Secondary Index
 
-Only a different range key than in the table definition needs to be supplied here. The hash key remains the same.
+An additional index that uses the *same hash key* as the primary key together with a *different range key*.
 
-### Global Secondary Indexes
+Note that local secondary indexes can only be used when the primary key is a composite key consisting of a hash and a range key.
 
-Different hash and range keys than defined on the table.
+### Global Secondary Index
+
+An additional index that uses a *different hash and range key*. The range key is optional.
+
+---
+
+Please refer to the docs about [Secondary Indexes in DynamoDB](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/SecondaryIndexes.html) for detailed information about all features and constraints.
 
 ### Examples
 
