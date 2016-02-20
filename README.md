@@ -75,9 +75,9 @@ class Cat
 end
 ```
 
-#### DataTypes
+#### Data Types
 
-In addition to the default [DynamoDB DataTypes for AttributeValues](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_AttributeValue.html) Dynameister offers a few more datatypes
+In addition to the default [DynamoDB DataTypes for AttributeValues](http://docs.aws.amazon.com/amazondynamodb/latest/APIReference/API_AttributeValue.html) Dynameister offers a few more data types
 
  * `:datetime`
  * `:float`
