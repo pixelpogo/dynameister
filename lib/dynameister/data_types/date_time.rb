@@ -9,7 +9,7 @@ module Dynameister
       end
 
       def serialize(value)
-        value.try(:iso8601, 6)
+        value.try(:iso8601, 9)
       end
 
       private
