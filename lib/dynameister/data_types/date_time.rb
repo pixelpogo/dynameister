@@ -9,7 +9,7 @@ module Dynameister
       end
 
       def serialize(value)
-        value.as_json
+        value.try(:iso8601, 6)
       end
 
       private
