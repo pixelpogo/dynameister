@@ -1,10 +1,6 @@
 ---
 engines:
 
-  # https://docs.codeclimate.com/v1.0/docs/bundler-audit
-  bundler-audit:
-    enabled: true
-
   # https://docs.codeclimate.com/v1.0/docs/duplication
   duplication:
     enabled: true
@@ -17,8 +13,7 @@ engines:
 
 ratings:
   paths:
-  - Gemfile.lock
   - "**.rb"
 
 exclude_paths:
-- spec/
+- spec/**/*
