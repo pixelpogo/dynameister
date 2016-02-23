@@ -18,19 +18,26 @@ module Dynameister
 
       def create_table(options: {})
         options =
-        {
-          range_key:      range_key,
-          local_indexes:  local_indexes,
-          global_indexes: global_indexes
-        }.merge(options)
+          {
+            range_key:      range_key,
+            local_indexes:  local_indexes,
+            global_indexes: global_indexes
+          }.merge(options)
 
         unless table_exists?
           client.create_table(table_name: table_name, hash_key: hash_key, options: options)
         end
       end
 
+      def delete_table
+        client.delete_table(table_name: table_name)
+      end
+
       def table_exists?
-        client.table_names.include? table_name
+        client.describe_table table_name: table_name
+        true
+      rescue Aws::DynamoDB::Errors::ResourceNotFoundException
+        false
       end
 
       def create(attrs = {})

@@ -4,9 +4,9 @@ module Dynameister
 
   class Query
 
-    AND_OPERATOR = " and "
-    OR_OPERATOR  = " or "
-    NOT_OPERATOR = "not "
+    AND_OPERATOR = " and ".freeze
+    OR_OPERATOR  = " or ".freeze
+    NOT_OPERATOR = "not ".freeze
 
     attr_reader :model, :operation, :dataset, :options
 
@@ -39,6 +39,16 @@ module Dynameister
       if serialized
         build_options_query(serialized)
       end
+
+      self
+    end
+
+    def reversed
+      if operation != :query_table
+        raise ReversedScanNotSupported.new("Reversed can only be used with .query")
+      end
+
+      options[:scan_index_forward] = false
 
       self
     end

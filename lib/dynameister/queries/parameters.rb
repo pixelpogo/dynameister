@@ -15,7 +15,7 @@ module Dynameister
       def to_h
         index = find_local_index_for_attributes
         params = {}
-        params.merge!(index_name: index) if index
+        params[:index_name] = index if index
         params.merge!(filter_expression)
       end
 

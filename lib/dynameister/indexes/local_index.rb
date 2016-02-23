@@ -6,7 +6,7 @@ module Dynameister
 
     class LocalIndex
 
-      LOCAL_INDEX_PREFIX = "by_"
+      LOCAL_INDEX_PREFIX = "by_".freeze
 
       attr_accessor :range_key, :projection
 

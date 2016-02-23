@@ -59,7 +59,7 @@ describe Dynameister::Fields do
 
     before { Language.create_table }
 
-    after { delete_table(Language.table_name) }
+    after { Language.delete_table }
 
     let!(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
 
@@ -92,7 +92,7 @@ describe Dynameister::Fields do
       let(:hash_key_value) { "neko atsume" }
       let!(:table) { Cat.create_table }
 
-      after { delete_table(Cat.table_name) }
+      after { Cat.delete_table }
 
       subject { Cat.new(name: hash_key_value) }
 
@@ -111,7 +111,7 @@ describe Dynameister::Fields do
         end.attribute_type
       end
 
-      after { delete_table(CatWithTypedIndexes.table_name) }
+      after { CatWithTypedIndexes.delete_table }
 
       subject { CatWithTypedIndexes.new(name: hash_key_value) }
 
@@ -128,7 +128,7 @@ describe Dynameister::Fields do
       let(:hash_key_value) { "a name" }
       let!(:table) { Cat.create_table }
 
-      after { delete_table(Cat.table_name) }
+      after { Cat.delete_table }
 
       subject { Cat.new(name: hash_key_value) }
 
@@ -154,7 +154,7 @@ describe Dynameister::Fields do
 
       let!(:table) { Cat.create_table }
 
-      after { delete_table(Cat.table_name) }
+      after { Cat.delete_table }
 
       subject { Cat.new(name: "name", created_at: "today") }
 
@@ -182,7 +182,7 @@ describe Dynameister::Fields do
         end.attribute_type
       end
 
-      after { delete_table(CatWithTypedIndexes.table_name) }
+      after { CatWithTypedIndexes.delete_table }
 
       subject { CatWithTypedIndexes.new(name: "name", created_at: "today") }
 
@@ -208,7 +208,7 @@ describe Dynameister::Fields do
 
       let!(:table) { RangeKeyAccessors.create_table }
 
-      after { delete_table(RangeKeyAccessors.table_name) }
+      after { RangeKeyAccessors.delete_table }
 
       subject { RangeKeyAccessors.new(created_at: 1234) }
 
@@ -252,7 +252,7 @@ describe Dynameister::Fields do
       }
     end
 
-    after { delete_table(CatWithOverwrittenIndexTypes.table_name) }
+    after { CatWithOverwrittenIndexTypes.delete_table }
 
     subject { CatWithOverwrittenIndexTypes.new(name: hash_key_value) }
 

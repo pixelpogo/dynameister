@@ -17,7 +17,7 @@ describe Dynameister::Persistence do
 
     subject! { Language.create_table }
 
-    after { delete_table table_name }
+    after { Language.delete_table }
 
     it "creates the table for the object" do
       expect(Dynameister::Client.new.table_names).to include(table_name)
@@ -27,11 +27,11 @@ describe Dynameister::Persistence do
       expect { Language.create_table }.not_to raise_exception
     end
 
-    context "custom table name" do
+    context "with a custom table name" do
 
       subject! { Cat.create_table }
 
-      after { delete_table Cat.table_name }
+      after { Language.delete_table }
 
       it "creates a table" do
         expect(Dynameister::Client.new.table_names).to include("kittens")
@@ -40,11 +40,61 @@ describe Dynameister::Persistence do
     end
   end
 
+  describe "deleting a table" do
+
+    context "with a default table name" do
+
+      before { Language.create_table }
+
+      subject { Language.delete_table }
+
+      let(:table_name) { "languages" }
+
+      it "deletes the table" do
+        subject
+        expect(Dynameister::Client.new.table_names).to_not include(table_name)
+      end
+
+    end
+
+    context "with a custom table name" do
+
+      before { Cat.create_table }
+
+      subject { Cat.delete_table }
+
+      let(:table_name) { "kittens" }
+
+      it "deletes the table" do
+        subject
+        expect(Dynameister::Client.new.table_names).to_not include(table_name)
+      end
+
+    end
+
+  end
+
+  describe "table_exists?" do
+
+    subject { Language.table_exists? }
+
+    after { Language.delete_table }
+
+    it "returns false if table does not exist" do
+      expect(subject).to be false
+    end
+
+    it "returns true if table exists" do
+      Language.create_table
+      expect(subject).to be true
+    end
+  end
+
   describe "creating a document" do
 
     before { Language.create_table }
 
-    after { delete_table Language.table_name }
+    after { Language.delete_table }
 
     subject! { Language.create(locale: "JPN") }
 
@@ -58,7 +108,7 @@ describe Dynameister::Persistence do
 
     before { Language.create_table }
 
-    after { delete_table Language.table_name }
+    after { Language.delete_table }
 
     let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
 
@@ -74,7 +124,7 @@ describe Dynameister::Persistence do
 
     before { Language.create_table }
 
-    after { delete_table Language.table_name }
+    after { Language.delete_table }
 
     subject { Language.schema }
 
@@ -88,7 +138,7 @@ describe Dynameister::Persistence do
 
     before { Language.create_table }
 
-    after { delete_table Language.table_name }
+    after { Language.delete_table }
 
     subject { Language.key_schema_keys }
 

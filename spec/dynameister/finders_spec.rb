@@ -6,7 +6,7 @@ describe Dynameister::Finders do
 
   before { Language.create_table }
 
-  after  { delete_table table_name }
+  after  { Language.delete_table }
 
   describe "fetching a document" do
 
@@ -103,11 +103,11 @@ describe Dynameister::Finders do
     context "nothing found" do
 
       it "with a single hash_key returns nil" do
-        expect(Language.find "some id").to be_nil
+        expect(Language.find("some id")).to be_nil
       end
 
       it "with multiple hash_keys returns an empty array" do
-        expect(Language.find "some id", "another_id here").to be_empty
+        expect(Language.find("some id", "another_id here")).to be_empty
       end
 
     end

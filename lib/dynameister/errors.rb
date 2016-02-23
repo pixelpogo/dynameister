@@ -15,4 +15,6 @@ module Dynameister
 
   end
 
+  class ReversedScanNotSupported < StandardError; end
+
 end
