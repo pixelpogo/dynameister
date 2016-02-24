@@ -104,6 +104,26 @@ describe Dynameister::Persistence do
 
   end
 
+  describe "updating a document" do
+
+    before { Language.create_table }
+
+    after { Language.delete_table }
+
+    let!(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
+
+    subject { language.update_attributes(locale: "my_locale", rank: 99) }
+
+    its(:locale) { is_expected.to eq("my_locale") }
+    its(:rank)   { is_expected.to eq(99) }
+
+    it "persists the modified data" do
+      item = Language.find_by(hash_key: { id: subject.id })
+      expect(subject.attributes).to eq(item.attributes)
+    end
+
+  end
+
   describe "deleting a document" do
 
     before { Language.create_table }

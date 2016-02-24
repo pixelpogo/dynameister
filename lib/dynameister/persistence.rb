@@ -88,6 +88,15 @@ module Dynameister
       private_class_method :attribute_casters
     end
 
+    def update_attributes(attributes)
+      unless attributes.nil? || attributes.empty?
+        attributes.each do |attribute, value|
+          write_attribute(attribute, value)
+        end
+        save
+      end
+    end
+
     def save
       persist
       self
