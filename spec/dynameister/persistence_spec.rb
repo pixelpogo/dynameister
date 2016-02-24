@@ -31,7 +31,7 @@ describe Dynameister::Persistence do
 
       subject! { Cat.create_table }
 
-      after { Language.delete_table }
+      after { Cat.delete_table }
 
       it "creates a table" do
         expect(Dynameister::Client.new.table_names).to include("kittens")
