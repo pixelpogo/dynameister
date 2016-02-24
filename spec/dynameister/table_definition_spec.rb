@@ -9,8 +9,8 @@ describe Dynameister::TableDefinition do
   let(:other_range_key) { { my_other_range_key: :string } }
   let(:local_indexes) do
     [
-      Dynameister::Indexes::LocalIndex.new(range_key),
-      Dynameister::Indexes::LocalIndex.new(other_range_key, projection: :keys_only)
+      Dynameister::Indexes::LocalIndex.new(range_key, {}),
+      Dynameister::Indexes::LocalIndex.new(other_range_key, {}, projection: :keys_only)
     ]
   end
   let(:global_indexes) do
@@ -30,7 +30,7 @@ describe Dynameister::TableDefinition do
   end
   let(:local_indexes_with_other_range_key) do
     [
-      Dynameister::Indexes::LocalIndex.new(my_attribute: :string)
+      Dynameister::Indexes::LocalIndex.new({ my_attribute: :string }, {})
     ]
   end
 
@@ -176,7 +176,7 @@ describe Dynameister::TableDefinition do
 
       context "when there are more than five local secondary indexes" do
         let(:local_indexes) do
-          Array.new(6, Dynameister::Indexes::LocalIndex.new(other_range_key))
+          Array.new(6, Dynameister::Indexes::LocalIndex.new(other_range_key, {}))
         end
 
         it "raises an ArgumentError" do
@@ -188,7 +188,7 @@ describe Dynameister::TableDefinition do
         let(:included_attribute_keys) { [:attribute1, :attribute2] }
         let(:local_indexes) do
           [
-            Dynameister::Indexes::LocalIndex.new(range_key, projection: included_attribute_keys)
+            Dynameister::Indexes::LocalIndex.new(range_key, {}, projection: included_attribute_keys)
           ]
         end
         let(:expected_local_secondary_indexes) do
@@ -306,7 +306,7 @@ describe Dynameister::TableDefinition do
         end
 
         let(:local_indexes_with_duplicate_range_key) do
-          [Dynameister::Indexes::LocalIndex.new(duplicate_range_key)]
+          [Dynameister::Indexes::LocalIndex.new(duplicate_range_key, {})]
         end
 
         let(:options) do

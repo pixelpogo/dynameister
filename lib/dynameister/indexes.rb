@@ -17,8 +17,7 @@ module Dynameister
     module ClassMethods
 
       def local_index(range_key, options = {})
-        type = attributes[range_key][:type]
-        local_index = LocalIndex.new({ range_key => type }, options)
+        local_index = LocalIndex.new(range_key, attributes, options)
         local_indexes << local_index
       end
 
