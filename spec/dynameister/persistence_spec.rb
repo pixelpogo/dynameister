@@ -1,5 +1,6 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
+require_relative "../app/models/pet_food_with_callback"
 
 describe Dynameister::Persistence do
 
@@ -145,6 +146,45 @@ describe Dynameister::Persistence do
     it "persists the data" do
       item = Language.find_by(hash_key: { id: subject.id })
       expect(subject.attributes).to eq(item.attributes)
+    end
+
+    context "with a before_save callback" do
+
+      before { PetFoodWithCallback.create_table }
+
+      after { PetFoodWithCallback.delete_table }
+
+      context "when the callback succeeds" do
+
+        let(:document) { PetFoodWithCallback.new }
+
+        it "executes the callback" do
+          expect(subject.valid_until).not_to be_nil
+        end
+
+        it "persists the data" do
+          item = PetFoodWithCallback.find_by(hash_key: { id: subject.id })
+          expect(subject.attributes).to eq(item.attributes)
+        end
+
+      end
+
+      context "when the callback fails" do
+
+        let(:document) { PetFoodWithCallback.new(valid_until: Time.now - 3.months) }
+
+        it "returns false" do
+          expect(subject).to be(false)
+        end
+
+        it "does not persist the data" do
+          expect { subject }.to_not change {
+            PetFoodWithCallback.all.count
+          }
+        end
+
+      end
+
     end
 
   end

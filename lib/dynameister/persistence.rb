@@ -1,4 +1,5 @@
-require 'securerandom'
+require "active_model/callbacks"
+require "securerandom"
 
 module Dynameister
 
@@ -85,6 +86,9 @@ module Dynameister
     end
 
     included do
+      extend ActiveModel::Callbacks
+      define_model_callbacks :save, only: [:before]
+
       private_class_method :attribute_casters
     end
 
@@ -98,8 +102,10 @@ module Dynameister
     end
 
     def save
-      persist
-      self
+      run_callbacks(:save) do
+        persist
+        self
+      end
     end
 
     def delete
