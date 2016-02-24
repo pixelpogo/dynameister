@@ -90,6 +90,25 @@ describe Dynameister::Persistence do
     end
   end
 
+  describe ".new" do
+
+    before { Language.create_table }
+
+    after { Language.delete_table }
+
+    subject { Language.new(locale: "de", rank: 42) }
+
+    its(:locale) { is_expected.to eq("de") }
+    its(:rank)   { is_expected.to eq(42) }
+
+    it "does not persist the data" do
+      expect { subject }.to_not change {
+        Language.all.count
+      }
+    end
+
+  end
+
   describe ".create" do
 
     before { Language.create_table }
@@ -97,6 +116,27 @@ describe Dynameister::Persistence do
     after { Language.delete_table }
 
     subject { Language.create(locale: "de", rank: 42) }
+
+    it "generates a uuid for the hash_key of the document" do
+      expect(subject.id).not_to be_nil
+    end
+
+    it "persists the data" do
+      item = Language.find_by(hash_key: { id: subject.id })
+      expect(subject.attributes).to eq(item.attributes)
+    end
+
+  end
+
+  describe "#save" do
+
+    before { Language.create_table }
+
+    after { Language.delete_table }
+
+    let(:document) { Language.new(locale: "de", rank: 42) }
+
+    subject { document.save }
 
     it "generates a uuid for the hash_key of the document" do
       expect(subject.id).not_to be_nil
