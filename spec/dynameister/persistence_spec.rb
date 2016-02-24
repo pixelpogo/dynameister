@@ -96,7 +96,7 @@ describe Dynameister::Persistence do
 
     after { Language.delete_table }
 
-    subject! { Language.create(locale: "JPN") }
+    subject { Language.create(locale: "JPN") }
 
     it "generates an uuid for the hash_key of the document" do
       expect(subject.id).not_to be_nil
@@ -110,7 +110,7 @@ describe Dynameister::Persistence do
 
     after { Language.delete_table }
 
-    let!(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
+    let(:language) { Language.create(locale: "grumpy_cat", rank: 42) }
 
     subject { language.update_attributes(locale: "my_locale", rank: 99) }
 
@@ -130,7 +130,7 @@ describe Dynameister::Persistence do
 
     after { Language.delete_table }
 
-    let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
+    let(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
 
     subject! { language.delete }
 
