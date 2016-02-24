@@ -27,26 +27,9 @@ module Dynameister
       private
 
       def build_keys(keys)
-        typed_keys = data_types_for_keys(keys)
         [].tap do |a|
-          a << Coercer.new(schema).create_hash_key(typed_keys.first)
-          a << Coercer.new(schema).create_range_key(typed_keys.last) if typed_keys.length > 1
-        end
-      end
-
-      def data_types_for_keys(keys)
-        if keys.length > 1
-          [data_type_for(keys.first), data_type_for(keys.last)]
-        else
-          [data_type_for(keys.first)]
-        end
-      end
-
-      def data_type_for(key)
-        if schema[key]
-          { key => schema[key][:type] }
-        else
-          key
+          a << Coercer.new(schema).create_key(keys.first)
+          a << Coercer.new(schema).create_key(keys.last) if keys.length > 1
         end
       end
 

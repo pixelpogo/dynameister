@@ -29,22 +29,13 @@ module Dynameister
       end
 
       def hash_key
-        key = options[:hash_key]
-        key_def = case key
-                  when Hash then options[:hash_key]
-                  when String, Symbol
-                    attributes[key].nil? ? key : { key => attributes[key][:type] }
-                  end
-        Coercer.new.create_hash_key(key_def || :id)
+        name = options[:hash_key] || :id
+        Coercer.new(attributes).create_key(name)
       end
 
       def range_key
-        if key = options[:range_key]
-          if attributes[key].nil?
-            Coercer.new.create_range_key(key)
-          else
-            Coercer.new.create_range_key(key => attributes[key][:type])
-          end
+        if name = options[:range_key]
+          Coercer.new(attributes).create_key(name)
         end
       end
 

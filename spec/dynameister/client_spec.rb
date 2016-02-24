@@ -2,17 +2,17 @@ describe Dynameister::Client do
 
   let(:client)           { Dynameister::Client.new }
   let(:table_name)       { "my-table" }
-  let(:default_hash_key) { create_hash_key :id }
+  let(:default_hash_key) { create_key :id }
 
   describe "#create_table" do
 
-    let(:hash_key)         { create_hash_key :my_hash_key }
+    let(:hash_key)         { create_key :my_hash_key }
     let(:capacity)         { 99 }
     let(:table_options) do
       {
         read_capacity:  capacity,
         write_capacity: capacity,
-        range_key: create_range_key(:created_at)
+        range_key: create_key(:created_at)
       }
     end
 
@@ -55,7 +55,7 @@ describe Dynameister::Client do
         subject { table.attribute_definitions[1] }
 
         its(:attribute_name) { is_expected.to eq("created_at") }
-        its(:attribute_type) { is_expected.to eq("N") }
+        its(:attribute_type) { is_expected.to eq("S") }
 
       end
 
@@ -152,7 +152,7 @@ describe Dynameister::Client do
       let(:table) do
         client.create_table(table_name: table_name,
                             hash_key: default_hash_key,
-                            options: { range_key: create_range_key(user: :string) })
+                            options: { range_key: create_key(user: :string) })
       end
       let(:item_range_key) { { user: "john doe" } }
 
@@ -273,7 +273,7 @@ describe Dynameister::Client do
       let(:table) do
         client.create_table(table_name: table_name,
                             hash_key: default_hash_key,
-                            options: { range_key: create_range_key(user: :string) })
+                            options: { range_key: create_key(user: :string) })
       end
       let(:item_range_key) { { user: "john doe" } }
 

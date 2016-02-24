@@ -26,7 +26,7 @@ describe Dynameister::Indexes::GlobalIndex do
       subject { described_class.new(keys, {}).range_key }
 
       its(:name) { is_expected.to eq :created_at }
-      its(:type) { is_expected.to eq :number }
+      its(:type) { is_expected.to eq :string }
 
     end
 
@@ -54,7 +54,7 @@ describe Dynameister::Indexes::GlobalIndex do
       subject { described_class.new(keys, {}).range_key }
 
       its(:name) { is_expected.to eq :created_at }
-      its(:type) { is_expected.to eq :number }
+      its(:type) { is_expected.to eq :string }
 
     end
 

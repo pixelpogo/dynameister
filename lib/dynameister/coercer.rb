@@ -6,13 +6,7 @@ module Dynameister
 
     Key = Struct.new(:name, :type)
 
-    attr_accessor :schema
-
-    DEFAULT_AWS_DATA_TYPE =
-      {
-        hash:  :string,
-        range: :number
-      }.freeze
+    DEFAULT_AWS_DATA_TYPE = :string
 
     AWS_DATA_TYPE = {
       time:     :string,
@@ -24,34 +18,31 @@ module Dynameister
       binary:   :binary
     }.freeze
 
+    attr_accessor :schema
+
     def initialize(schema = {})
-      @schema = schema
+      @schema = schema.with_indifferent_access
     end
 
-    def create_hash_key(hash_key)
-      create_key(hash_key, :hash)
-    end
-
-    def create_range_key(range_key)
-      create_key(range_key, :range)
+    def create_key(key_information)
+      case key_information
+      when String, Symbol then Key.new(key_information.to_sym,
+                                       to_aws_type(key_information))
+      when Hash           then Key.new(key_information.keys.first,
+                                       AWS_DATA_TYPE[key_information.values.first])
+      else raise KeyDefinitionError.new(key_information)
+      end
     end
 
     private
 
-    def create_key(key_information, key_type)
-      case key_information
-      when String, Symbol then Key.new(key_information.to_sym, default_data_type(key_type))
-      when Hash           then map_to_aws_data_type(key_information)
-      else raise KeyDefinitionError.new(key_information, key_type)
-      end
+    def to_aws_type(name)
+      data_type = extract_type_from_schema(name)
+      AWS_DATA_TYPE[data_type]
     end
 
-    def default_data_type(key_type)
-      DEFAULT_AWS_DATA_TYPE[key_type]
-    end
-
-    def map_to_aws_data_type(key_definition)
-      Key.new(key_definition.keys.first, AWS_DATA_TYPE[key_definition.values.first])
+    def extract_type_from_schema(name)
+      schema[name] ? schema[name][:type] : DEFAULT_AWS_DATA_TYPE
     end
 
   end
