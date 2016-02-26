@@ -30,12 +30,12 @@ module Dynameister
 
       def hash_key
         name = options[:hash_key] || :id
-        Coercer.new(attributes).create_key(name)
+        DataTypes::Coercer.new(attributes).create_key(name)
       end
 
       def range_key
         if name = options[:range_key]
-          Coercer.new(attributes).create_key(name)
+          DataTypes::Coercer.new(attributes).create_key(name)
         end
       end
 

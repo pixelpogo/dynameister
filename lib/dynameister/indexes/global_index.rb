@@ -1,4 +1,4 @@
-require_relative "../coercer"
+require "dynameister/data_types/coercer"
 
 module Dynameister
 
@@ -28,8 +28,10 @@ module Dynameister
 
       def build_keys(keys)
         [].tap do |a|
-          a << Coercer.new(schema).create_key(keys.first)
-          a << Coercer.new(schema).create_key(keys.last) if keys.length > 1
+          a << DataTypes::Coercer.new(schema).create_key(keys.first)
+          if keys.length > 1
+            a << DataTypes::Coercer.new(schema).create_key(keys.last)
+          end
         end
       end
 

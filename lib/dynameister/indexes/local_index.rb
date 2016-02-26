@@ -1,4 +1,4 @@
-require_relative "../coercer"
+require "dynameister/data_types/coercer"
 
 module Dynameister
 
@@ -22,7 +22,7 @@ module Dynameister
       private
 
       def build_key(key, schema)
-        Coercer.new(schema).create_key(key)
+        DataTypes::Coercer.new(schema).create_key(key)
       end
 
     end

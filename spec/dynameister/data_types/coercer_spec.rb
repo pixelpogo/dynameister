@@ -1,4 +1,4 @@
-describe Dynameister::Coercer do
+describe Dynameister::DataTypes::Coercer do
 
   describe "creating a key" do
 
