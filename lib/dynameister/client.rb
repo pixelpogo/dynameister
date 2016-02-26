@@ -5,10 +5,10 @@ module Dynameister
   class Client
 
     def create_table(table_name:, hash_key:, options: {})
-      options[:hash_key] ||= hash_key
-      options[:read_capacity] ||= Dynameister.read_capacity
+      options[:hash_key]       ||= hash_key
+      options[:read_capacity]  ||= Dynameister.read_capacity
       options[:write_capacity] ||= Dynameister.write_capacity
-      options[:local_indexes] ||= []
+      options[:local_indexes]  ||= []
       options[:global_indexes] ||= []
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h

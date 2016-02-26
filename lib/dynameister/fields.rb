@@ -29,12 +29,13 @@ module Dynameister
       end
 
       def hash_key
-        Key.create_hash_key(options[:hash_key] || :id)
+        name = options[:hash_key] || :id
+        DataTypes::Coercer.new(attributes).create_key(name)
       end
 
       def range_key
-        if key = options[:range_key]
-          Key.create_range_key(key)
+        if name = options[:range_key]
+          DataTypes::Coercer.new(attributes).create_key(name)
         end
       end
 
@@ -62,12 +63,11 @@ module Dynameister
       end
 
       def create_hash_key_accessors?
-        !attributes.has_key?(hash_key.name) || attributes[hash_key.name] != hash_key.type
+        !attributes.has_key?(hash_key.name)
       end
 
       def create_range_key_accessors?
-        range_key.present? &&
-          (!attributes.has_key?(range_key.name) || attributes[range_key.name] != range_key.type)
+        range_key.present? && !attributes.has_key?(range_key.name)
       end
 
     end

@@ -4,7 +4,7 @@ class Cat
 
   field :pet_food
   field :adopted_at, :datetime
-  field :created_at
+  field :created_at, :datetime
 
   # local indexes can only be defined on tables with hash and range key
   table name: "kittens", hash_key: :name, range_key: :created_at

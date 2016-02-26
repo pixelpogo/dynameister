@@ -1,8 +1,9 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
-require_relative "../app/models/cat_with_typed_indexes"
-require_relative "../app/models/cat_with_overwritten_index_types"
+require_relative "../app/models/cat_with_typed_primary_key"
+require_relative "../app/models/cat_with_overwritten_primary_key_data_types"
 require_relative "../app/models/range_key_accessors"
+require_relative "../app/models/pet_food"
 
 describe Dynameister::Fields do
 
@@ -17,7 +18,7 @@ describe Dynameister::Fields do
     end
 
     it "adds the attribute name to the table key schema" do
-      expect(hash_key_schema.attribute_name).to eq "name"
+      expect(hash_key_schema.attribute_name).to eq hash_key_name
     end
 
     it "adds the hash key type to the table key schema" do
@@ -90,7 +91,8 @@ describe Dynameister::Fields do
     context "its name can be overriden" do
 
       let(:hash_key_value) { "neko atsume" }
-      let!(:table) { Cat.create_table }
+      let!(:table)         { Cat.create_table }
+      let(:hash_key_name)  { "name" }
 
       after { Cat.delete_table }
 
@@ -103,22 +105,47 @@ describe Dynameister::Fields do
     context "its type can be overriden" do
 
       let(:hash_key_value) { 10 }
-      let!(:table) { CatWithTypedIndexes.create_table }
+      let!(:table)         { CatWithTypedPrimaryKey.create_table }
+      let(:hash_key_name)  { "name" }
 
       let(:hash_key_type) do
         table.attribute_definitions.detect do |a|
-          a.attribute_name == 'name'
+          a.attribute_name == hash_key_name
         end.attribute_type
       end
 
-      after { CatWithTypedIndexes.delete_table }
+      after { CatWithTypedPrimaryKey.delete_table }
 
-      subject { CatWithTypedIndexes.new(name: hash_key_value) }
+      subject { CatWithTypedPrimaryKey.new(name: hash_key_value) }
 
       it_behaves_like "a table's hash key"
 
       it "sets the custom hash key type" do
-        expect(hash_key_type).to eq('N')
+        expect(hash_key_type).to eq("N")
+      end
+
+    end
+
+    context "its data_type can be derived from the field definition" do
+
+      let!(:table)         { PetFood.create_table }
+      let(:hash_key_name)  { "valid_until" }
+      let(:hash_key_value) { DateTime.now }
+
+      let(:hash_key_type) do
+        table.attribute_definitions.detect do |a|
+          a.attribute_name == "valid_until"
+        end.attribute_type
+      end
+
+      subject { PetFood.new(valid_until: hash_key_value) }
+
+      after { PetFood.delete_table }
+
+      it_behaves_like "a table's hash key"
+
+      it "field with a custom data type" do
+        expect(hash_key_type).to eq("S")
       end
 
     end
@@ -126,7 +153,7 @@ describe Dynameister::Fields do
     context "its attribute accessors" do
 
       let(:hash_key_value) { "a name" }
-      let!(:table) { Cat.create_table }
+      let!(:table)         { Cat.create_table }
 
       after { Cat.delete_table }
 
@@ -174,17 +201,17 @@ describe Dynameister::Fields do
 
     context "its default type can be overriden" do
 
-      let!(:table) { CatWithTypedIndexes.create_table }
+      let!(:table) { CatWithTypedPrimaryKey.create_table }
 
       let(:range_key_type) do
         table.attribute_definitions.detect do |a|
-          a.attribute_name == 'created_at'
+          a.attribute_name == "created_at"
         end.attribute_type
       end
 
-      after { CatWithTypedIndexes.delete_table }
+      after { CatWithTypedPrimaryKey.delete_table }
 
-      subject { CatWithTypedIndexes.new(name: "name", created_at: "today") }
+      subject { CatWithTypedPrimaryKey.new(name: "name", created_at: "today") }
 
       it "supports defining a range key" do
         expect(subject.range_key).to eq "today"
@@ -199,7 +226,27 @@ describe Dynameister::Fields do
       end
 
       it "sets the custom range key type" do
-        expect(range_key_type).to eq('B')
+        expect(range_key_type).to eq("B")
+      end
+
+    end
+
+    context "derives its data type from the field definitions if given" do
+
+      let!(:table) { PetFood.create_table }
+
+      let(:range_key_type) do
+        table.attribute_definitions.detect do |a|
+          a.attribute_name == "created_at"
+        end.attribute_type
+      end
+
+      after { PetFood.delete_table }
+
+      subject { PetFood.create(valid_until: DateTime.now, created_at: Time.now) }
+
+      it "sets the range key data type to string" do
+        expect(range_key_type).to eq("S")
       end
 
     end
@@ -229,47 +276,45 @@ describe Dynameister::Fields do
   describe "overwritten index types" do
 
     let(:hash_key_value) { 123 }
-    let!(:table) { CatWithOverwrittenIndexTypes.create_table }
+    let(:hash_key_name)  { "name" }
+
+    let!(:table) do
+      CatWithOverwrittenPrimaryKeyDataTypes.create_table
+    end
 
     let(:hash_key_type) do
       table.attribute_definitions.detect do |a|
-        a.attribute_name == 'name'
+        a.attribute_name == "name"
       end.attribute_type
     end
 
     let(:range_key_type) do
       table.attribute_definitions.detect do |a|
-        a.attribute_name == 'created_at'
+        a.attribute_name == "created_at"
       end.attribute_type
     end
 
     let(:expected_model_attributes) do
       {
-        name: { type: :number },
-        pet_food: { type: :string },
+        name:       { type: :number },
+        pet_food:   { type: :string },
         adopted_at: { type: :datetime },
         created_at: { type: :binary }
       }
     end
 
-    after { CatWithOverwrittenIndexTypes.delete_table }
+    after { CatWithOverwrittenPrimaryKeyDataTypes.delete_table }
 
-    subject { CatWithOverwrittenIndexTypes.new(name: hash_key_value) }
+    subject { CatWithOverwrittenPrimaryKeyDataTypes.new(name: hash_key_value) }
 
     it_behaves_like "a table's hash key"
 
     it "overwrites the hash key type defined in the field definition" do
-      expect(hash_key_type).to eq('N')
+      expect(hash_key_type).to eq("N")
     end
 
     it "overwrites the range key type defined in the field definition" do
-      expect(range_key_type).to eq('B')
-    end
-
-    it "has the proper overwritten hash and range key types" do
-      expect(
-        CatWithOverwrittenIndexTypes.attributes
-      ).to eq expected_model_attributes
+      expect(range_key_type).to eq("B")
     end
 
   end
