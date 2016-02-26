@@ -319,4 +319,23 @@ describe Dynameister::Fields do
 
   end
 
+  describe "primary key" do
+
+    context "given only a hash_key as primary key" do
+
+      subject { Language }
+
+      its(:primary_key) { is_expected.to eq(hash_key: :id) }
+
+    end
+
+    context "given a composite primary key" do
+
+      subject { Cat }
+
+      its(:primary_key) { is_expected.to eq(hash_key: :name, range_key: :created_at) }
+    end
+
+  end
+
 end

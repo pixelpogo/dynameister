@@ -1,5 +1,6 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
+require_relative "../app/models/book"
 
 describe Dynameister::Persistence do
 
@@ -106,18 +107,38 @@ describe Dynameister::Persistence do
 
   describe "deleting a document" do
 
-    before { Language.create_table }
+    context "the primary key consists of only a hash key" do
 
-    after { Language.delete_table }
+      before { Language.create_table }
 
-    let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
+      after { Language.delete_table }
 
-    subject!        { language.delete }
+      let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
 
-    it "deletes the record of the language object" do
-      expect(Language.find_by(hash_key: { id: language.id })).to be_nil
+      subject! { language.delete }
+
+      # TODO: replace query with find_by
+      it "deletes the record of the language object" do
+        expect(Language.query(id: language.id).all).to eq []
+      end
+
     end
 
+    context "the primary key consists of composite keys" do
+
+      before { Book.create_table }
+
+      after { Book.delete_table }
+
+      let!(:book) { Book.create(uuid: "id", rank: 42, author_id: 1) }
+
+      subject! { book.delete }
+
+      it "deletes the book record" do
+        expect(Book.query(uuid: "id").and(rank: 42).all).to eq []
+      end
+
+    end
   end
 
   describe "table schema" do
