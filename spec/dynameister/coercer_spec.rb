@@ -16,10 +16,6 @@ describe Dynameister::Coercer do
           described_class.new(schema).create_key(key_information)
         end
 
-        let(:schema) do
-          { hej: { type: :datetime }, hola: { type: :float } }
-        end
-
         it "derives its data type from the key information" do
           expect(subject.type).to eq :number
         end
@@ -80,12 +76,16 @@ describe Dynameister::Coercer do
 
     describe "given a string" do
 
-      subject { described_class.new(schema).create_key("hola") }
-
       context "with a schema for attributes" do
+
+        subject { described_class.new(schema).create_key("hola") }
 
         it "derives its data type from the schema" do
           expect(subject.type).to eq :number
+        end
+
+        it "returns a key with a name" do
+          expect(subject.name).to eq :hola
         end
 
       end
