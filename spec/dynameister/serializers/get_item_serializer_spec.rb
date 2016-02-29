@@ -8,7 +8,7 @@ describe Dynameister::Serializers::GetItemSerializer do
 
   describe "#to_h" do
 
-    let(:options) { { table_name: table_name, hash_key: hash_key } }
+    let(:options) { { table_name: table_name, key: hash_key } }
 
     subject { described_class.new(options).to_h }
 
@@ -17,7 +17,7 @@ describe Dynameister::Serializers::GetItemSerializer do
     context "with an additional range key given" do
 
       let(:range_key) { { user: "john doe" } }
-      let(:options)   { { table_name: table_name, hash_key: hash_key, range_key: range_key } }
+      let(:options)   { { table_name: table_name, key: hash_key.merge(range_key) } }
 
       it_behaves_like "a serializer that includes table name and hash key"
 

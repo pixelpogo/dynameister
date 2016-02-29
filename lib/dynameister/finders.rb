@@ -8,21 +8,16 @@ module Dynameister
 
     module ClassMethods
 
-      # We have to use `scan` here, because `query` does not allow
-      # the contains in operator `in`, only scan supports this
+      def find(hash, range = nil)
+        return destructure_params(hash) if hash.is_a?(Array)
 
-      def find(*hash_keys)
-        hash_keys = Array(hash_keys.flatten.uniq)
-        if hash_keys.count == 1
-          find_by(hash_key: { hash_key.name => hash_keys.first })
-        else
-          options = { hash_key.name => hash_keys }
-          all(options)
-        end
+        keys = { hash_key.name => hash }
+        keys[range_key.name] = range if range_key && range
+        find_by(key: keys)
       end
 
-      def find_by(hash_key:)
-        retrieved = client.get_item(table_name: table_name, hash_key: hash_key)
+      def find_by(key:)
+        retrieved = client.get_item(table_name: table_name, key: key)
         if retrieved.empty?
           nil
         else
@@ -33,6 +28,16 @@ module Dynameister
       def all(options = {})
         limit = options.delete(:limit)
         scan(options).limit(limit).all
+      end
+
+      private
+
+      def destructure_params(params)
+        if params[0].is_a?(Array) && range_key # check for multi-array
+          params.flatten.each_slice(2).map { |h, r| find h, r }.compact
+        else
+          params.map { |elem| find elem }.compact
+        end
       end
 
     end
