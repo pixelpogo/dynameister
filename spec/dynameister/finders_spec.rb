@@ -157,7 +157,7 @@ describe Dynameister::Finders do
 
         subject { Book.find("id_2", 2) }
 
-        it "returns the language with the corresponding hash_key" do
+        it "returns the book with the corresponding hash_key" do
           expect(subject.uuid).to eq "id_2"
         end
 
