@@ -233,7 +233,9 @@ Book.query(uuid: "72c62052").reversed.all
 Book.find_by(key: { uuid: "a17871e56c14", rank: 42 })
 Book.find("a17871e56c14", 42)
 
-Book.find [["ane85rna", 1], ["nelg94", 2], ["h384hen", 3]] # only for compliance with ActiveRecord API
+# Only for compliance with ActiveRecord API
+Book.find [["a17871e56c14", 42], ["nelg94", 23], ["h384hen", 1024]]
+
 Book.all  # no filter
 ```
 
