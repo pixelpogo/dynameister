@@ -11,8 +11,10 @@ module Dynameister
       def find(hash, range = nil)
         return destructure_params(hash) if hash.is_a?(Array)
 
-        keys = { hash_key.name => hash }
-        keys[range_key.name] = range if range_key && range
+        keys = {}.tap do |k|
+          k[hash_key.name] = hash
+          k[range_key.name] = range if range_key && range
+        end
         find_by(key: keys)
       end
 
