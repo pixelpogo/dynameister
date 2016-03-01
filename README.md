@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.org/babbel/dynameister.svg?branch=master)](https://travis-ci.org/babbel/dynameister)
-[![Build Status](https://travis-ci.org/babbel/dynameister.svg?branch=master)](https://travis-ci.org/babbel/dynameister)
 [![Code Climate](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/badges/5f0af74f84173b8b80a2/gpa.svg)](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/feed)
 [![Test Coverage](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/badges/5f0af74f84173b8b80a2/coverage.svg)](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/coverage)
 [![Issue Count](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/badges/5f0af74f84173b8b80a2/issue_count.svg)](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/feed)
