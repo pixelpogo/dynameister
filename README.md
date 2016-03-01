@@ -233,7 +233,6 @@ Book.query(uuid: "72c62052").reversed.all
 Book.find_by(key: { uuid: "a17871e56c14", rank: 42 })
 Book.find("a17871e56c14", 42)
 
-# Using DynamoDB scan
 Book.find [["ane85rna", 1], ["nelg94", 2], ["h384hen", 3]] # only for compliance with ActiveRecord API
 Book.all  # no filter
 ```
