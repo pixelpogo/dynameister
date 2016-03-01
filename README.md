@@ -197,28 +197,44 @@ Calling `.all` on the query, will execute the query and return the result.
 DynamoDB query should be used whenever the `hash_key` or additionally the `range_key` is available.
 
 ```ruby
+# Given a simple Book model
+class Book
+
+  include Dynameister::Document
+
+  field :name
+  field :rank, :integer
+  field :author_id, :integer
+  field :created_at, :datetime
+
+  table hash_key: :uuid, range_key: :rank
+
+  local_index :author_id
+
+end
+
 # Perform a query using hash and range key.
 # It is also possible for query to only receive the hash key.
 # In this case all books with that hash key and - if present -
 # different range keys would be returned.
-Book.query(hash_key: "72c62052").all # or
-Book.query(hash_key: "72c62052").and(range_key: 42).all
-Book.query(hash_key: "72c62052").and(range_key: 42).limit(1)
+Book.query(uuid: "72c62052").all # or
+Book.query(uuid: "72c62052").and(rank: 42).all
+Book.query(uuid: "72c62052").and(rank: 42).limit(1)
 
 # You can also do comparisons on the range_key,
 # e.g. returning objects with ranges less than or equal to 42
-Book.query(hash_key: "72c62052").le(range_key: 42).all
+Book.query(uuid: "72c62052").le(rank: 42).all
 
 # Queries are sorted on the range key by default.
 # You can reverse the order:
-Book.query(hash_key: "72c62052").reversed.all
+Book.query(uuid: "72c62052").reversed.all
 
 # Same as above but uses get_item underneath
-Book.find_by(hash_key: { uuid: "a17871e56c14" })
-Book.find("a17871e56c14")
+Book.find_by(key: { uuid: "a17871e56c14", rank: 42 })
+Book.find("a17871e56c14", 42)
 
 # Using DynamoDB scan
-Book.find ["ane85rna", "nelg94", "h384hen"] # only for compliance with ActiveRecord API
+Book.find [["ane85rna", 1], ["nelg94", 2], ["h384hen", 3]] # only for compliance with ActiveRecord API
 Book.all  # no filter
 ```
 
