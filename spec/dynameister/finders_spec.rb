@@ -50,7 +50,7 @@ describe Dynameister::Finders do
         expect(subject.uuid).to eq "id"
       end
 
-      it "returns an instance of document" do
+      it "returns an instance of Book" do
         expect(subject).to be_an_instance_of(Book)
       end
 
