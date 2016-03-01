@@ -117,9 +117,8 @@ describe Dynameister::Persistence do
 
       subject! { language.delete }
 
-      # TODO: replace query with find_by
       it "deletes the record of the language object" do
-        expect(Language.query(id: language.id).all).to eq []
+        expect(Language.find_by(key: { id: language.id })).to be_nil
       end
 
     end
