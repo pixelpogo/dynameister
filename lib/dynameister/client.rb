@@ -33,7 +33,7 @@ module Dynameister
     end
 
     def get_item(table_name:, key:)
-      serialized = Dynameister::Serializers::GetItemSerializer.new(
+      serialized = Dynameister::Serializers::BaseItemSerializer.new(
         table_name: table_name, key: key)
 
       aws_client.get_item(serialized.to_h)
@@ -48,7 +48,7 @@ module Dynameister
     end
 
     def delete_item(table_name:, key:)
-      serialized = Dynameister::Serializers::DeleteItemSerializer.new(
+      serialized = Dynameister::Serializers::BaseItemSerializer.new(
         table_name: table_name, key: key)
 
       aws_client.delete_item(serialized.to_h)
