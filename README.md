@@ -36,7 +36,7 @@ Dynameister provides some configuration options:
 
 * `read_capacity`: Defines the **default** provisioned throughput for read requests, see [read capacity units](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughputIntro.html#ProvisionedThroughputIntro.Reads).
 * `write_capacity`: Defines the **default** provisioned throughput for write requests, see [write capacity units](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughputIntro.html#ProvisionedThroughputIntro.Writes).
-* `endpoint`: As mentioned above this is only necessary when [DynamoDB Local](https://aws.amazon.com/de/blogs/aws/dynamodb-local-for-desktop-development/) is used.
+* `endpoint`: This is only necessary when [DynamoDB Local](https://aws.amazon.com/de/blogs/aws/dynamodb-local-for-desktop-development/) is used, otherwise a default endpoint is constructed from the :region by the AWS SDK automatically.
 * `region`: Specifies the AWS Region for DynamoDB tables. It overwrites the global configuration of the AWS SDK (e.g. `ENV['AWS_REGION']`), so that different AWS regions can be used in parallel.
 * `credentials`: Allows to configure custom [AWS credentials](http://docs.aws.amazon.com/sdkforruby/api/Aws/Credentials.html). Only required for local and/or testing environment. In production environments you should always load your credentials from outside your application, e.g. the AWS SDK loads it from environment variables automatically. Avoid configuring credentials statically and never commit them to source control.
 
