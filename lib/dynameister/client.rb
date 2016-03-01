@@ -33,25 +33,27 @@ module Dynameister
     end
 
     def get_item(table_name:, key:)
-      serialized = Dynameister::Serializers::BaseItemSerializer.new(
-        table_name: table_name, key: key)
-
-      aws_client.get_item(serialized.to_h)
+      serialized = {
+        table_name: table_name,
+        key: key
+      }
+      aws_client.get_item(serialized)
     end
 
     def put_item(table_name:, item:)
-      serialized = Dynameister::Serializers::PutItemSerializer.new(
+      serialized = {
         table_name: table_name,
-        item:       item)
-
-      aws_client.put_item(serialized.to_h)
+        item:       item
+      }
+      aws_client.put_item(serialized)
     end
 
     def delete_item(table_name:, key:)
-      serialized = Dynameister::Serializers::BaseItemSerializer.new(
-        table_name: table_name, key: key)
-
-      aws_client.delete_item(serialized.to_h)
+      serialized =  {
+        table_name: table_name,
+        key: key
+      }
+      aws_client.delete_item(serialized)
     end
 
     def scan_table(options)
