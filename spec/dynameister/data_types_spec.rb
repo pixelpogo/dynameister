@@ -53,7 +53,7 @@ describe Dynameister::DataTypes do
 
   describe "retrieving a document" do
 
-    subject { CompactDisc.find_by(hash_key: { id: cd.id }) }
+    subject { CompactDisc.find_by(key: { id: cd.id }) }
 
     it "deserializes :datetime attributes" do
       expect(CompactDisc.type_caster(type: :datetime)).to receive(:deserialize).once

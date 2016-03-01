@@ -39,6 +39,13 @@ module Dynameister
         end
       end
 
+      def primary_key
+        {}.tap do |h|
+          h[:hash_key] =  hash_key.name
+          h[:range_key] = range_key.name if range_key
+        end
+      end
+
       def table(options = {})
         self.options = options
 

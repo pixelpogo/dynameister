@@ -141,7 +141,7 @@ describe Dynameister::Client do
 
       it "retrieves the item" do
         expect(
-          client.get_item(table_name: table_name, hash_key: item_hash_key).item
+          client.get_item(table_name: table_name, key: item_hash_key).item
         ).to eq(expected_item)
       end
 
@@ -158,7 +158,7 @@ describe Dynameister::Client do
 
       it "retrieves the item" do
         expect(
-          client.get_item(table_name: table_name, hash_key: item_hash_key, range_key: item_range_key).item
+          client.get_item(table_name: table_name, key: item_hash_key.merge(item_range_key)).item
         ).to eq(expected_item)
       end
 
@@ -259,7 +259,7 @@ describe Dynameister::Client do
       let(:get_hash) { { table_name: table_name, key: item_hash_key } }
 
       it "deletes the item" do
-        client.delete_item(table_name: table_name, hash_key: item_hash_key)
+        client.delete_item(table_name: table_name, key: item_hash_key)
 
         expect(
           client.aws_client.get_item(get_hash).item
@@ -280,7 +280,7 @@ describe Dynameister::Client do
       let(:get_hash)  { { table_name: table_name, key: item_hash_key.merge(item_range_key) } }
 
       it "deletes the item" do
-        client.delete_item(table_name: table_name, hash_key: item_hash_key, range_key: item_range_key)
+        client.delete_item(table_name: table_name, key: item_hash_key.merge(item_range_key))
 
         expect(
           client.aws_client.get_item(get_hash).item

@@ -70,7 +70,7 @@ describe Dynameister::Fields do
     its(:rank)   { is_expected.to eq(99) }
 
     it "persists the modified data" do
-      item = Language.find_by(hash_key: { id: subject.id })
+      item = Language.find_by(key: { id: subject.id })
       expect(subject.attributes).to eq(item.attributes)
     end
 
@@ -315,6 +315,25 @@ describe Dynameister::Fields do
 
     it "overwrites the range key type defined in the field definition" do
       expect(range_key_type).to eq("B")
+    end
+
+  end
+
+  describe "primary key" do
+
+    context "given only a hash_key as primary key" do
+
+      subject { Language }
+
+      its(:primary_key) { is_expected.to eq(hash_key: :id) }
+
+    end
+
+    context "given a composite primary key" do
+
+      subject { Cat }
+
+      its(:primary_key) { is_expected.to eq(hash_key: :name, range_key: :created_at) }
     end
 
   end
