@@ -1,4 +1,7 @@
 [![Build Status](https://travis-ci.org/babbel/dynameister.svg?branch=master)](https://travis-ci.org/babbel/dynameister)
+[![Code Climate](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/badges/5f0af74f84173b8b80a2/gpa.svg)](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/feed)
+[![Test Coverage](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/badges/5f0af74f84173b8b80a2/coverage.svg)](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/coverage)
+[![Issue Count](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/badges/5f0af74f84173b8b80a2/issue_count.svg)](https://codeclimate.com/repos/56c5f3c355cf362a4f008842/feed)
 
 
 # Dynameister
@@ -33,7 +36,7 @@ Dynameister provides some configuration options:
 
 * `read_capacity`: Defines the **default** provisioned throughput for read requests, see [read capacity units](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughputIntro.html#ProvisionedThroughputIntro.Reads).
 * `write_capacity`: Defines the **default** provisioned throughput for write requests, see [write capacity units](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ProvisionedThroughputIntro.html#ProvisionedThroughputIntro.Writes).
-* `endpoint`: As mentioned above this is only necessary when [DynamoDB Local](https://aws.amazon.com/de/blogs/aws/dynamodb-local-for-desktop-development/) is used.
+* `endpoint`: This is only necessary when [DynamoDB Local](https://aws.amazon.com/de/blogs/aws/dynamodb-local-for-desktop-development/) is used, otherwise a default endpoint is constructed from the :region by the AWS SDK automatically.
 * `region`: Specifies the AWS Region for DynamoDB tables. It overwrites the global configuration of the AWS SDK (e.g. `ENV['AWS_REGION']`), so that different AWS regions can be used in parallel.
 * `credentials`: Allows to configure custom [AWS credentials](http://docs.aws.amazon.com/sdkforruby/api/Aws/Credentials.html). Only required for local and/or testing environment. In production environments you should always load your credentials from outside your application, e.g. the AWS SDK loads it from environment variables automatically. Avoid configuring credentials statically and never commit them to source control.
 
@@ -214,28 +217,45 @@ Calling `.all` on the query, will execute the query and return the result.
 DynamoDB query should be used whenever the `hash_key` or additionally the `range_key` is available.
 
 ```ruby
+# Given a simple Book model
+class Book
+
+  include Dynameister::Document
+
+  field :name
+  field :rank, :integer
+  field :author_id, :integer
+  field :created_at, :datetime
+
+  table hash_key: :uuid, range_key: :rank
+
+  local_index :author_id
+
+end
+
 # Perform a query using hash and range key.
 # It is also possible for query to only receive the hash key.
 # In this case all books with that hash key and - if present -
 # different range keys would be returned.
-Book.query(hash_key: "72c62052").all # or
-Book.query(hash_key: "72c62052").and(range_key: 42).all
-Book.query(hash_key: "72c62052").and(range_key: 42).limit(1)
+Book.query(uuid: "72c62052").all # or
+Book.query(uuid: "72c62052").and(rank: 42).all
+Book.query(uuid: "72c62052").and(rank: 42).limit(1)
 
 # You can also do comparisons on the range_key,
 # e.g. returning objects with ranges less than or equal to 42
-Book.query(hash_key: "72c62052").le(range_key: 42).all
+Book.query(uuid: "72c62052").le(rank: 42).all
 
 # Queries are sorted on the range key by default.
 # You can reverse the order:
-Book.query(hash_key: "72c62052").reversed.all
+Book.query(uuid: "72c62052").reversed.all
 
 # Same as above but uses get_item underneath
-Book.find_by(hash_key: { uuid: "a17871e56c14" })
-Book.find("a17871e56c14")
+Book.find_by(key: { uuid: "a17871e56c14", rank: 42 })
+Book.find("a17871e56c14", 42)
 
-# Using DynamoDB scan
-Book.find ["ane85rna", "nelg94", "h384hen"] # only for compliance with ActiveRecord API
+# Only for compliance with ActiveRecord API
+Book.find [["a17871e56c14", 42], ["nelg94", 23], ["h384hen", 1024]]
+
 Book.all  # no filter
 ```
 

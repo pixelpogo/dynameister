@@ -4,14 +4,14 @@ describe Dynameister::Indexes::LocalIndex do
 
   shared_examples_for "a local index" do
 
-    subject { described_class.new(range_key, options) }
+    subject { described_class.new(range_key, {}, options) }
 
     its(:name) { is_expected.to eq "by_adopted_at" }
     its(:projection) { is_expected.to eq projection }
 
     context "the range key" do
 
-      subject { described_class.new(range_key).range_key }
+      subject { described_class.new(range_key, {}).range_key }
 
       its(:name) { is_expected.to eq :adopted_at }
       its(:type) { is_expected.to eq range_key_type }
@@ -26,7 +26,7 @@ describe Dynameister::Indexes::LocalIndex do
 
     let(:options) { {} }
     let(:projection) { :all }
-    let(:range_key_type) { :number }
+    let(:range_key_type) { :string }
 
     it_behaves_like "a local index"
 
@@ -36,7 +36,7 @@ describe Dynameister::Indexes::LocalIndex do
 
     let(:options) { { projection: projection } }
     let(:projection) { :keys_only }
-    let(:range_key_type) { :number }
+    let(:range_key_type) { :string }
 
     it_behaves_like "a local index"
 
@@ -44,7 +44,7 @@ describe Dynameister::Indexes::LocalIndex do
 
   context "given a range key with explicit type" do
 
-    subject { described_class.new(range_key) }
+    subject { described_class.new(range_key, {}) }
 
     context "with valid format" do
 

@@ -17,12 +17,12 @@ module Dynameister
     module ClassMethods
 
       def local_index(range_key, options = {})
-        local_index = LocalIndex.new(range_key, options)
+        local_index = LocalIndex.new(range_key, attributes, options)
         local_indexes << local_index
       end
 
       def global_index(keys, options = {})
-        global_index = GlobalIndex.new(keys, options)
+        global_index = GlobalIndex.new(keys, attributes, options)
         global_indexes << global_index
       end
 

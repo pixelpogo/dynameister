@@ -5,10 +5,10 @@ module Dynameister
   class Client
 
     def create_table(table_name:, hash_key:, options: {})
-      options[:hash_key] ||= hash_key
-      options[:read_capacity] ||= Dynameister.read_capacity
+      options[:hash_key]       ||= hash_key
+      options[:read_capacity]  ||= Dynameister.read_capacity
       options[:write_capacity] ||= Dynameister.write_capacity
-      options[:local_indexes] ||= []
+      options[:local_indexes]  ||= []
       options[:global_indexes] ||= []
 
       table_definition = Dynameister::TableDefinition.new(table_name, options).to_h
@@ -32,30 +32,28 @@ module Dynameister
       end
     end
 
-    def get_item(table_name:, hash_key:, range_key: nil)
-      serialized = Dynameister::Serializers::GetItemSerializer.new(
+    def get_item(table_name:, key:)
+      serialized = {
         table_name: table_name,
-        hash_key:   hash_key,
-        range_key:  range_key)
-
-      aws_client.get_item(serialized.to_h)
+        key: key
+      }
+      aws_client.get_item(serialized)
     end
 
     def put_item(table_name:, item:)
-      serialized = Dynameister::Serializers::PutItemSerializer.new(
+      serialized = {
         table_name: table_name,
-        item:       item)
-
-      aws_client.put_item(serialized.to_h)
+        item:       item
+      }
+      aws_client.put_item(serialized)
     end
 
-    def delete_item(table_name:, hash_key:, range_key: nil)
-      serialized = Dynameister::Serializers::DeleteItemSerializer.new(
+    def delete_item(table_name:, key:)
+      serialized =  {
         table_name: table_name,
-        hash_key:   hash_key,
-        range_key:  range_key)
-
-      aws_client.delete_item(serialized.to_h)
+        key: key
+      }
+      aws_client.delete_item(serialized)
     end
 
     def scan_table(options)

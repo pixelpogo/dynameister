@@ -109,11 +109,17 @@ module Dynameister
     end
 
     def delete
-      params = { self.class.hash_key.name => hash_key }
-      client.delete_item(table_name: table_name, hash_key: params)
+      client.delete_item(table_name: table_name, key: primary_key)
     end
 
     private
+
+    def primary_key
+      {}.tap do |h|
+        h[self.class.primary_key[:hash_key]] = hash_key
+        h[self.class.primary_key[:range_key]] = range_key if self.class.range_key
+      end
+    end
 
     def table_name
       self.class.table_name
