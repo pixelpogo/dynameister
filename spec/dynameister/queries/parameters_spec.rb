@@ -114,7 +114,7 @@ describe Dynameister::Queries::Parameters do
 
   describe "parameters for a model with local indexes" do
 
-    let(:local_index)  { Dynameister::Indexes::LocalIndex.new(:age) }
+    let(:local_index)  { Dynameister::Indexes::LocalIndex.new(:age, {}) }
     let(:model)        { double('model', local_indexes: [local_index]) }
     let(:comparator)   { "=" }
     let(:options)      { { age: 42 } }

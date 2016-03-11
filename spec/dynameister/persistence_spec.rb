@@ -1,5 +1,6 @@
 require_relative "../app/models/language"
 require_relative "../app/models/cat"
+require_relative "../app/models/book"
 
 describe Dynameister::Persistence do
 
@@ -117,12 +118,12 @@ describe Dynameister::Persistence do
 
     subject { Language.create(locale: "de", rank: 42) }
 
-    it "generates a uuid for the hash_key of the document" do
+    it "generates a uuid for the key of the document" do
       expect(subject.id).not_to be_nil
     end
 
     it "persists the data" do
-      item = Language.find_by(hash_key: { id: subject.id })
+      item = Language.find_by(key: { id: subject.id })
       expect(subject.attributes).to eq(item.attributes)
     end
 
@@ -138,12 +139,12 @@ describe Dynameister::Persistence do
 
     subject { document.save }
 
-    it "generates a uuid for the hash_key of the document" do
+    it "generates a uuid for the key of the document" do
       expect(subject.id).not_to be_nil
     end
 
     it "persists the data" do
-      item = Language.find_by(hash_key: { id: subject.id })
+      item = Language.find_by(key: { id: subject.id })
       expect(subject.attributes).to eq(item.attributes)
     end
 
@@ -163,7 +164,7 @@ describe Dynameister::Persistence do
     its(:rank)   { is_expected.to eq(99) }
 
     it "persists the modified data" do
-      item = Language.find_by(hash_key: { id: subject.id })
+      item = Language.find_by(key: { id: subject.id })
       expect(subject.attributes).to eq(item.attributes)
     end
 
@@ -171,18 +172,37 @@ describe Dynameister::Persistence do
 
   describe "#delete" do
 
-    before { Language.create_table }
+    context "the primary key consists of only a hash key" do
 
-    after { Language.delete_table }
+      before { Language.create_table }
 
-    let(:language) { Language.create(locale: "de", rank: 42) }
+      after { Language.delete_table }
 
-    subject! { language.delete }
+      let!(:language) { Language.create(locale: "GER", displayable: true, rank: 42) }
 
-    it "deletes the record of the language object" do
-      expect(Language.find_by(hash_key: { id: language.id })).to be_nil
+      subject! { language.delete }
+
+      it "deletes the record of the language object" do
+        expect(Language.find_by(key: { id: language.id })).to be_nil
+      end
+
     end
 
+    context "the primary key consists of composite keys" do
+
+      before { Book.create_table }
+
+      after { Book.delete_table }
+
+      let!(:book) { Book.create(uuid: "id", rank: 42, author_id: 1) }
+
+      subject! { book.delete }
+
+      it "deletes the book record" do
+        expect(Book.query(uuid: "id").and(rank: 42).all).to eq []
+      end
+
+    end
   end
 
   describe ".schema" do
@@ -235,7 +255,8 @@ describe Dynameister::Persistence do
   describe ".serialize_attributes" do
 
     let(:item) do
-      { id: "8d629240-d319-41a9-b39e-9df1d376476e",
+      {
+        id: "8d629240-d319-41a9-b39e-9df1d376476e",
         name: "Garfield",
         adopted_at: DateTime.now,
         pet_food: "Meat"

@@ -1,7 +1,6 @@
 require "active_support"
 require "active_support/core_ext"
 require "dynameister/client"
-require "dynameister/serializers"
 require "dynameister/table_definition"
 require "dynameister/version"
 
