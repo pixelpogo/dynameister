@@ -164,7 +164,7 @@ describe Dynameister::Persistence do
         end
 
         it "persists the data" do
-          item = PetFoodWithCallback.find_by(hash_key: { id: subject.id })
+          item = PetFoodWithCallback.find_by(key: { id: subject.id })
           expect(subject.attributes).to eq(item.attributes)
         end
 
