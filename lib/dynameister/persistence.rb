@@ -88,9 +88,9 @@ module Dynameister
       private_class_method :attribute_casters
     end
 
-    def update_attributes(attributes)
-      unless attributes.nil? || attributes.empty?
-        attributes.each do |attribute, value|
+    def update_attributes(attrs)
+      unless attrs.nil? || attrs.empty?
+        attrs.each do |attribute, value|
           write_attribute(attribute, value)
         end
         save
