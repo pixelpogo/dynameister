@@ -14,7 +14,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe ".create_table" do
+  describe "creating a table" do
 
     subject! { Language.create_table }
 
@@ -41,7 +41,7 @@ describe Dynameister::Persistence do
     end
   end
 
-  describe ".delete_table" do
+  describe "deleting a table" do
 
     context "with a default table name" do
 
@@ -75,7 +75,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe ".table_exists?" do
+  describe "table_exists?" do
 
     subject { Language.table_exists? }
 
@@ -91,7 +91,7 @@ describe Dynameister::Persistence do
     end
   end
 
-  describe ".new" do
+  describe "creating a document" do
 
     before { Language.create_table }
 
@@ -110,7 +110,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe ".create" do
+  describe "creating a table" do
 
     before { Language.create_table }
 
@@ -129,7 +129,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe "#save" do
+  describe "saving a document" do
 
     before { Language.create_table }
 
@@ -150,7 +150,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe "#update_attributes" do
+  describe "updating attributes" do
 
     before { Language.create_table }
 
@@ -170,7 +170,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe "#delete" do
+  describe "deleting a document" do
 
     context "the primary key consists of only a hash key" do
 
@@ -205,7 +205,7 @@ describe Dynameister::Persistence do
     end
   end
 
-  describe ".schema" do
+  describe "schema" do
 
     before { Language.create_table }
 
@@ -219,7 +219,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe ".key_schema_keys" do
+  describe "key schema keys" do
 
     before { Language.create_table }
 
@@ -233,7 +233,7 @@ describe Dynameister::Persistence do
 
   end
 
-  describe ".serialize_attribute" do
+  describe "serialize an attribute" do
 
     subject { Cat.serialize_attribute(attr_hash) }
 
@@ -252,7 +252,7 @@ describe Dynameister::Persistence do
     end
   end
 
-  describe ".serialize_attributes" do
+  describe "serializing attributes" do
 
     let(:item) do
       {
@@ -271,7 +271,7 @@ describe Dynameister::Persistence do
     end
   end
 
-  describe ".deserialize_attributes" do
+  describe "deserialize attributes" do
 
     let(:raw_attributes) do
       { name: "Garfield",
