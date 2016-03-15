@@ -101,6 +101,26 @@ class CompactDisc
 end
 ```
 
+#### Callbacks
+
+You can define a `before_save` callback that will be executed before a `#save` call.
+
+```ruby
+class Person
+  include Dynameister::Document
+
+  field :name
+
+  before_save :ensure_name
+
+  def ensure_name
+    self.name ||= "Heinz"
+  end
+end
+```
+
+Returning false in the callback will stop the execution of `#save`.
+
 ### Document Creation
 
 First create the table for the model.
