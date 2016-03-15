@@ -81,15 +81,6 @@ module Dynameister
 
     attr_accessor :attributes
 
-    def update_attributes(attributes)
-      unless attributes.nil? || attributes.empty?
-        attributes.each do |attribute, value|
-          write_attribute(attribute, value)
-        end
-        save
-      end
-    end
-
     def hash_key
       send(self.class.hash_key.name)
     end
