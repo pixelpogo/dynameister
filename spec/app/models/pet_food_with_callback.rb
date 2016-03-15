@@ -6,8 +6,6 @@ class PetFoodWithCallback
   field :created_at,  :time
   field :deliver_at,  :time
 
-  table
-
   before_save :ensure_the_food_is_still_valid
 
   private
