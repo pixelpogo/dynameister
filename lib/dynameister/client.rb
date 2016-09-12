@@ -6,8 +6,8 @@ module Dynameister
 
     def create_table(table_name:, hash_key:, options: {})
       options[:hash_key]       ||= hash_key
-      options[:read_capacity]  ||= Dynameister.read_capacity
-      options[:write_capacity] ||= Dynameister.write_capacity
+      options[:read_capacity]  ||= Dynameister::Config.read_capacity
+      options[:write_capacity] ||= Dynameister::Config.write_capacity
       options[:local_indexes]  ||= []
       options[:global_indexes] ||= []
 
@@ -84,9 +84,9 @@ module Dynameister
 
     def aws_client_options
       {
-        endpoint:    Dynameister.endpoint,
-        region:      Dynameister.region,
-        credentials: Dynameister.credentials
+        endpoint:    Dynameister::Config.endpoint,
+        region:      Dynameister::Config.region,
+        credentials: Dynameister::Config.credentials
       }.delete_if { |_, v| v.nil? }
     end
 
