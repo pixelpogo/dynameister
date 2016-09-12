@@ -1,7 +1,9 @@
 require "dynameister/config/options"
 
 module Dynameister
+
   module Config
+
     extend self
     extend Options
 
@@ -10,5 +12,7 @@ module Dynameister
     option :region
     option :endpoint
     option :credentials
+
   end
+
 end

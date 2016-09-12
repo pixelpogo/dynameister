@@ -16,6 +16,7 @@ require "dynameister/queries"
 require "dynameister/document"
 
 module Dynameister
+
   extend self
 
   def configure
